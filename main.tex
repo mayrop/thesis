@@ -19,6 +19,7 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{luacode}
 
 \usepackage{mathpazo} % Use the Palatino font by default
 
@@ -53,7 +54,7 @@ headsepline, % Uncomment to get a line under the header
 \author{Mayra \textsc{Valdés}}
 \addresses{}
 
-\subject{Data Analytics}
+\subject{Data sAnalytics}
 \keywords{}
 \university{\href{http://www.university.com}{University Name}}
 \department{\href{http://department.university.com}{Department or School Name}}
@@ -70,11 +71,25 @@ headsepline, % Uncomment to get a line under the header
 
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
 
+\begin{luacode}
+	function read(file)
+		local handler = io.open(file, "rb")
+		local content = handler:read("*all")
+		handler:close()
+		return content
+	end
+	JSON = (loadfile "JSON.lua")()
+	X = JSON:decode(read("./test.json"))
+\end{luacode}
+
+
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
 
 %////////////////////////////////////////////////////////////////////////
 %	TITLE PAGE
 %////////////////////////////////////////////////////////////////////////
+
+\directlua{tex.print(X['recipe']['title'])}
 
 \begin{titlepage}
 \begin{center}
