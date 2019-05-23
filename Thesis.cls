@@ -126,12 +126,6 @@
 	\addchaptertocentry{\contentsname}\@starttoc{toc}}{}{}%
 }
 
-\patchcmd{\tableofcontents}{\MakeUppercase}{\MakeMarkcase}{}{}
-\patchcmd{\tableofcontents}{\MakeUppercase}{\MakeMarkcase}{}{}
-\patchcmd{\listoffigures}{\MakeUppercase}{\MakeMarkcase}{}{}
-\patchcmd{\listoffigures}{\MakeUppercase}{\MakeMarkcase}{}{}
-\patchcmd{\listoftables}{\MakeUppercase}{\MakeMarkcase}{}{}
-\patchcmd{\listoftables}{\MakeUppercase}{\MakeMarkcase}{}{}
 
 % If the option `nolistspacing' is given, the spacing in the different lists is reduced to single spacing. This option is only useful, if the spacing of the document has been changed to onehalfspacing or doublespacing.
 \ifbool{nolistspace}{
@@ -178,7 +172,7 @@
 \RequirePackage{booktabs} % Required for better table rules
 
 \RequirePackage{caption} % Required for customising the captions
-\captionsetup{justification=centerlast,font=small,labelfont=sc,margin=50pt}
+\captionsetup{justification=centerlast,font=small,labelfont=bf,margin=30pt}
 
 %----------------------------------------------------------------------------------------
 %	DEFINE CUSTOM THESIS INFORMATION COMMANDS
@@ -253,29 +247,17 @@
 %----------------------------------------------------------------------------------------
 
 \RequirePackage[markcase=used]{scrlayer-scrpage}
-\providepairofpagestyles{thesisSimple}{%
+\providepairofpagestyles{myThesis}{%
 	\clearpairofpagestyles%
-	\automark[chapter]{chapter}
-	\ihead{\headmark}% Inner header
-	\ohead[\pagemark]{\pagemark}% Outer header
+	\cfoot[\pagemark]{\pagemark}% Footer
 }
 \ifoot{}% Inner footer
 \ofoot{}% Outer footer
-\pagestyle{thesisSimple}
-\providepairofpagestyles[thesisSimple]{thesis}{%
-	\automark*[section]{}%
-}
-\providepairofpagestyles[thesisSimple]{review}{%
-	\ofoot[\shorttitle/\authorname]{\shorttitle/\authorname}
-	\ifoot[\today]{\today}
-}
-\pagestyle{thesis}
-\ifbool{headsepline}{\KOMAoption{headsepline}{true}}{}
+\pagestyle{myThesis}
 \PreventPackageFromLoading[\ClassError{\classname}{Package `fancyhdr' is
 incompatible\MessageBreak with this class}{The pagesyles are defined 
 	using package `scrlayer-scrpage', please consult the\MessageBreak 
 KOMA-script documentation for details.}]{fancyhdr}
-
 
 \newcommand{\blank@p@gestyle}{empty}
 \newcommand{\chapter@p@gestyle}{plain}
@@ -399,7 +381,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 }
 {
 	\DeclareDocumentEnvironment{acknowledgements}{}{%
-		\checktoopen
+		\clearpage
 		\tttypeout{\acknowledgementname}
 		\thispagestyle{plain}
 		\begin{center}{\huge\textit{\acknowledgementname}\par}\end{center}
@@ -501,7 +483,7 @@ bookmarksopenlevel=0,
 hypertexnames=false,
 colorlinks=true,% Set to false to disable coloring links
 citecolor=magenta,% The color of citations
-linkcolor=red,% The color of references to document elements (sections, figures, etc)
+linkcolor=black,% The color of references to document elements (sections, figures, etc)
 urlcolor=mdtRed,% The color of hyperlinks (URLs)
 pdfstartview={FitV},
 unicode,
