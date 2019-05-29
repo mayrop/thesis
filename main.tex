@@ -21,9 +21,25 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 \usepackage{luacode}
-\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
-\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
+% Use the bibtex backend with the authoryear citation style (which resembles APA)
+\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
+
+% Required to generate language-dependent quotes in the bibliography
+\usepackage[autostyle=true]{csquotes}
+
+% Usage of python inside latex
+\usepackage[gobble=auto]{pythontex}
+\usepackage{pythontex}
+
+% https://stackoverflow.com/questions/1673942/latex-table-positioning
+\usepackage{float}
+% \restylefloat{table}
+
+% https://tex.stackexchange.com/questions/33510/how-do-i-create-the-headings-for-this-multirow-multicolum-table
+\usepackage{graphicx}% http://ctan.org/pkg/graphicx
+\usepackage{multirow}% http://ctan.org/pkg/multirow
+\usepackage{tabularx,ragged2e,caption}
 \addbibresource{example.bib} % The filename of the bibliography
 
 %////////////////////////////////////////////////////////////////////////
@@ -67,6 +83,17 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 \begin{document}
 
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\begin{tabular}{c@{\qquad}ccc@{\qquad}cccc}
+	\toprule
+	\multirow{2}{*}{\raisebox{-\heavyrulewidth}{Title}} & \multicolumn{3}{c}{Category~A} & \multicolumn{4}{c}{Category~B} \\
+	\cmidrule{2-8}
+	& Item 1 & Item~2 & Item~3 & Item~1 & Item~2 & Item~3 & Item~4 \\
+	\midrule
+	$X$ & 1 & 2 & 3 & 1 & 2 & 3 & 3 \\
+	$Y$ & 1 & 2 & 3 & 1 & 2 & 3 & 143 \\
+	\bottomrule
+\end{tabular}
 
 \begin{luacode}
 	function read(file)
