@@ -1,0 +1,22 @@
+\begin{pycode} 
+    import json
+    with open('./test.json', 'r') as handle:
+        parsed = json.load(handle)  
+    print(json.dumps(parsed, indent=4, sort_keys=True))
+    print(parsed['recipe']['title'])
+\end{pycode}
+
+This is the first time \pyc{print(parsed['recipe']['title'])} I do this
+
+\begin{luacode}
+	function read(file)
+		local handler = io.open(file, "rb")
+		local content = handler:read("*all")
+		handler:close()
+		return content
+	end
+	JSON = (loadfile "JSON.lua")()
+	X = JSON:decode(read("./test.json"))
+\end{luacode}
+
+\luadirect{tex.print(X['recipe']['title'])}

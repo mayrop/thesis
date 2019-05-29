@@ -2,25 +2,6 @@
 
 \chapter{Chapter Title Here TEST} % Main chapter title
 
-\begin{pycode} 
-import scipy
-from tabulate import tabulate
-
-a = scipy.random.rand(3,3)
-headers = ["Col 1", "Col 2", "Col 3"]
-
-print(r"\begin{table}[H]")
-print(r"\begin{center}")
-print(tabulate(a, colalign=("right","left","center"), headers=headers, tablefmt="latex_booktabs", floatfmt=".2f"))
-print(r"\end{center}")
-print(r"\end{table}")
-
-print(r"\begin{table}[H]")
-print(r"\centering")
-print(tabulate([["F",24],["M",19]], tablefmt="latex", showindex="always"))
-print(r"\end{table}")
-\end{pycode}
-
 \label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
 %----------------------------------------------------------------------------------------

@@ -55,71 +55,10 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 	%showframe, % Uncomment to show how the type block is set on the page
 }
 
-%////////////////////////////////////////////////////////////////////////
-%	THESIS INFORMATION
-%////////////////////////////////////////////////////////////////////////
-
-\thesistitle{Thesis Title}
-\supervisor{Dr. James \textsc{Smith}}
-\examiner{}
-\degree{MSc}
-\author{Mayra \textsc{Valdés}}
-\addresses{}
-
-\subject{Data sAnalytics}
-\keywords{}
-\university{\href{http://www.university.com}{University Name}}
-\department{\href{http://department.university.com}{Department or School Name}}
-\group{\href{http://researchgroup.university.com}{Research Group Name}}
-\faculty{\href{http://faculty.university.com}{Faculty Name}}
-
-\AtBeginDocument{
-\hypersetup{pdftitle=\ttitle}
-\hypersetup{pdfauthor=\authorname}
-\hypersetup{pdfkeywords=\keywordnames}
-}
-
 \begin{document}
 
-\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
-
-\pagestyle{plain} % Default to the plain heading style 
-
-\include{Sections/FrontPage}
-\include{Sections/DeclarationOfAuthorship}
-\include{Sections/Quotation}
-\include{Sections/Abstract}
-\include{Sections/Acknowledgements}
-\include{Sections/ListOfContents}
-\include{Sections/Abbreviations}
-\include{Sections/PhysicalConstants}
-\include{Sections/Symbols}
-\include{Sections/Dedication}
-
-% C h a p t e r s
-\mainmatter % Begin numeric (1,2,3...) page numbering
-
-\include{Chapters/Chapter1}
-%\include{Chapters/Chapter2} 
-%\include{Chapters/Chapter3}
-%\include{Chapters/Chapter4} 
-%\include{Chapters/Chapter5} 
-
-%////////////////////////////////////////////////////////////////////////
-%	THESIS CONTENT - APPENDICES
-%////////////////////////////////////////////////////////////////////////
-
-\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
-
-\include{Appendices/AppendixA}
-%\include{Appendices/AppendixB}
-%\include{Appendices/AppendixC}
-
-%////////////////////////////////////////////////////////////////////////
-%	BIBLIOGRAPHY
-%////////////////////////////////////////////////////////////////////////
-
-\printbibliography[heading=bibintoc]
+\include{Templates/Tables}
+\include{Templates/Json}
 
 %////////////////////////////////////////////////////////////////////////
 
