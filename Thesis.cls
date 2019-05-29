@@ -190,8 +190,6 @@
 \NewDocumentCommand{\addresses}{m}{\newcommand{\addressname}{#1}}
 \NewDocumentCommand{\university}{m}{\newcommand{\univname}{#1}}
 \NewDocumentCommand{\department}{m}{\newcommand{\deptname}{#1}}
-\NewDocumentCommand{\group}{m}{\newcommand{\groupname}{#1}}
-\NewDocumentCommand{\faculty}{m}{\newcommand{\facname}{#1}}
 \NewDocumentCommand{\subject}{m}{\newcommand{\subjectname}{#1}}
 \NewDocumentCommand{\keywords}{m}{\newcommand{\keywordnames}{#1}}
 
@@ -322,7 +320,6 @@ KOMA-script documentation for details.}]{fancyhdr}
 			\bigskip
 			{\huge\textit{\abstractname} \par}
 			\bigskip
-			{\normalsize \facname \par}% Faculty name
 			{\normalsize \deptname \par}% Department name
 			\bigskip
 			{\normalsize \degreename\par}% Degree name
@@ -348,7 +345,6 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\bigskip
 		{\huge\textit{\abstractname} \par}
 		\bigskip
-		{\normalsize \facname \par}% Faculty name
 		{\normalsize \deptname \par}% Department name
 		\bigskip
 		{\normalsize \degreename\par}% Degree name
