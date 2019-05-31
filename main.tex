@@ -1,87 +1,18 @@
 %////////////////////////////////////////////////////////////////////////
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%   C O N F I G
 %////////////////////////////////////////////////////////////////////////
 
-\documentclass[
-12pt, 
-english, 
-oneside,
-doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
-%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
-%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
-%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
-%toctotoc, % Uncomment to add the main table of contents to the table of contents
-%parskip, % Uncomment to add space between paragraphs
-%nohyperref, % Uncomment to not load the hyperref package
-%headsepline, % Uncomment to get a line under the header
-%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
-%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
-]{Thesis} % The class file specifying the document structure
-
-\usepackage[utf8]{inputenc} % Required for inputting international characters
-\usepackage[T1]{fontenc} % Output font encoding for international characters
-\usepackage{luacode}
-
-% Use the bibtex backend with the authoryear citation style (which resembles APA)
-\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
-
-% Required to generate language-dependent quotes in the bibliography
-\usepackage[autostyle=true]{csquotes}
-
-% Usage of python inside latex
-\usepackage[gobble=auto]{pythontex}
-\usepackage{pythontex}
-
-% https://stackoverflow.com/questions/1673942/latex-table-positioning
-\usepackage{float}
-% \restylefloat{table}
-
-% https://tex.stackexchange.com/questions/33510/how-do-i-create-the-headings-for-this-multirow-multicolum-table
-\usepackage{multirow}% http://ctan.org/pkg/multirow
-\usepackage{graphicx}
+\include{_Config/Settings}
 
 \addbibresource{example.bib} % The filename of the bibliography
 
-%////////////////////////////////////////////////////////////////////////
-%	MARGIN SETTINGS
-%////////////////////////////////////////////////////////////////////////
-
-\geometry{
-	paper=a4paper, % Change to letterpaper for US letter
-	inner=2.5cm, % Inner margin
-	outer=3.8cm, % Outer margin
-	bindingoffset=.5cm, % Binding offset
-	top=1.5cm, % Top margin
-	bottom=1.5cm, % Bottom margin
-	%showframe, % Uncomment to show how the type block is set on the page
-}
-
-%////////////////////////////////////////////////////////////////////////
-%	THESIS INFORMATION
-%////////////////////////////////////////////////////////////////////////
-
-\thesistitle{Lorem Ipsum is simply dummy text of the printing and typesetting industry.}
-\examiner{}
-\degree{MSc in Data Analytics}
-\author{Mayra Alejandra Valdés Ibarra}
-\addresses{}
-
-\subject{Data Analytics}
-\keywords{}
-\university{\href{https://www.gla.ac.uk/}{University Name}}
-\department{School of Mathematics and Statistics}
-
-\AtBeginDocument{
-\hypersetup{pdftitle=\ttitle}
-\hypersetup{pdfauthor=\authorname}
-\hypersetup{pdfkeywords=\keywordnames}
-}
-
 \begin{document}
 
-\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+ % Pre-content pages, roman numbers
+\frontmatter
 
-\pagestyle{plain} % Default to the plain heading style 
+% Default plain style 
+\pagestyle{plain}
 
 \include{Sections/FrontPage}
 \include{Sections/DeclarationOfAuthorship}
@@ -94,7 +25,10 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 \include{Sections/Symbols}
 \include{Sections/Dedication}
 
-% C h a p t e r s
+%////////////////////////////////////////////////////////////////////////
+%   C H A P T E R S
+%////////////////////////////////////////////////////////////////////////
+
 \mainmatter % Begin numeric (1,2,3...) page numbering
 
 \include{Chapters/Chapter1}
@@ -104,17 +38,17 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 %\include{Chapters/Chapter5} 
 
 %////////////////////////////////////////////////////////////////////////
-%	THESIS CONTENT - APPENDICES
+%	A P P E N D I C E S
 %////////////////////////////////////////////////////////////////////////
 
-\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+\appendix
 
 \include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
 %\include{Appendices/AppendixC}
 
 %////////////////////////////////////////////////////////////////////////
-%	BIBLIOGRAPHY
+%	B I B L I O G R A P H Y
 %////////////////////////////////////////////////////////////////////////
 
 \printbibliography[heading=bibintoc]

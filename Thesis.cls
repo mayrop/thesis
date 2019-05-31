@@ -154,25 +154,44 @@
 %	REQUIRED PACKAGES
 %----------------------------------------------------------------------------------------
 
-\RequirePackage{babel} % Required for automatically changing names of document elements to languages besides english
+ % Required for automatically changing names of document elements to languages besides english
+\RequirePackage{babel}
 
-\RequirePackage{scrbase} % Required for handling language-dependent names of sections/document elements
+% Required for handling language-dependent names of sections/document elements
+\RequirePackage{scrbase}
 
-\RequirePackage{scrhack} % Loads fixes for various packages
+% Loads fixes for various packages
+\RequirePackage{scrhack}
 
-\RequirePackage{setspace} % Required for changing line spacing
+% Required for changing line spacing
+\RequirePackage{setspace}
 
-\RequirePackage{longtable} % Required for tables that span multiple pages (used in the symbols, abbreviations and physical constants pages)
+% Required for tables that span multiple pages (used in the symbols, abbreviations and physical constants pages)
+\RequirePackage{longtable}
 
-\RequirePackage{siunitx} % Required for \SI commands
+% Required for \SI commands
+\RequirePackage{siunitx}
 
-\RequirePackage{graphicx} % Required to include images
+% Required to include images
+\RequirePackage{graphicx}
 \graphicspath{{Figures/}{./}} % Specifies where to look for included images
 
-\RequirePackage{booktabs} % Required for better table rules
+% Required for better table rules
+\RequirePackage{booktabs} 
 
-\RequirePackage{caption} % Required for customising the captions
+% Required for customising the captions
+\RequirePackage{caption} 
 \captionsetup{justification=centerlast,font=small,labelfont=bf,margin=30pt}
+
+% Required for using hold position 
+% https://stackoverflow.com/questions/1673942/latex-table-positioning
+\RequirePackage{float} 
+% \restylefloat{table}
+
+% https://tex.stackexchange.com/questions/33510/how-do-i-create-the-headings-for-this-multirow-multicolum-table
+\RequirePackage{multirow}
+
+\RequirePackage{luacode}
 
 %----------------------------------------------------------------------------------------
 %	DEFINE CUSTOM THESIS INFORMATION COMMANDS
@@ -190,6 +209,7 @@
 \NewDocumentCommand{\addresses}{m}{\newcommand{\addressname}{#1}}
 \NewDocumentCommand{\university}{m}{\newcommand{\univname}{#1}}
 \NewDocumentCommand{\department}{m}{\newcommand{\deptname}{#1}}
+\NewDocumentCommand{\college}{m}{\newcommand{\collegename}{#1}}
 \NewDocumentCommand{\subject}{m}{\newcommand{\subjectname}{#1}}
 \NewDocumentCommand{\keywords}{m}{\newcommand{\keywordnames}{#1}}
 
@@ -310,53 +330,15 @@ KOMA-script documentation for details.}]{fancyhdr}
 	}%
 	{}%end alt-abstract
 }{%
-	\DeclareDocumentEnvironment{abstract}{ O{\null\vfill} }{
-		\checktoopen
+	\DeclareDocumentEnvironment{abstract}{}{
+		\clearpage
 		\tttypeout{\abstractname}
-		#1%added to be able to have abstract more than one page long
 		\thispagestyle{plain}
-		\begin{center}
-			{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
-			\bigskip
-			{\huge\textit{\abstractname} \par}
-			\bigskip
-			{\normalsize \deptname \par}% Department name
-			\bigskip
-			{\normalsize \degreename\par}% Degree name
-			\bigskip
-			{\normalsize\bfseries \@title \par}% Thesis title
-			\medskip
-			{\normalsize \byname{} \authorname \par}% Author name
-			\bigskip
-		\end{center}
+		\begin{center}{\huge{\abstractname}\par}\end{center}		
 	}
 	{
 		\vfill\null
 	}
-}
-
-\DeclareDocumentEnvironment{extraAbstract}{ O{\null\vfill} }{
-	\checktoopen
-	\tttypeout{\abstractname}
-	#1%added to be able to have abstract more than one page long
-	\thispagestyle{empty}
-	\begin{center}
-		{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
-		\bigskip
-		{\huge\textit{\abstractname} \par}
-		\bigskip
-		{\normalsize \deptname \par}% Department name
-		\bigskip
-		{\normalsize \degreename\par}% Degree name
-		\bigskip
-		{\normalsize\bfseries \@title \par}% Thesis title
-		\medskip
-		{\normalsize \byname{} \authorname \par}% Author name
-		\bigskip
-	\end{center}
-}
-{
-	\vfill\null
 }
 
 %----------------------------------------------------------------------------------------
@@ -364,10 +346,8 @@ KOMA-script documentation for details.}]{fancyhdr}
 %----------------------------------------------------------------------------------------
 
 \usepackage{xcolor}
-\colorlet{mdtRed}{red!50!black}
 \newcommand{\acknowledgementname}{Acknowledgements}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish} {\acknowledgementname}{Acknowledgements} % Acknowledgement text for English countries
-\providecaptionname{german,ngerman,austrian,naustrian}{\acknowledgementname}{Danksagung} % Acknowledgement text for Germanic countries
 
 \ifbool{consistentlayout}{
 	\DeclareDocumentEnvironment{acknowledgements}{}{%
@@ -380,7 +360,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 		\clearpage
 		\tttypeout{\acknowledgementname}
 		\thispagestyle{plain}
-		\begin{center}{\huge\textit{\acknowledgementname}\par}\end{center}
+		\begin{center}{\huge{\acknowledgementname}\par}\end{center}
 	}
 	{
 		\vfil\vfil\null
@@ -496,4 +476,3 @@ breaklinks=true,
 %----------------------------------------------------------------------------------------
 
 \endinput
-% lazyLizardTracer
