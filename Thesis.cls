@@ -264,14 +264,16 @@
 %	HEADERS AND FOOTERS
 %----------------------------------------------------------------------------------------
 
-\RequirePackage[markcase=used]{scrlayer-scrpage}
+\RequirePackage[markcase=noupper]{scrlayer-scrpage}
 \providepairofpagestyles{myThesis}{%
 	\clearpairofpagestyles%
-	\cfoot[\pagemark]{\pagemark}% Footer
+	\automark[chapter]{chapter}
+	\cfoot[\pagemark]{\pagemark}% Footer		
 }
 \ifoot{}% Inner footer
 \ofoot{}% Outer footer
-\pagestyle{myThesis}
+\setkomafont{pageheadfoot}{\normalfont} % remove italic from headings
+
 \PreventPackageFromLoading[\ClassError{\classname}{Package `fancyhdr' is
 incompatible\MessageBreak with this class}{The pagesyles are defined 
 	using package `scrlayer-scrpage', please consult the\MessageBreak 
@@ -279,6 +281,7 @@ KOMA-script documentation for details.}]{fancyhdr}
 
 \newcommand{\blank@p@gestyle}{empty}
 \newcommand{\chapter@p@gestyle}{plain}
+
 \NewDocumentCommand{\blankpagestyle}{ m }{%
 	\ClassWarning{\classname}{\string\blankpagestyle\space is
 	obsolete,\MessageBreak use \string\setblankpagestyle \space  instead}\renewcommand{\blank@p@gestyle}{}{#1}
@@ -318,54 +321,28 @@ KOMA-script documentation for details.}]{fancyhdr}
 \DeclareDocumentCommand{\abstracttitlefont}{}{}
 \newcommand{\byname}{by}
 \newcommand{\abstractname}{Abstract}
-\providecaptionname{german,ngerman,austrian,naustrian}{\byname}{von}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish}{\byname}{by}
-\ifbool{consistentlayout}{
-	\DeclareDocumentEnvironment{abstract}{ O{} }{%
-		\addchap*{\abstractname}%
-		{\chapteralign\normalsize\abstractauthorfont \authorname \par}% Author name
-		\vspace{\baselineskip}
-		{\chapteralign\parbox{.7\linewidth}{\chapteralign\normalsize\itshape\abstracttitlefont\@title}\par}% Thesis title
-		\bigskip\noindent\ignorespaces
-	}%
-	{}%end alt-abstract
-}{%
-	\DeclareDocumentEnvironment{abstract}{}{
-		\clearpage
-		\tttypeout{\abstractname}
-		\thispagestyle{plain}
-		\begin{center}{\huge{\abstractname}\par}\end{center}		
-	}
-	{
-		\vfill\null
-	}
-}
+
+\DeclareDocumentEnvironment{abstract}{}{
+	\clearpage
+	\tttypeout{\abstractname}
+	\thispagestyle{plain}
+	\begin{center}{\huge{\abstractname}\par}\end{center} 
+}{}
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS PAGE DESIGN
 %----------------------------------------------------------------------------------------
 
-\usepackage{xcolor}
 \newcommand{\acknowledgementname}{Acknowledgements}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish} {\acknowledgementname}{Acknowledgements} % Acknowledgement text for English countries
 
-\ifbool{consistentlayout}{
-	\DeclareDocumentEnvironment{acknowledgements}{}{%
-		\tttypeout{\acknowledgementname}
-		\addchap*{\acknowledgementname}
-	}
-}
-{
-	\DeclareDocumentEnvironment{acknowledgements}{}{%
-		\clearpage
-		\tttypeout{\acknowledgementname}
-		\thispagestyle{plain}
-		\begin{center}{\huge{\acknowledgementname}\par}\end{center}
-	}
-	{
-		\vfil\vfil\null
-	}
-}
+\DeclareDocumentEnvironment{acknowledgements}{}{%
+	\clearpage
+	\tttypeout{\acknowledgementname}
+	\thispagestyle{plain}
+	\begin{center}{\huge\textit{\acknowledgementname}\par}\end{center}
+}{}
 
 %----------------------------------------------------------------------------------------
 %	DECLARATION PAGE DESIGN
@@ -373,43 +350,25 @@ KOMA-script documentation for details.}]{fancyhdr}
 
 \newcommand{\authorshipname}{Declaration of Authorship}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish}{\authorshipname}{Declaration of Authorship} % Declaration of Authorship text for English countries
-\providecaptionname{german,ngerman,austrian,naustrian}{\authorshipname}{Eidesstattliche Erkl\"arung} % Declaration of Authorship text for Germanic countries
 
-\ifbool{consistentlayout}{
-	\DeclareDocumentEnvironment{declaration}{}{
-		\addchap*{\authorshipname}
-		}{}%
-}{
-	\DeclareDocumentEnvironment{declaration}{}{
-		\checktoopen
-		\tttypeout{\authorshipname}
-		\thispagestyle{plain}
-		\null\vfil
-		{\noindent\huge\bfseries\authorshipname\par\vspace{10pt}}
-	}{}
-}
+\DeclareDocumentEnvironment{declaration}{}{
+	\checktoopen
+	\tttypeout{\authorshipname}
+	\thispagestyle{plain}
+	\null\vfil
+	{\noindent\huge\bfseries\authorshipname\par\vspace{10pt}}
+}{}
 
 %----------------------------------------------------------------------------------------
 %	DEDICATION PAGE DESIGN
 %----------------------------------------------------------------------------------------
-
-\ifbool{consistentlayout}{
-	\DeclareDocumentCommand{\dedicatory}{
-		m O{\vspace*{.7\textheight} }  }{
-			\checktoopen\tttypeout{Dedicatory}
-			\markboth{}{}
-			#2
-			{\hfill\parbox{.4\textwidth}{\flushright#1\par}}
-		}
-}{
-	\newcommand\dedicatory[1]{
-		\checktoopen
-		\tttypeout{Dedicatory}
-		\null\vfil
-		\thispagestyle{plain}
-		\begin{center}{\Large\slshape #1}\end{center}
-		\vfil\null
-	}
+\newcommand\dedicatory[1]{
+	\checktoopen
+	\tttypeout{Dedicatory}
+	\null\vfil
+	\thispagestyle{plain}
+	\begin{center}{\Large\slshape #1}\end{center}
+	\vfil\null
 }
 
 
