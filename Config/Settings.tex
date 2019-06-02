@@ -22,7 +22,8 @@ headsepline, % Uncomment to get a line under the header
 	outer=3.8cm,
 	bindingoffset=.5cm,
 	top=1.5cm,
-	bottom=1.5cm
+	bottom=1.5cm,
+	head=24pt
 	%showframe, % Uncomment to show how the type block is set on the page
 }
 
@@ -31,10 +32,11 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 
-% Use the bibtex backend with the authoryear citation style (which resembles APA)
-\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
+% Bibliography
+\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
 
 % Required to generate language-dependent quotes in the bibliography
+\usepackage{fvextra}
 \usepackage[autostyle=true]{csquotes}
 
 % Usage of python inside latex

@@ -4,7 +4,7 @@
 
 \include{Config/Settings}
 
-\addbibresource{example.bib} % The filename of the bibliography
+\addbibresource{thesis.bib}
 
 \begin{document}
 
@@ -14,6 +14,7 @@
 % Default plain style 
 \pagestyle{plain}
 
+TESTING
 \include{Sections/FrontPage}
 \include{Sections/DeclarationOfAuthorship}
 \include{Sections/Quotation}
@@ -29,8 +30,10 @@
 %   C H A P T E R S
 %////////////////////////////////////////////////////////////////////////
 
-\mainmatter % Begin numeric (1,2,3...) page numbering
+% Begin numeric (1,2,3...) page numbering
+\mainmatter
 
+% Add nice headings
 \pagestyle{headings}
 
 \include{Chapters/Chapter1}
@@ -53,7 +56,7 @@
 %	B I B L I O G R A P H Y
 %////////////////////////////////////////////////////////////////////////
 
-\printbibliography[heading=bibintoc]
+\printbibliography[title={References}]
 
 %////////////////////////////////////////////////////////////////////////
 
