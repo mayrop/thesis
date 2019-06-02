@@ -6,7 +6,7 @@
 12pt, 
 english, 
 oneside,
-doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+doublespacing % Single line spacing, alternatives: onehalfspacing or doublespacing
 %draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
 %nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
 %liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
@@ -18,11 +18,11 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 %consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
 ]{Thesis} % The class file specifying the document structure
 
+% Bibliography
+\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
+
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
-
-% Use the bibtex backend with the authoryear citation style (which resembles APA)
-\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
 
 % Required to generate language-dependent quotes in the bibliography
 \usepackage[autostyle=true]{csquotes}
@@ -37,8 +37,6 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 
 % https://tex.stackexchange.com/questions/33510/how-do-i-create-the-headings-for-this-multirow-multicolum-table
 \usepackage{multirow}% http://ctan.org/pkg/multirow
-
-\addbibresource{example.bib} % The filename of the bibliography
 
 %////////////////////////////////////////////////////////////////////////
 %	MARGIN SETTINGS
@@ -57,7 +55,6 @@ doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 \begin{document}
 
 \include{Templates/Tables}
-\include{Templates/Json}
 
 %////////////////////////////////////////////////////////////////////////
 
