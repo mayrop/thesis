@@ -45,8 +45,8 @@ For the advanced chapter, one option would be to source data from the earlier el
 
 ## Reading material
 1. Presidential Election Process. https://www.usa.gov/election
-2. A Comprehensive Survey of Clustering Algorithms. Xu, D. and Tian, Y. (2015) Annals of Data Science 2 (2), 165–193. https://link.springer.com/article/10.1007/ s40745-015-0040-1
-3. Supervised machine learning: A review of classification techniques. Kotsiantis, S. B. (2007) Informatica, 31, 249-268. http://www.informatica.si/ojs-2.4.3/index.php/ informatica/article/view/148/140
+2. A Comprehensive Survey of Clustering Algorithms. Xu, D. and Tian, Y. (2015) Annals of Data Science 2 (2), 165–193. https://link.springer.com/article/10.1007/s40745-015-0040-1
+3. Supervised machine learning: A review of classification techniques. Kotsiantis, S. B. (2007) Informatica, 31, 249-268. http://www.informatica.si/ojs-2.4.3/index.php/informatica/article/view/148/140
 
 ## Dictionary
 `PST045214` - Population, 2014 estimate  
