@@ -1,0 +1,30 @@
+\begin{tabular}{c@{\qquad}ccc@{\qquad}cccc}
+	\toprule
+	\multirow{2}{*}{\raisebox{-\heavyrulewidth}{Title}} & \multicolumn{3}{c}{Category~A} & \multicolumn{4}{c}{Category~B} \\
+	\cmidrule{2-8}
+	& Item 1 & Item~2 & Item~3 & Item~1 & Item~2 & Item~3 & Item~4 \\
+	\midrule
+	$X$ & 1 & 2 & 3 & 1 & 2 & 3 & 3 \\
+	$Y$ & 1 & 2 & 3 & 1 & 2 & 3 & 143 \\
+	\bottomrule
+\end{tabular}
+
+\begin{pycode} 
+	import scipy
+	from tabulate import tabulate
+	
+	a = scipy.random.rand(3,3)
+	headers = ["Col 1", "Col 2", "Col 3"]
+\end{pycode}
+
+\begin{table}[H]
+\begin{center}
+\pyc{print(tabulate(a, colalign=("right","left","center"), headers=headers, tablefmt="latex_booktabs", floatfmt=".2f"))}
+\end{center}
+\end{table}
+	
+\begin{table}[H]
+\centering
+\pyc{print(tabulate([["F",24],["M",19]], tablefmt="latex", showindex="always"))}
+\end{table}
+

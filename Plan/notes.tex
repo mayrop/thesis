@@ -1,0 +1,125 @@
+%////////////////////////////////////////////////////////////////////////
+%   C O N F I G
+%////////////////////////////////////////////////////////////////////////
+
+\documentclass[
+12pt, 
+english, 
+oneside,
+doublespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc, % Uncomment to add the main table of contents to the table of contents
+%parskip, % Uncomment to add space between paragraphs
+%nohyperref, % Uncomment to not load the hyperref package
+headsepline, % Uncomment to get a line under the header
+%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
+%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
+]{../Thesis} % The class file specifying the document structure
+
+% Margins
+
+\geometry{
+	paper=a4paper,
+	inner=2.5cm,
+	outer=3.8cm,
+	bindingoffset=.5cm,
+	top=1.5cm,
+	bottom=1.5cm,
+	head=24pt
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+% \setlength{\headsep}{2cm}
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+
+% Bibliography
+\usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
+
+% Required to generate language-dependent quotes in the bibliography
+\usepackage{fvextra}
+\usepackage[autostyle=true]{csquotes}
+\usepackage[utf8]{inputenc}
+
+\addbibresource{thesis.bib}
+
+\begin{document}
+
+ % Pre-content pages, roman numbers
+\frontmatter
+
+% Default plain style 
+\pagestyle{plain}
+
+%////////////////////////////////////////////////////////////////////////
+%   C H A P T E R S
+%////////////////////////////////////////////////////////////////////////
+
+% Begin numeric (1,2,3...) page numbering
+\mainmatter
+
+{\bfseries\noindent\huge{Statistical Analysis Plan (Notes)}}
+
+{\noindent\Large{Assessing the impact of socio-economic factors on Presidential Primary Election voting in the USA in 2016}} % Main chapter title
+
+%---------------------------------------------------------------------------------------- Commands
+\newcommand{\myheading}[1]{\vspace{3ex}
+{\bfseries\noindent\large{#1}}\par}
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Aim}
+\noindent{What factors affect the probability of republican winning a county?}
+
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Outcome}
+- \textbf{Binary outcome}: Republican won or not (logistic regression)\par
+- \textbf{Proportion}: Either beta regression model or normal regression model applied to 
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Missingness}
+Alaska - Remove as different areas.
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Exploratory Analysis}
+- Maps of binary outcome or proportion republican\par
+- Maps of other key variables\par
+- Scatterplots / boxplots of response vs covariates - linear or non-linear relationships\par
+- Collinearity - Scatterplots between covariates
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Variable Reduction}
+- Choose based on context of variable or PCA to get independent covariates. PCA may be hard to explain.
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Modelling}
+- Logistic Regression either by stepwise or put all variable in model and remove non-significant ones one at a time.
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Compare Multiple Models}
+- Model fit measures - AIC / BIC\par
+- Prediction - RMSE based on 10 fold cross validation. Sensitivity, specificity.
+
+%----------------------------------------------------------------------------------------
+
+\myheading{Advanced Chapter}
+- Model spatial correlation - CARBayes\par
+- Clustering of counties\par
+- Other classification techniques
+
+
+%----------------------------------------------------------------------------------------
+
+%////////////////////////////////////////////////////////////////////////
+
+\end{document}  
