@@ -44,52 +44,57 @@ facts_orig <- read.csv("data/facts.csv")
 
 ########################################################################
 
-testing <- function(row, row_number) {
-  print(row[1,])
-  print(row_number)
-  if (row[row_number]["lead_party"] == "republican") {
-    if (row[row_number]["lead_votes"] <= 0.1) {
+testing <- function(lead_party, lead_votes) {
+  if (lead_party == "republican") {
+    if (lead_votes <= 0.1) {
       return(1)
     }
-    if (row[row_number]["lead_votes"] <= 0.2) {
+    if (lead_votes <= 0.2) {
       return(2)
     }
-    if (row[row_number]["lead_votes"] <= 0.3) {
+    if (lead_votes <= 0.3) {
       return(3)
     }
     
     return(4)
   }
   
-  if (row[row_number]["lead_party"] == "democrat") {
-    if (row[row_number]["lead_votes"] <= 0.1) {
+  if (lead_party == "democrat") {
+    if (lead_votes <= 0.1) {
       return(5)
     }
-    if (row[row_number]["lead_votes"] <= 0.2) {
+    if (lead_votes <= 0.2) {
       return(6)
     }
-    if (row[row_number]["lead_votes"] <= 0.3) {
+    if (lead_votes <= 0.3) {
       return(7)
     }
     
     return(8)
   }
   
-  if (row[row_number]["lead_votes"] <= 0.1) {
+  if (lead_votes <= 0.1) {
     return(9)
   }
-  if (row[row_number]["lead_votes"] <= 0.2) {
+  if (lead_votes <= 0.2) {
     return(10)
   }
-  if (row[row_number]["lead_votes"] <= 0.3) {
+  if (lead_votes <= 0.3) {
     return(11)
   }
   
   return(12)
 }
 
+
 # Adding variables that exist in the Uni dataset
-elections <- elections_orig %>%
+# Removing NA from party column
+elections <- elections_orig
+elections$party <- as.character(elections$party)
+elections[is.na(elections$party), "party"] <- "other"
+elections$party <- factor(elections$party)
+
+elections <- elections %>%
   filter(year == 2016 & !is.na(totalvotes)) %>%
   select(-year, -version, -office) %>%
   mutate(
@@ -99,7 +104,6 @@ elections <- elections_orig %>%
     total_votes=totalvotes,
     votes=candidatevotes
   ) %>% 
-  filter(fips=="01001") %>%
   group_by(fips) %>%
   mutate(
     party_won=as.numeric(row_number()==which.max(frac_votes))
@@ -107,10 +111,8 @@ elections <- elections_orig %>%
   arrange(fips, desc(frac_votes)) %>%
   mutate(
     lead_votes=frac_votes[1]-frac_votes[2],
-    lead_party=party[1]
-  ) %>%
-  mutate(
-    map_color=testing(., row_number())
+    lead_party=party[1],
+    map_color=testing(party[1], frac_votes[1]-frac_votes[2])
   ) %>%
   select(
     fips, 
@@ -126,6 +128,9 @@ elections <- elections_orig %>%
     lead_party,
     map_color,
     party_won
+  ) %>%
+  filter(
+    party == "republican"
   )
 
 elections_uni <- elections_uni %>%
@@ -144,11 +149,6 @@ facts <- facts_orig %>%
   select(
     -state_abbreviation
   )
-
-# Removing NA from party column
-elections$party <- as.character(elections$party)
-elections[is.na(elections$party), "party"] <- "other"
-elections$party <- factor(elections$party)
 
 ########################################################################
 ## Sanity checks
