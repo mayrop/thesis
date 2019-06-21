@@ -6,6 +6,14 @@
 # Datasets:
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
 # 
+#
+# For year 2016:
+#  - FIPS:4007 (Gila County), candidate other shows candidatevotes=15512, but should be: 1123
+#  - FIPS:4009 (Graham County), candidate other shows candidatevotes=8980, but should be: 806
+#  - FIPS:4011 (Greenlee County), candidate other shows candidatevotes=2208, but should be: 286
+#  
+#  https://en.wikipedia.org/wiki/2016_United_States_presidential_election_in_Arizona
+#  https://uselectionatlas.org/RESULTS/state.php?year=2016&fips=4&f=0&off=0&elect=0
 ### 
 
 # Loading Libraries
@@ -41,6 +49,40 @@ elections_uni <- read.csv("data/counties-uni.csv")
 elections_orig <- read.csv("data/counties-original.csv")
 dictionary_orig <- read.csv("data/dictionary.csv")
 facts_orig <- read.csv("data/facts.csv")
+
+
+# Changes per:
+# https://www.cdc.gov/nchs/nvss/bridged_race/county_geography-_changes2015.pdf
+elections_orig[elections_orig$FIPS==46113 & !is.na(elections_orig$FIPS),]$FIPS <- 46102
+facts_orig[facts_orig$fips==46113 &  !is.na(facts_orig$fips),]$fips <- 46102
+
+# https://www.nytimes.com/elections/2016/results/president
+# https://en.wikipedia.org/wiki/2016_United_States_presidential_election_in_Arizona
+
+#  - FIPS:4007 (Gila County), candidate other shows candidatevotes=15512, but should be: 1123
+#  - FIPS:4009 (Graham County), candidate other shows candidatevotes=8980, but should be: 806
+#  - FIPS:4011 (Greenlee County), candidate other shows candidatevotes=2208, but should be: 286
+fixes <- rbind(
+  c(4007, 1123),
+  c(4009, 806),
+  c(4011, 286)
+)
+
+# Apply fixes
+for (i in 1:nrow(fixes)) {
+  elections_orig[
+    elections_orig$FIPS == fixes[i,1] & 
+      !is.na(elections_orig$FIPS) & 
+      elections_orig$year == 2016 & 
+      elections_orig$candidate == "Other",
+    ]$candidatevotes <- fixes[i,2]
+}
+
+# Recalculate total votes
+elections_orig <- elections_orig %>%
+  group_by(year,FIPS) %>%
+  mutate(totalvotes = sum(candidatevotes)) %>%
+  ungroup()
 
 ########################################################################
 
@@ -128,15 +170,9 @@ elections <- elections %>%
     lead_party,
     map_color,
     party_won
-  ) %>%
-  filter(
-    party == "republican"
   )
 
-elections_uni <- elections_uni %>%
-  mutate(
-    fips=str_pad(FIPS, 5, pad="0")
-  )
+elections$map_color <- factor(elections$map_color)
 
 facts <- facts_orig %>%
   mutate(
@@ -191,23 +227,23 @@ all <- all[complete.cases(all),]
 
 ########################################
 
-facts_corr <- facts_orig %>%
-  select(-fips, -area_name, -state_abbreviation)
+#facts_corr <- facts_orig %>%
+#  select(-fips, -area_name, -state_abbreviation)
 
-correlation <- cor(facts_corr, use="complete.obs", method="pearson")
-melted_correlation <- melt(correlation)
+#correlation <- cor(facts_corr, use="complete.obs", method="pearson")
+#melted_correlation <- melt(correlation)
 
-ggplot(data = melted_correlation, aes(x=Var1, y=Var2, fill=value)) + 
-  geom_tile() + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+#ggplot(data = melted_correlation, aes(x=Var1, y=Var2, fill=value)) + 
+#  geom_tile() + 
+#  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ##### hclust
-correlation[correlation < 0.5] = 0
-dissimilarity = 1 - correlation
-distance = as.dist(dissimilarity)
-cluster = hclust(distance)
+#correlation[correlation < 0.5] = 0
+#dissimilarity = 1 - correlation
+#distance = as.dist(dissimilarity)
+#cluster = hclust(distance)
 
-plot(cluster, cex=0.6)
+#plot(cluster, cex=0.6)
 
 ########################################
 # Map by final election by county
@@ -215,11 +251,19 @@ spatial_data <- inner_join(all,
   get_urbn_map(map = "counties", sf = TRUE),
   by = c("fips" = "county_fips"))
 
+# counties <- get_urbn_map(map = "counties", sf = TRUE)
+# missing<- counties[!(counties$county_fips %in% all$fips),]
+
+# Graham County
+# Gila County
+# Greenly County
+
 spatial_data %>% 
   filter(party=="republican") %>% 
   ggplot() + 
-  geom_sf(mapping = aes(fill = frac_votes), color = "#ffffff", size = 0.1)  + 
-  scale_fill_gradientn(colors = c("#3D6C99", "#FFFFFF", "#C64526"))
+  geom_sf(aes(fill = map_color)) + 
+  scale_fill_manual(values = c("#db8f7f", "#cf6a55", "#c4462d", "#c32b0d","#C0CCDD", "#819ABB", "#3D6C99", "#0e4375", "#cbe1b9"))
+
 ########################################
 
 
