@@ -87,45 +87,25 @@ elections_orig <- elections_orig %>%
 ########################################################################
 
 testing <- function(lead_party, lead_votes) {
-  if (lead_party == "republican") {
-    if (lead_votes <= 0.1) {
-      return(1)
-    }
-    if (lead_votes <= 0.2) {
-      return(2)
-    }
-    if (lead_votes <= 0.3) {
-      return(3)
-    }
-    
-    return(4)
+  if (lead_votes <= 0.1) {
+    val <- 1
+  } else if (lead_votes <= 0.2) {
+    val <- 2
+  } else if (lead_votes <= 0.3) {
+    val <- 3
+  } else {
+    val <- 4  
   }
   
   if (lead_party == "democrat") {
-    if (lead_votes <= 0.1) {
-      return(5)
-    }
-    if (lead_votes <= 0.2) {
-      return(6)
-    }
-    if (lead_votes <= 0.3) {
-      return(7)
-    }
-    
-    return(8)
+    val <- val + 4
   }
   
-  if (lead_votes <= 0.1) {
-    return(9)
+  if (lead_party %in% c("democrat", "republican")) {
+    return(val)
   }
-  if (lead_votes <= 0.2) {
-    return(10)
-  }
-  if (lead_votes <= 0.3) {
-    return(11)
-  }
-  
-  return(12)
+
+  stop("error happened")
 }
 
 
@@ -173,6 +153,7 @@ elections <- elections %>%
   )
 
 elections$map_color <- factor(elections$map_color)
+elections$party_won <- factor(elections$party_won)
 
 facts <- facts_orig %>%
   mutate(
@@ -262,23 +243,17 @@ spatial_data %>%
   filter(party=="republican") %>% 
   ggplot() + 
   geom_sf(aes(fill = map_color)) + 
-  scale_fill_manual(values = c("#db8f7f", "#cf6a55", "#c4462d", "#c32b0d","#C0CCDD", "#819ABB", "#3D6C99", "#0e4375", "#cbe1b9"))
+  scale_fill_manual(values = c("#db8f7f", "#cf6a55", "#c4462d", "#c32b0d","#C0CCDD", "#819ABB", "#3D6C99", "#0e4375"))
+
+spatial_data %>% 
+  filter(party=="republican") %>% 
+  ggplot() + 
+  geom_sf(aes(fill = party_won)) + 
+  scale_fill_manual(values = c("#c32b0d","#0e4375"))
 
 ########################################
 
 
-# backup of rows without data
-missing_elections <- elections[is.na(elections$state),]
-
-elections <- elections[!is.na(elections$state),]
-elections <- elections %>%
-  select(-state, -state_abbreviation)
-
-# skim for checking missing values
-elections_orig %>% skim()
-facts %>% 
-  select(-area_name, -state_abbreviation) %>% 
-  skim()
 
 ########################################
 # Map by final election by county
