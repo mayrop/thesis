@@ -155,7 +155,9 @@ elections <- elections %>%
 elections$map_color <- factor(elections$map_color)
 elections$party_won <- factor(elections$party_won)
 
-facts <- facts_orig %>%
+# Working with the facts
+
+facts_filtered <- facts_orig %>%
   mutate(
     fips = str_pad(fips, 5, pad="0"),
     state_facts = state_abbreviation
@@ -164,8 +166,114 @@ facts <- facts_orig %>%
     state_facts != ""
   ) %>%
   select(
-    -state_abbreviation
+    -state_abbreviation,
+    -RHI325214, -RHI425214, -RHI525214, -RHI625214, # percent of indian, asian, hawaiian and two or more races
+    -SBO115207, -SBO215207, -SBO315207, -SBO415207, -SBO515207, -SBO015207, # number of firms by race
+    -HSD310213, -HSG096213, -HSG445213, -HSD410213, -HSG495213, # housing
+    -INC110213, # household income
+    -POP010210, # population 2010
+    -BZA110213, -BZA115213, # private nonfarm employment
+    -RTN130207, -RTN131207, # retail sales 2007
+    -MAN450207, # manufacturers shipments 2007 
+    -WTN220207, # merchangt wholesaler sales 2007
+    -AFN120207, # accomodation and food services
+    -LND110210, # land area in square miles
+    -PST120214, # population percent change
+    -POP715213, -POP645213, -POP815213, # population related to foreign born persons and language other than english
+    -LFE305213 # mean travel time
   )
+
+# Double checking
+facts_filtered %>% 
+  select(-fips, -area_name, -state_facts) %>% 
+  skim()
+
+# Renaming variables for better readibility
+facts_vars <- facts_filtered %>%
+  mutate(
+    # population
+    population_2014 = PST045214,
+    population_density_2010 = POP060210,
+    
+    # age
+    age_under_5_percent_2014 = (AGE135214 * 100) / PST045214,
+    age_under_18_percent_2014 = (AGE295214 * 100) / PST045214,
+    age_over_65_percent_2014 = (AGE775214 * 100) / PST045214,
+    
+    # education
+    education_high_school_percent_2013 = EDU635213,
+    education_bachelor_percent_2013 = EDU685213,
+    
+    # race
+    race_white_percent_2014 = RHI125214, 
+    race_afroamerican_percent_2014 = RHI225214,
+    race_latino_percent_2014 = RHI725214,
+    race_white_no_hispanic_percent_2014 = RHI825214,
+    
+    # sex
+    females_percentage_2014 = (SEX255214 * 100) / PST045214,
+    
+    # housing & buildings & businesses
+    hbb_building_permits_rate_2014 = BPS030214 / PST045214,
+    hbb_private_nonfarm_establishments_rate_2014 = ifelse(PST045214 == 0, 0, BZA010213 / PST045214),
+    hbb_housing_units_rate_2014 = HSG010214 / PST045214,
+    hbb_nonemployer_establishments_rate_2013 = ifelse(PST045214 == 0, 0, NES010213 / PST045214),
+    hbb_businesses_rate = ifelse(PST045214 == 0, 0, SBO001207 / PST045214),
+    
+    # money
+    income_per_capita_income_2013 = INC910213,
+    income_persons_below_poverty_2013 = PVY020213,
+    
+    # veterans
+    veterans_percent_2013 = ifelse(PST045214 == 0, 0, (VET605213 * 100) / PST045214)
+  ) %>%
+  select(
+    # ids 
+    fips, 
+    area_name, 
+    state_facts,
+    
+    # population
+    population_2014,
+    population_density_2010,
+    
+    # age
+    age_under_5_percent_2014,
+    age_under_18_percent_2014,
+    age_over_65_percent_2014,
+    
+    # education
+    education_high_school_percent_2013,
+    education_bachelor_percent_2013,
+    
+    # race
+    race_white_percent_2014, 
+    race_afroamerican_percent_2014,
+    race_latino_percent_2014,
+    race_white_no_hispanic_percent_2014,
+    
+    # sex
+    females_percentage_2014,
+    
+    # housing & buildings & businesses
+    hbb_building_permits_rate_2014,
+    hbb_private_nonfarm_establishments_rate_2014,
+    hbb_housing_units_rate_2014,
+    hbb_nonemployer_establishments_rate_2013,
+    hbb_businesses_rate,
+    
+    # money
+    income_per_capita_income_2013,
+    income_persons_below_poverty_2013,
+    
+    # veterans
+    veterans_percent_2013
+  )
+
+# Analysis
+facts_vars %>% 
+  select(-fips, -area_name, -state_facts) %>% 
+  skim()
 
 ########################################################################
 ## Sanity checks
@@ -188,10 +296,14 @@ sum(elections[elections$candidate=="Donald Trump",]$party_won)
 sum(elections_uni$candidatevotesR)
 sum(elections[elections$candidate=="Donald Trump",]$votes)
 
+if (ncol(facts_vars) != ncol(facts_filtered)) {
+  stop("You're missing variables")
+}
+
 ########################################################################
 
 all <- full_join(
-  elections, facts, by="fips"
+  elections, facts_vars, by="fips"
 )
 
 # Missing values
@@ -230,7 +342,8 @@ all <- all[complete.cases(all),]
 # Map by final election by county
 spatial_data <- inner_join(all,
   get_urbn_map(map = "counties", sf = TRUE),
-  by = c("fips" = "county_fips"))
+  by = c("fips" = "county_fips")
+)
 
 # counties <- get_urbn_map(map = "counties", sf = TRUE)
 # missing<- counties[!(counties$county_fips %in% all$fips),]
@@ -252,23 +365,11 @@ spatial_data %>%
   scale_fill_manual(values = c("#c32b0d","#0e4375"))
 
 ########################################
-
-
-
-########################################
 # Map by final election by county
 spatial_data %>% 
   ggplot() + 
-  geom_sf(mapping = aes(fill = EDU685213), color = "#ffffff", size = 0.05)
+  geom_sf(mapping = aes(fill = education_high_school_percent_2013), color = "#ffffff", size = 0.05)
 ########################################
 
-# RHI125214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214, RHI725214, RHI825214
-# POP715213, POP645213, POP815213
-# EDU685213, EDU635213
-# SBO001207, SBO315207, SBO115207, SBO215207, SBO515207, SBO415207, SBO015207
-
-elections_ggpairs <- elections %>%
-  select(fracvotesR, partywonR, SBO001207, SBO315207, SBO115207, SBO215207, SBO515207, SBO415207, SBO015207) %>%
-  mutate(partywonR = as.character(partywonR))
 
 ggpairs(elections_ggpairs, aes(colour = partywonR, alpha = 0.4))
