@@ -17,29 +17,22 @@
 ### 
 
 # Loading Libraries
-library(sf)
-library(ggplot2)
-library(GGally)
-library(gridExtra)
-library(dplyr)
-library(moderndive)
-#library(ISLR)
-library(skimr)
-library(plotly)
-library(tidyr)
-library(tidyverse)
-# install.packages('devtools')
-# devtools::install_github("UrbanInstitute/urbnmapr")
-library(urbnmapr)
-#library(datasets)
-#library(knitr)
-#library(janitor)
-#library(infer)
-#library(broom)
-#library(sjPlot)
-#library(stats)
-#library(readr)
-library(reshape2) # correlation headmap
+libraries <- c(
+  "sf", "ggplot2", "GGally", "gridExtra", "dplyr", "moderndive", "skimr", "plotly", "tidyr", "tidyverse", "urbnmapr", "reshape2", "corrplot", "caret",
+  "ellipse", # https://stackoverflow.com/questions/44502469/r-featureplot-returning-null
+  "e1071",
+  "psych", "betareg", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
+  "car", "rcompanion"
+)
+
+
+for (library in libraries) {
+  if (!require(library, character.only = TRUE)) {
+    install.packages(library)
+  }
+
+  library(library, character.only = TRUE)
+}
 
 # Setting project directory
 setwd("~/Github/thesis/Project")
@@ -136,6 +129,15 @@ elections <- elections %>%
     lead_party=party[1],
     map_color=testing(party[1], frac_votes[1]-frac_votes[2])
   ) %>%
+  arrange(fips, party) %>%
+  mutate(
+    frac_democrat=frac_votes[1],
+    frac_republican=frac_votes[3],
+    votes_democrat=votes[1],
+    votes_republican=votes[3],
+    prop_democrat=votes[1]/(votes[1] + votes[3]),
+    prop_republican=votes[3]/(votes[1] + votes[3])
+  ) %>%
   select(
     fips, 
     state, 
@@ -145,7 +147,13 @@ elections <- elections %>%
     party, 
     total_votes, 
     votes, 
-    frac_votes, 
+    votes_democrat,
+    votes_republican,
+    prop_democrat,
+    prop_republican,
+    frac_votes,
+    frac_democrat,
+    frac_republican,
     lead_votes,
     lead_party,
     map_color,
@@ -243,7 +251,7 @@ facts_vars <- facts_filtered %>%
     age_over_65_percent_2014,
     
     # education
-    education_high_school_percent_2013,
+    # education_high_school_percent_2013,
     education_bachelor_percent_2013,
     
     # race
@@ -253,14 +261,14 @@ facts_vars <- facts_filtered %>%
     race_white_no_hispanic_percent_2014,
     
     # sex
-    females_percentage_2014,
+    # females_percentage_2014,
     
     # housing & buildings & businesses
     hbb_building_permits_rate_2014,
-    hbb_private_nonfarm_establishments_rate_2014,
+    # hbb_private_nonfarm_establishments_rate_2014,
     hbb_housing_units_rate_2014,
-    hbb_nonemployer_establishments_rate_2013,
-    hbb_businesses_rate,
+    # hbb_nonemployer_establishments_rate_2013,
+    # hbb_businesses_rate,
     
     # money
     income_per_capita_income_2013,
@@ -282,7 +290,9 @@ facts_vars %>%
 sum(complete.cases(elections)) / nlevels(elections$party)
 
 # Complete cases: Facts
-sum(complete.cases(facts))
+sum(complete.cases(facts_vars))
+nrow(facts_vars) # TODO - fix
+facts_vars <- facts_vars[complete.cases(facts_vars),]
 
 # Number of rows
 nrow(elections_uni)
@@ -290,15 +300,17 @@ nrow(elections) / nlevels(elections$party)
 
 # Number of counties won by candidate
 sum(elections_uni$partywonR)
-sum(elections[elections$candidate=="Donald Trump",]$party_won)
+sum(as.numeric(elections[elections$candidate=="Donald Trump",]$party_won)) # CHECK!
 
 # Total of votes per candidate
 sum(elections_uni$candidatevotesR)
 sum(elections[elections$candidate=="Donald Trump",]$votes)
 
-if (ncol(facts_vars) != ncol(facts_filtered)) {
-  stop("You're missing variables")
-}
+#if (ncol(facts_vars) != ncol(facts_filtered)) {
+#  stop("You're missing variables")
+#}
+
+sum(complete.cases(facts_vars))
 
 ########################################################################
 
@@ -318,8 +330,59 @@ all[is.na(all$area_name) & all$state_abbreviation != "AK",]
 # Removing incomplete rows
 all <- all[complete.cases(all),]
 
-########################################
+#################################3
 
+# https://www.datacamp.com/community/tutorials/logistic-regression-R
+correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
+corrplot(correlations, method="circle")
+
+correlations <- cor(all[,-which(colnames(all) %in% c("fips", "map_color", "party_won", "state", "state_abbreviation", "county", "candidate", "party", "lead_party", "area_name", "state_facts"))])
+corrplot(correlations, method="circle")
+
+pairs_matrix <- all %>%
+  filter(
+    party == "republican"
+  ) %>%
+  ungroup() %>%
+  select(
+    -fips, -state, -state_abbreviation, -county, -candidate, -party, -total_votes, -votes, -lead_votes, -lead_party,
+    -map_color, -area_name, -state_facts
+  )
+
+pairs(pairs_matrix[,c(1,c(3:7))], col=pairs_matrix$party_won)
+pairs(pairs_matrix[,c(8:12)], col=pairs_matrix$party_won)
+pairs(pairs_matrix[,c(13:17)], col=pairs_matrix$party_won)
+
+x <- pairs_matrix[,-c(2)]
+y <- pairs_matrix[,]$party_won
+
+scales <- list(x=list(relation="free"), y=list(relation="free"))
+featurePlot(x=log(x), y=y, plot="density", scales=scales)
+featurePlot(x=x, y=y, plot="density", scales=scales)
+
+featurePlot(x=log(x[c(1,c(3:7))]), y=y, plot="pairs", scales=scales)
+featurePlot(x=log(x[c(8:12)]), y=y, plot="pairs", scales=scales)
+featurePlot(x=log(x[c(13:18)]), y=y, plot="pairs", scales=scales)
+featurePlot(x=log(x[c(19:21)]), y=y, plot="pairs", scales=scales)
+
+
+
+glm.fit <- glm(party_won ~ 
+                 log(population_2014) +
+                 log(population_density_2010) +
+                 log(age_under_5_percent_2014) +
+                 log(age_under_18_percent_2014) +
+                 log(age_over_65_percent_2014) +
+                 log(education_bachelor_percent_2013) + 
+                 log(race_white_percent_2014) +
+                 log(race_afroamerican_percent_2014 + 1) + 
+                 log(race_latino_percent_2014) +
+                 log(race_white_no_hispanic_percent_2014) + 
+                 log(hbb_housing_units_rate_2014) +
+                 log(income_per_capita_income_2013) + 
+                 log(income_persons_below_poverty_2013) + 
+                 log(veterans_percent_2013), data = all, family = binomial)
+summary(glm.fit)
 #facts_corr <- facts_orig %>%
 #  select(-fips, -area_name, -state_abbreviation)
 
@@ -373,3 +436,105 @@ spatial_data %>%
 
 
 ggpairs(elections_ggpairs, aes(colour = partywonR, alpha = 0.4))
+
+
+# there is a guy that is buying bottles of wine in batches
+# wine weights different depending on the quality
+# this guy only buys good quality but he thinks he is getting mixed good and bad quality
+# he weighted 9 randomly bottles of wine he got and splitted them between good & bad
+
+# question is, is there a significant difference in weights between the two groups?
+# what's the prob that they are actually mixed?
+
+
+#####################################3
+
+good <- c(
+  36.43,
+  36.58,
+  36.57,
+  36.6,
+  36.37,
+  36.369
+)
+
+bad <- c(
+  36.88,
+  36.55,
+  36.71
+)
+
+# test for equal variance
+var.test(bad, good)
+# p-value = 0.3894
+# we can assume the variacnes of both samples are homogenous
+
+# H0: Two means are the same
+# H1: Two means are different
+test <- t.test(good, bad, var.equal = TRUE)
+test
+
+# t = -2.5185, df = 7, p-value = 0.0399
+# 95 percent confidence interval:
+# -0.43948285 -0.01385048
+
+p.2 <-power.t.test(n=9, delta=.2, sd=1, sig.level=.05, type='one.sample')
+p.5 <- power.t.test(n=9, delta=.5, sd=1, sig.level=.05, type='one.sample')
+p.8 <-power.t.test(n=9, delta=.8, sd=1, sig.level=.05, type='one.sample')
+
+round(rbind(p.2=p.2$power, p.5=p.5$power, p.8=p.8$power), 2)  
+
+
+wilcox.test(good, bad)
+
+#####################################3
+
+
+# votes
+ResponseVotes = as.matrix(cbind(all[all$party=="republican", "votes_republican"], all[all$party=="republican", c("votes_democrat")]))
+
+mydata <- all[all$party == "republican", c("education_bachelor_percent_2013", "prop_republican")]
+
+model.log = glm(ResponseVotes ~ log(education_bachelor_percent_2013),
+                data = mydata,
+                family = binomial(link="logit"))
+
+
+
+glm.fit <- glm(party_won ~ 
+                 log(population_2014) +
+                 log(population_density_2010) +
+                 log(age_under_5_percent_2014) +
+                 log(age_under_18_percent_2014) +
+                 log(age_over_65_percent_2014) +
+                 log(education_bachelor_percent_2013) + 
+                 log(race_white_percent_2014) +
+                 log(race_afroamerican_percent_2014 + 1) + 
+                 log(race_latino_percent_2014) +
+                 log(race_white_no_hispanic_percent_2014) + 
+                 log(hbb_housing_units_rate_2014) +
+                 log(income_per_capita_income_2013) + 
+                 log(income_persons_below_poverty_2013) + 
+                 log(veterans_percent_2013), data = all[all$party=="republican",], family = binomial)
+
+Anova(glm.fit, 
+      type="II", 
+      test="Wald")
+
+nagelkerke(glm.fit)
+
+plotPredy(data  = mydata,
+          y     = prop_republican,
+          x     = education_bachelor_percent_2013,
+          model = model.log,
+          type  = "response",    # Needed for logistic regression
+          xlab  = "Grade",
+          ylab  = "Proportion passing")
+
+
+plot(fitted(model.beta),
+     residuals(model.beta))
+
+
+### More diagnostic plots: plot(model.beta)
+
