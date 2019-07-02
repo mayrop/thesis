@@ -7,7 +7,7 @@ facts_filtered <- facts_orig %>%
   ) %>%
   filter(
     state_facts != "",
-    PST045214 != 0 # TODO -> CHECK, fips == 51515
+    PST045214 != 0 # fips == 51515, this is not in elections, so not a problem
   ) %>%
   select(
     -state_abbreviation

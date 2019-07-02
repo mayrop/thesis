@@ -29,7 +29,7 @@ libraries <- c(
   "urbnmapr", "reshape2", "corrplot", "caret",
   "ellipse", # https://stackoverflow.com/questions/44502469/r-featureplot-returning-null
   "psych", "betareg", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
-  "car", "rcompanion", "e1071", "sf"
+  "car", "rcompanion", "e1071", "sf", "ROCR"
 )
 
 libraries <- c(
@@ -37,7 +37,8 @@ libraries <- c(
   "stringr", # for str_pad
   "skimr",
   "tidyr",
-  "ggplot2"
+  "ggplot2",
+  "ROCR"
 )
 
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
@@ -47,7 +48,7 @@ source("http://www.sthda.com/upload/rquery_cormat.r")
 
 for (library in libraries) {
   if (!require(library, character.only = TRUE)) {
-    #install.packages(library)
+    install.packages(library)
   }
 
   library(library, character.only = TRUE)
@@ -231,7 +232,6 @@ ggplot(mydata, aes(logit, predictor.value))+
   theme_bw() + 
   facet_wrap(~predictors, scales = "free_y")
 
-library(ROCR)
 
 p <- predict(glm.fit, train, type="response")
 pr <- prediction(p, train$party_won)
@@ -269,24 +269,3 @@ empLogitPlot(log(republican$education_bachelor_percent_2013), as.numeric(republi
 
 
 
-
-
-
-
-data("PimaIndiansDiabetes2", package = "mlbench")
-PimaIndiansDiabetes2 <- na.omit(PimaIndiansDiabetes2)
-# Fit the logistic regression model
-model <- glm(diabetes ~., data = PimaIndiansDiabetes2, 
-             family = binomial)
-# Predict the probability (p) of diabete positivity
-probabilities <- predict(model, type = "response")
-predicted.classes <- ifelse(probabilities > 0.5, "pos", "neg")
-head(predicted.classes)
-
-mydata <- PimaIndiansDiabetes2 %>%
-  dplyr::select_if(is.numeric) 
-predictors <- colnames(mydata)
-# Bind the logit and tidying the data for plot
-mydata <- mydata %>%
-  mutate(logit = log(probabilities/(1-probabilities))) %>%
-  gather(key = "predictors", value = "predictor.value", -logit)
