@@ -49,34 +49,6 @@ facts_orig <- read.csv("data/facts.csv")
 elections_orig[elections_orig$FIPS==46113 & !is.na(elections_orig$FIPS),]$FIPS <- 46102
 facts_orig[facts_orig$fips==46113 &  !is.na(facts_orig$fips),]$fips <- 46102
 
-# https://www.nytimes.com/elections/2016/results/president
-# https://en.wikipedia.org/wiki/2016_United_States_presidential_election_in_Arizona
-
-#  - FIPS:4007 (Gila County), candidate other shows candidatevotes=15512, but should be: 1123
-#  - FIPS:4009 (Graham County), candidate other shows candidatevotes=8980, but should be: 806
-#  - FIPS:4011 (Greenlee County), candidate other shows candidatevotes=2208, but should be: 286
-fixes <- rbind(
-  c(4007, 1123),
-  c(4009, 806),
-  c(4011, 286)
-)
-
-# Apply fixes
-for (i in 1:nrow(fixes)) {
-  elections_orig[
-    elections_orig$FIPS == fixes[i,1] & 
-      !is.na(elections_orig$FIPS) & 
-      elections_orig$year == 2016 & 
-      elections_orig$candidate == "Other",
-    ]$candidatevotes <- fixes[i,2]
-}
-
-# Recalculate total votes
-elections_orig <- elections_orig %>%
-  group_by(year,FIPS) %>%
-  mutate(totalvotes = sum(candidatevotes)) %>%
-  ungroup()
-
 ########################################################################
 
 testing <- function(lead_party, lead_votes) {
@@ -226,16 +198,16 @@ facts_vars <- facts_filtered %>%
     hbb_private_nonfarm_establishments_rate_2014 = ifelse(PST045214 == 0, 0, BZA010213 / PST045214),
     hbb_housing_units_rate_2014 = HSG010214 / PST045214,
     hbb_nonemployer_establishments_rate_2013 = ifelse(PST045214 == 0, 0, NES010213 / PST045214),
-    hbb_businesses_rate = ifelse(PST045214 == 0, 0, SBO001207 / PST045214),
+    hbb_businesses_rate_2007 = ifelse(PST045214 == 0, 0, SBO001207 / PST045214),
     
     # money
     income_per_capita_income_2013 = INC910213,
-    income_persons_below_poverty_2013 = PVY020213,
+    income_persons_below_poverty_percent_2013 = PVY020213,
     
     # veterans
     veterans_percent_2013 = ifelse(PST045214 == 0, 0, (VET605213 * 100) / PST045214)
   ) %>%
-  select(
+  dplyr::select(
     # ids 
     fips, 
     area_name, 
@@ -251,7 +223,7 @@ facts_vars <- facts_filtered %>%
     age_over_65_percent_2014,
     
     # education
-    # education_high_school_percent_2013,
+    education_high_school_percent_2013,
     education_bachelor_percent_2013,
     
     # race
@@ -265,14 +237,14 @@ facts_vars <- facts_filtered %>%
     
     # housing & buildings & businesses
     hbb_building_permits_rate_2014,
-    # hbb_private_nonfarm_establishments_rate_2014,
+    hbb_private_nonfarm_establishments_rate_2014,
     hbb_housing_units_rate_2014,
-    # hbb_nonemployer_establishments_rate_2013,
-    # hbb_businesses_rate,
+    hbb_nonemployer_establishments_rate_2013,
+    hbb_businesses_rate_2007,
     
     # money
     income_per_capita_income_2013,
-    income_persons_below_poverty_2013,
+    income_persons_below_poverty_percent_2013,
     
     # veterans
     veterans_percent_2013
@@ -329,22 +301,23 @@ all[is.na(all$area_name) & all$state_abbreviation != "AK",]
 
 # Removing incomplete rows
 all <- all[complete.cases(all),]
+republican <- all[all$party=="republican",]
 
 #################################3
 
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
 correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
-corrplot(correlations, method="circle")
+corrplot::corrplot(correlations, method="circle")
 
 correlations <- cor(all[,-which(colnames(all) %in% c("fips", "map_color", "party_won", "state", "state_abbreviation", "county", "candidate", "party", "lead_party", "area_name", "state_facts"))])
-corrplot(correlations, method="circle")
+corrplot::corrplot(correlations, method="pie")
 
 pairs_matrix <- all %>%
   filter(
     party == "republican"
   ) %>%
   ungroup() %>%
-  select(
+  dplyr::select(
     -fips, -state, -state_abbreviation, -county, -candidate, -party, -total_votes, -votes, -lead_votes, -lead_party,
     -map_color, -area_name, -state_facts
   )
@@ -352,25 +325,30 @@ pairs_matrix <- all %>%
 pairs(pairs_matrix[,c(1,c(3:7))], col=pairs_matrix$party_won)
 pairs(pairs_matrix[,c(8:12)], col=pairs_matrix$party_won)
 pairs(pairs_matrix[,c(13:17)], col=pairs_matrix$party_won)
+pairs(pairs_matrix[,c(18:23)], col=pairs_matrix$party_won)
 
-x <- pairs_matrix[,-c(2)]
+x <- pairs_matrix[,-c(2,8)]
 y <- pairs_matrix[,]$party_won
 
 scales <- list(x=list(relation="free"), y=list(relation="free"))
-featurePlot(x=log(x), y=y, plot="density", scales=scales)
-featurePlot(x=x, y=y, plot="density", scales=scales)
+featurePlot(x=log(x), y, plot="density", scales=scales)
 
 featurePlot(x=log(x[c(1,c(3:7))]), y=y, plot="pairs", scales=scales)
 featurePlot(x=log(x[c(8:12)]), y=y, plot="pairs", scales=scales)
 featurePlot(x=log(x[c(13:18)]), y=y, plot="pairs", scales=scales)
 featurePlot(x=log(x[c(19:21)]), y=y, plot="pairs", scales=scales)
 
+featurePlot(x=log(x[c(1:7)]), y=y, plot="density", scales=scales)
+featurePlot(x=log(x[c(8:12)]), y=y, plot="density", scales=scales)
+featurePlot(x=log(x[c(13:18)]), y=y, plot="density", scales=scales)
+featurePlot(x=log(x[c(19:21)]), y=y, plot="density", scales=scales)
+
 
 
 glm.fit <- glm(party_won ~ 
                  log(population_2014) +
                  log(population_density_2010) +
-                 log(age_under_5_percent_2014) +
+                 #log(age_under_5_percent_2014) +
                  log(age_under_18_percent_2014) +
                  log(age_over_65_percent_2014) +
                  log(education_bachelor_percent_2013) + 
@@ -381,7 +359,7 @@ glm.fit <- glm(party_won ~
                  log(hbb_housing_units_rate_2014) +
                  log(income_per_capita_income_2013) + 
                  log(income_persons_below_poverty_2013) + 
-                 log(veterans_percent_2013), data = all, family = binomial)
+                 log(veterans_percent_2013), data = all[all$party=="republican",], family = binomial)
 summary(glm.fit)
 #facts_corr <- facts_orig %>%
 #  select(-fips, -area_name, -state_abbreviation)
@@ -494,42 +472,52 @@ wilcox.test(good, bad)
 ResponseVotes = as.matrix(cbind(all[all$party=="republican", "votes_republican"], all[all$party=="republican", c("votes_democrat")]))
 
 mydata <- all[all$party == "republican", c("education_bachelor_percent_2013", "prop_republican")]
+mydata$log_education_bachelor_percent_2013 <- log(mydata$education_bachelor_percent_2013)
 
-model.log = glm(ResponseVotes ~ log(education_bachelor_percent_2013),
+model.log = glm(ResponseVotes ~ log_education_bachelor_percent_2013,
                 data = mydata,
                 family = binomial(link="logit"))
 
-
+republican <- all[all$party == "republican", ]
+republican$log_race_white_percent_2014 <- log(republican$race_white_percent_2014)
+republican$log_population_2014 <- log(republican$population_2014)
+republican$log_population_density_2010 <- log(republican$population_density_2010)
+republican$log_age_under_18_percent_2014 <- log(republican$age_under_18_percent_2014)
+republican$log_education_bachelor_percent_2013 <- log(republican$education_bachelor_percent_2013)
+republican$log_race_afroamerican_percent_2014 <- log(republican$race_afroamerican_percent_2014) + 1
+republican$log_race_latino_percent_2014 <- log(republican$race_latino_percent_2014)
+republican$log_hbb_housing_units_rate_2014 <- log(republican$hbb_housing_units_rate_2014)
+republican$log_veterans_percent_2013 <- log(republican$veterans_percent_2013)
 
 glm.fit <- glm(party_won ~ 
-                 log(population_2014) +
-                 log(population_density_2010) +
-                 log(age_under_5_percent_2014) +
-                 log(age_under_18_percent_2014) +
-                 log(age_over_65_percent_2014) +
-                 log(education_bachelor_percent_2013) + 
-                 log(race_white_percent_2014) +
-                 log(race_afroamerican_percent_2014 + 1) + 
-                 log(race_latino_percent_2014) +
-                 log(race_white_no_hispanic_percent_2014) + 
-                 log(hbb_housing_units_rate_2014) +
-                 log(income_per_capita_income_2013) + 
-                 log(income_persons_below_poverty_2013) + 
-                 log(veterans_percent_2013), data = all[all$party=="republican",], family = binomial)
+                 log_population_2014 +
+                 log_population_density_2010 +
+                 #log_age_under_5_percent_2014 +
+                 log_age_under_18_percent_2014 +
+                 #log_age_over_65_percent_2014 +
+                 log_education_bachelor_percent_2013 + 
+                 log_race_white_percent_2014 +
+                 #log_race_afroamerican_percent_2014 + 
+                 log_race_latino_percent_2014 +
+                 #log_race_white_no_hispanic_percent_2014 + 
+                 log_hbb_housing_units_rate_2014 +
+                 #log_income_per_capita_income_2013 + 
+                 #log_income_persons_below_poverty_2013 + 
+                 log_veterans_percent_2013, data = republican, family = binomial(link="logit"))
+
+
+
+plotPredy(data  = republican,
+          y     = prop_republican,
+          x     = income_persons_below_poverty_2013,
+          model = glm.fit,
+          type  = "response")
 
 Anova(glm.fit, 
       type="II", 
       test="Wald")
 
 nagelkerke(glm.fit)
-
-plotPredy(data  = mydata,
-          y     = prop_republican,
-          x     = education_bachelor_percent_2013,
-          model = model.log,
-          type  = "response",    # Needed for logistic regression
-          xlab  = "Grade",
-          ylab  = "Proportion passing")
 
 
 plot(fitted(model.beta),
@@ -538,3 +526,150 @@ plot(fitted(model.beta),
 
 ### More diagnostic plots: plot(model.beta)
 
+
+
+data("GasolineYield", package="betareg")
+GasolineYield
+model <- betareg(yield ~ batch + temp, data=GasolineYield)
+summary(model)
+plot(model)
+
+data("FoodExpenditure", package="betareg")
+FoodExpenditureNew <- FoodExpenditure[order(FoodExpenditure$income),]
+FoodExpenditureNew$prop <- FoodExpenditure$food/FoodExpenditure$income
+
+FoodExpenditure <- FoodExpenditureNew
+
+fe_lm <- lm(I(food/income) ~ income + persons, data=FoodExpenditure)
+bptest(fe_lm)
+
+fe_beta <- betareg(I(food/income) ~ income + persons, data=FoodExpenditure)
+bptest(fe_beta)
+
+fe_beta2 <- betareg(I(food/income) ~ income + persons | persons, data=FoodExpenditure)
+bptest(fe_beta2)
+
+summary(fe_beta)
+summary(fe_beta2)
+
+redblueblack <- hcl(c(0, 260, 0), c(90, 90, 0), c(40, 40, 0))
+
+plot(I(food/income) ~ income, data = FoodExpenditure,
+     xlab = "Household income", ylab = "Proportion of food expenditures",
+     main = "Food expenditures data", type = "n", ylim = c(0.04, 0.57))
+
+points(I(food/income) ~ income, data = FoodExpenditure, cex = persons / 1.5, pch = 19,
+       col = rev(gray.colors(7))[persons])
+
+points(I(food/income) ~ income, data = FoodExpenditure, cex = persons / 1.5)
+
+lines(10:100, predict(fe_lm, 
+                      newdata = data.frame(income = 10:100, persons = mean(FoodExpenditure$persons))),
+      col = redblueblack[3], lwd = 2, lty = 2)
+lines(10:100, predict(fe_beta, 
+                      newdata = data.frame(income = 10:100, persons = mean(FoodExpenditure$persons))),
+      col = redblueblack[2], lwd = 2, lty = 5)
+lines(10:100, predict(fe_beta2, 
+                      newdata = data.frame(income = 10:100, persons = mean(FoodExpenditure$persons))),
+      col = redblueblack[1], lwd = 2)
+
+abline(fe_lm)
+
+#http://alexschell.github.io/emplogit.html
+#https://bookdown.org/roback/bookdown-bysh/ch-logreg.html
+
+empLogitPlot <- function(x, y, nclass = floor(sqrt(length(x)))) {
+  require(arm)
+  require(ggplot2)
+  
+  logit <- function (x, eps = 0.05) log((eps + x)/(1 - x + eps))
+  
+  binned.df <- as.data.frame(binned.resids(x = x, y = y, nclass = nclass)[[1]])
+  
+  p <- qplot(x = xbar, y = logit(ybar), data = binned.df, geom = c("point", "smooth"), method = "lm", se = FALSE) + 
+    ylim(min(logit(binned.df$ybar)), max(logit(binned.df$ybar)))
+  return(p)
+}
+
+emplogit = function(x, y, binsize = NULL, ci = FALSE, probit = FALSE,
+                    prob = FALSE, main = NULL, xlab = "", ylab = ""){
+  # x         vector with values of the independent variable
+  # y         vector of binary responses
+  # binsize   integer value specifying bin size (optional)
+  # ci        logical value indicating whether to plot approximate
+  #           confidence intervals (not supported as of 02/08/2015)
+  # probit    logical value indicating whether to plot probits instead
+  #           of logits
+  # prob      logical value indicating whether to plot probabilities
+  #           without transforming
+  #
+  # the rest are the familiar plotting options
+  
+  if (length(x) != length(y))
+    stop("x and y lengths differ")
+  if (any(y < 0 | y > 1))
+    stop("y not between 0 and 1")
+  if (length(x) < 100 & is.null(binsize))
+    stop("Less than 100 observations: specify binsize manually")
+  
+  if (is.null(binsize)) binsize = min(round(length(x)/10), 50)
+  
+  if (probit){
+    link = qnorm
+    if (is.null(main)) main = "Empirical probits"
+  } else {
+    link = function(x) log(x/(1-x))
+    if (is.null(main)) main = "Empirical logits"
+  }
+  
+  sort = order(x)
+  x = x[sort]
+  y = y[sort]
+  a = seq(1, length(x), by=binsize)
+  b = c(a[-1] - 1, length(x))
+  
+  prob = xmean = ns = rep(0, length(a)) # ns is for CIs
+  for (i in 1:length(a)){
+    range = (a[i]):(b[i])
+    prob[i] = mean(y[range])
+    xmean[i] = mean(x[range])
+    ns[i] = b[i] - a[i] + 1 # for CI 
+  }
+  
+  extreme = (prob == 1 | prob == 0)
+  prob[prob == 0] = min(prob[!extreme])
+  prob[prob == 1] = max(prob[!extreme])
+  
+  g = link(prob) # logits (or probits if probit == TRUE)
+  
+  linear.fit = lm(g[!extreme] ~ xmean[!extreme])
+  b0 = linear.fit$coef[1]
+  b1 = linear.fit$coef[2]
+  
+  loess.fit = loess(g[!extreme] ~ xmean[!extreme])
+  
+  plot(xmean, g, main=main, xlab=xlab, ylab=ylab)
+  abline(b0,b1)
+  lines(loess.fit$x, loess.fit$fitted, lwd=2, lty=2)
+}
+
+
+set.seed(1234)
+n = 2000
+x1 = exp(rnorm(n/2, mean=0, sd=1))
+x2 = exp(rnorm(n/2, mean=1, sd=1))
+x = c(x1, x2)
+y = c(rep(0, n/2), rep(1, n/2))
+
+emplogit(x, y)
+emplogit(log(republican$population_density_2010), as.numeric(republican$party_won) - 1)
+empLogitPlot(log(republican$population_density_2010), as.numeric(republican$party_won) - 1)
+
+
+plot(republican$age_under_5_percent_2014, log((as.numeric(!(as.numeric(republican$party_won) - 1)) + 1/2)/((as.numeric(republican$party_won) - 1) + 1/2)), xlab = "concentration", ylab = "logit")
+
+
+republican$
+
+m1 = glm(y ~ x, family="binomial")
+m2 = glm(y ~ log(x), family="binomial")
