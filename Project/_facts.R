@@ -73,13 +73,13 @@ facts_vars <- facts_filtered %>%
     housing_median_value_in_housing_units_2013 = HSG495213,
     
     # Businesses    
-    businesses_rate = SBO001207,
-    businesses_indian_rate = SBO115207,
-    businesses_asian_rate = SBO215207,
-    businesses_afroamerican_rate = SBO315207,
-    businesses_hispanic_rate = SBO415207,
-    businesses_hawaiian_rate = SBO515207,
-    businesses_women_rate = SBO015207,
+    businesses_rate = SBO001207 / PST045214,
+    businesses_indian_rate = SBO115207 / PST045214,
+    businesses_asian_rate = SBO215207 / PST045214,
+    businesses_afroamerican_rate = SBO315207 / PST045214,
+    businesses_hispanic_rate = SBO415207 / PST045214,
+    businesses_hawaiian_rate = SBO515207 / PST045214,
+    businesses_women_rate = SBO015207 / PST045214,
     
     # money
     income_median_household_income_2013 = INC110213,

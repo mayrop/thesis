@@ -19,3 +19,4 @@
 - https://www.kaggleusercontent.com/kf/167576/eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..rwVGtMP2AeRGqG1N_sSUGQ.iG8_pShVF90PGQXJaGvRxFrTyw1LOm0QR6RO5i9ImjfqezfItWpddGa-9vm7AS_3ZaZCRTN0e-iU1j5IRcbC4Qmu30qRANoQjtBzX5oE70SJK1k8uOC2M377CWeln4uuOYPfHv2WfJkfBcFa058-X0NHWvsKoAKHa00ia8NPdco.URy5B32Vo5mVXjmmpdfLQQ/output.html
 - https://www.kaggle.com/kirandipta/do-we-vote-in-our-own-best-interest
 - https://www.kaggle.com/mpoegel/i-love-the-poorly-educated?scriptVersionId=171731
+- https://www.analyticsvidhya.com/blog/2018/05/improve-model-performance-cross-validation-in-python-r/

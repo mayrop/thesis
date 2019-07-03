@@ -96,24 +96,47 @@ test <- republican[indices == 2,]
 val <- republican[indices == 3,]
 
 # 11 category cols
-category_cols <- c("fips", "map_color", "party_won", "state", "state_abbreviation", "county", "candidate", "party", "lead_party", "area_name", "state_facts")
+category_cols <- c(
+  "fips", 
+  "map_color", 
+  "party_won", 
+  "state", 
+  "state_abbreviation", 
+  "county", 
+  "candidate", 
+  "party", 
+  "lead_party", 
+  "area_name", 
+  "state_facts"
+)
+
+non_demographic_cols <- c(
+  "total_votes", 
+  "votes", 
+  "votes_democrat", 
+  "votes_republican", 
+  "prop_democrat", 
+  "frac_votes", 
+  "frac_democrat", 
+  "frac_republican", 
+  "lead_votes"
+)
+
 train_continous <- train[,-which(colnames(train) %in% category_cols)]
 
-correlation_table <- rquery.cormat(train_continous, type="flatten", graph=FALSE)$r
-# Only interested in the cols correlated to prop_republican
-correlation_table <- correlation_table[correlation_table$col=="prop_republican" | correlation_table$row=="prop_republican",]
-  
-correlation_table$cor_abs <- abs(correlation_table$cor)
-correlation_table <- correlation_table[order(-correlation_table$cor_abs),]
+correlation_table <- rquery.cormat(train_continous, type="flatten", graph=FALSE)$r %>% 
+  # Only interested in the cols correlated to prop_republican
+  filter(column=="prop_republican" | row=="prop_republican") %>% 
+  mutate(cor_abs = abs(cor)) %>% 
+  arrange(desc(cor_abs))
 
-corrs <- correlation_table[correlation_table$cor_abs > 0.20,]
-corrs_cols <- unique(c(as.character(corrs[,1]),as.character(corrs[,2])))
-non_demographic_cols <- c("total_votes", "votes", "votes_democrat", "votes_republican", "prop_democrat", "frac_votes", "frac_democrat", "frac_republican", "lead_votes")
+correlated_columns <- correlation_table[correlation_table$cor_abs > 0.20,]
+correlated_columns <- unique(c(as.character(correlated_columns[,1]), as.character(correlated_columns[,2])))
 
-corrs_cols <- corrs_cols[!(corrs_cols %in% non_demographic_cols)]
+correlated_columns <- correlated_columns[!(correlated_columns %in% non_demographic_cols)]
 #correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
 
-correlations <- cor(facts_vars[,which(colnames(facts_vars) %in% corrs_cols)])
+correlations <- cor(facts_vars[,which(colnames(facts_vars) %in% correlated_columns)])
 corrplot(correlations, method="circle")
 
 #correlations <- cor(train[,-which(colnames(train) %in% c("fips", "map_color", "party_won", "state", "state_abbreviation", "county", "candidate", "party", "lead_party", "area_name", "state_facts"))])
@@ -122,7 +145,7 @@ corrplot(correlations, method="circle")
 cols <- colnames(republican)
 cols_facts <- colnames(facts_vars)
 
-for (col in corrs_cols) {
+for (col in correlated_columns) {
   if (length(which(cols==col))==0) {
     next
   }
@@ -141,21 +164,81 @@ source("_plots.R")
 
 # votes
 
-my_new_0 <- 0.001
-log(0.01)
-train <- train %>% 
-  mutate(
-    race_asian_percent_2014=ifelse(race_asian_percent_2014==0, my_new_0, race_asian_percent_2014),
-    race_afroamerican_percent_2014=ifelse(race_afroamerican_percent_2014==0, my_new_0, race_afroamerican_percent_2014),
-    businesses_asian_rate=ifelse(businesses_asian_rate==0, my_new_0, businesses_asian_rate),
-    businesses_afroamerican_rate=ifelse(businesses_afroamerican_rate==0, my_new_0, businesses_afroamerican_rate),
-    population_foreign_percent_2013=ifelse(population_foreign_percent_2013==0, my_new_0, population_foreign_percent_2013),
-    businesses_hispanic_rate=ifelse(businesses_hispanic_rate==0, my_new_0, businesses_hispanic_rate),
-    random_accomodation_and_food_sales_rate_2007=ifelse(random_accomodation_and_food_sales_rate_2007==0, my_new_0, random_accomodation_and_food_sales_rate_2007),
-    random_retail_sales_rate_2007=ifelse(random_retail_sales_rate_2007==0, my_new_0, random_retail_sales_rate_2007),
-    businesses_hispanic_rate=ifelse(businesses_hispanic_rate==0, my_new_0, businesses_hispanic_rate),
-    businesses_rate=ifelse(businesses_rate==0, my_new_0, businesses_rate)
-  )
+
+glm.fit.complete <- glm(party_won ~ 
+                 race_white_no_hispanic_percent_2014 +
+                 log(age_over_65_percent_2014) +
+                 housing_units_in_multiunit_2013 +
+                 housing_homeownership_rate_2013 +
+                 education_bachelor_percent_2013 +           
+                 housing_median_value_in_housing_units_2013 +
+                 log(race_asian_percent_2014 + 1) +
+                 race_afroamerican_percent_2014 +             
+                 population_foreign_percent_2013 +
+                 log(population_2014) +
+                 log(population_density_2010) +                    
+                 veterans_percent_2013 +
+                 income_per_capita_income_past_12_month_2013 +
+                 random_retail_sales_per_capita_2007 +
+                 businesses_afroamerican_rate +
+                 race_latino_percent_2014, data = train, family = binomial)
+
+
+glm.fit <- glm(party_won ~ 
+                 race_white_no_hispanic_percent_2014 +
+                 log(age_over_65_percent_2014) +
+                # housing_units_in_multiunit_2013 +
+                 housing_homeownership_rate_2013 +
+                 education_bachelor_percent_2013 +           
+               #  housing_median_value_in_housing_units_2013 +
+                 log(race_asian_percent_2014 + 1) +
+                 #race_afroamerican_percent_2014 +             
+                 population_foreign_percent_2013 +
+                 log(population_2014) +
+                 #log(population_density_2010) +                    
+                 veterans_percent_2013
+                 #income_per_capita_income_past_12_month_2013
+                 #random_retail_sales_per_capita_2007 +
+                 #businesses_afroamerican_rate +
+                 #race_latino_percent_2014
+               , data = train, family = binomial)
+
+glm.fit2 <- glm(party_won ~ 
+                 race_white_no_hispanic_percent_2014 +
+                 log(age_over_65_percent_2014) +
+                 housing_homeownership_rate_2013 +
+                 education_bachelor_percent_2013 +           
+                 housing_median_value_in_housing_units_2013 +
+                 log(race_asian_percent_2014 + 1) +
+                 #race_afroamerican_percent_2014 +             
+                 population_foreign_percent_2013 +
+                 log(population_2014) +
+                 #log(population_density_2010) +                    
+                 veterans_percent_2013 +
+                 income_per_capita_income_past_12_month_2013
+               #random_retail_sales_per_capita_2007 +
+               #businesses_afroamerican_rate +
+               #race_latino_percent_2014
+               , data = train, family = binomial)
+
+glm.fit3 <- glm(party_won ~ 
+                  race_white_no_hispanic_percent_2014 +
+                  log(age_over_65_percent_2014) +
+                  housing_units_in_multiunit_2013 +
+                  education_bachelor_percent_2013 +           
+                  housing_median_value_in_housing_units_2013 +
+                  log(race_asian_percent_2014 + 1) +
+                  #race_afroamerican_percent_2014 +             
+                  population_foreign_percent_2013 +
+                  log(population_2014) +
+                  #log(population_density_2010) +                    
+                  veterans_percent_2013 +
+                  income_per_capita_income_past_12_month_2013
+                #random_retail_sales_per_capita_2007 +
+                #businesses_afroamerican_rate +
+                #race_latino_percent_2014
+                , data = train, family = binomial)
+
 
 glm.fit <- glm(party_won ~ 
                 # housing_units_in_multiunit_2013 +
@@ -183,6 +266,10 @@ glm.fit <- glm(party_won ~
                , data = train, family = binomial)
 
 
+# http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
+HLTest(glm.fit, g=8)
+
+pR2(glm.fit)
 
 glm.probs <- predict(glm.fit, type="response")
 glm.pred <- ifelse(glm.probs > 0.5, 1, 0)
@@ -233,8 +320,8 @@ ggplot(mydata, aes(logit, predictor.value))+
   facet_wrap(~predictors, scales = "free_y")
 
 
-p <- predict(glm.fit, train, type="response")
-pr <- prediction(p, train$party_won)
+p <- predict(glm.fit3, test, type="response")
+pr <- prediction(p, test$party_won)
 prf <- performance(pr, measure = "tpr", x.measure = "fpr")
 plot(prf)
 
@@ -259,12 +346,6 @@ summary(glm.fit)
 
 emplogit(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
 empLogitPlot(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
-
-
-
-
-
-
 
 
 

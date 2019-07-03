@@ -242,3 +242,46 @@ plot(fitted(model.beta),
      residuals(model.beta))
 
 
+
+
+
+
+library(caret)
+data(iris)
+data(GermanCredit)
+
+
+Train <- createDataPartition(GermanCredit$Class, p=0.6, list=FALSE)
+training <- GermanCredit[Train,]
+testing <- GermanCredit[-Train,]
+
+mod_fit <- train(Class ~ Age + ForeignWorker + Property.RealEstate + Housing.Own + 
+                   CreditHistory.Critical,  data=training, method="glm", family="binomial")
+exp(coef(mod_fit$finalModel))
+
+print(mod_fit)
+
+predict(mod_fit, newdata=testing)
+predict(mod_fit, newdata=testing, type="prob")
+
+mod_fit_one <- glm(Class ~ Age + ForeignWorker + Property.RealEstate + Housing.Own + 
+                     CreditHistory.Critical, data=training, family="binomial")
+
+mod_fit_two <- glm(Class ~ Age + ForeignWorker, data=training, family="binomial")
+
+anova(mod_fit_one, mod_fit_two, test ="Chisq")
+
+library(lmtest)
+lrtest(mod_fit_one, mod_fit_two)
+
+library(pscl)
+pR2(mod_fit_one)
+
+library(MKmisc)
+HLgof.test(fit = fitted(mod_fit_one), obs = training$Class)
+HLgof.test(fit = fitted(glm.fit), obs = train$party_won)
+
+library(ResourceSelection)
+hoslem.test(train$party_won, fitted(glm.fit), g=10)
+
+# https://www.r-bloggers.com/evaluating-logistic-regression-models/
