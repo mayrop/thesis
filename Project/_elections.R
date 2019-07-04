@@ -9,8 +9,8 @@ elections[is.na(elections$party), "party"] <- "other"
 elections$party <- factor(elections$party)
 
 elections <- elections %>%
-  filter(year == 2016 & !is.na(totalvotes)) %>%
-  select(-year, -version, -office) %>%
+  dplyr::filter(year == 2016 & !is.na(totalvotes)) %>%
+  dplyr::select(-year, -version, -office) %>%
   mutate(
     frac_votes=candidatevotes / totalvotes,
     fips=str_pad(FIPS, 5, pad="0"),
@@ -26,7 +26,8 @@ elections <- elections %>%
   mutate(
     lead_votes=frac_votes[1]-frac_votes[2],
     lead_party=party[1],
-    map_color=get_map_color(party[1], frac_votes[1]-frac_votes[2])
+    map_color=get_map_color(party[1], frac_votes[1]-frac_votes[2]),
+    party_won_num=as.numeric(party_won)
   ) %>%
   arrange(fips, party) %>%
   mutate(
@@ -37,7 +38,7 @@ elections <- elections %>%
     prop_democrat=votes[1]/(votes[1] + votes[3]),
     prop_republican=votes[3]/(votes[1] + votes[3])
   ) %>%
-  select(
+  dplyr::select(
     fips, 
     state, 
     state_abbreviation, 
@@ -56,7 +57,8 @@ elections <- elections %>%
     lead_votes,
     lead_party,
     map_color,
-    party_won
+    party_won,
+    party_won_num
   )
 
 elections$map_color <- factor(elections$map_color)

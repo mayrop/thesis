@@ -9,7 +9,7 @@ facts_filtered <- facts_orig %>%
     state_facts != "",
     PST045214 != 0 # fips == 51515, this is not in elections, so not a problem
   ) %>%
-  select(
+  dplyr::select(
     -state_abbreviation
   )
 
@@ -51,7 +51,7 @@ facts_vars <- facts_filtered %>%
     race_two_races_percent_2014 = RHI625214,
     
     # sex
-    females_percentage_2014 = SEX255214,
+    females_percent_2014 = SEX255214,
     
     # housing & buildings & businesses
     hbb_building_permits_rate_2014 = BPS030214 / PST045214,
@@ -73,13 +73,13 @@ facts_vars <- facts_filtered %>%
     housing_median_value_in_housing_units_2013 = HSG495213,
     
     # Businesses    
-    businesses_rate = SBO001207 / PST045214,
-    businesses_indian_rate = SBO115207 / PST045214,
-    businesses_asian_rate = SBO215207 / PST045214,
-    businesses_afroamerican_rate = SBO315207 / PST045214,
-    businesses_hispanic_rate = SBO415207 / PST045214,
-    businesses_hawaiian_rate = SBO515207 / PST045214,
-    businesses_women_rate = SBO015207 / PST045214,
+    businesses_rate_2007 = SBO001207 / PST045214,
+    businesses_indian_rate_2007 = SBO115207 / PST045214,
+    businesses_asian_rate_2007 = SBO215207 / PST045214,
+    businesses_afroamerican_rate_2007 = SBO315207 / PST045214,
+    businesses_hispanic_rate_2007 = SBO415207 / PST045214,
+    businesses_hawaiian_rate_2007 = SBO515207 / PST045214,
+    businesses_women_rate_2007 = SBO015207 / PST045214,
     
     # money
     income_median_household_income_2013 = INC110213,
@@ -174,6 +174,7 @@ facts_vars <- facts_filtered %>%
     -VET605213,
     
     # reduntant
+      # reduntant with population_2014 and population_density_2010
     -population_2010,
     
       # reduntant with race_white_no_hispanic_percent_2014
@@ -183,7 +184,7 @@ facts_vars <- facts_filtered %>%
     -population_other_language_percent_2013,
 
       # reduntant with nonfarm_private_employment_percent_change_2013 
-      #& nonfarm_private_establishments_rate_2014
+      # & nonfarm_private_establishments_rate_2014
     -nonfarm_private_employment_rate_2013 
   )
 
