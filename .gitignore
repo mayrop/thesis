@@ -264,3 +264,8 @@ TSWLatexianTemp*
 
 # glossaries-extra
 *.ist
+
+# temp files
+*.RData
+*.Rhistory
+*/__latexindent_temp.tex
