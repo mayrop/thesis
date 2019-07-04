@@ -6,20 +6,8 @@
 # Datasets:
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
 # 
-#
-# For year 2016:
-#  - FIPS:4007 (Gila County), candidate other shows candidatevotes=15512, but should be: 1123
-#  - FIPS:4009 (Graham County), candidate other shows candidatevotes=8980, but should be: 806
-#  - FIPS:4011 (Greenlee County), candidate other shows candidatevotes=2208, but should be: 286
-#  
-#  https://en.wikipedia.org/wiki/2016_United_States_presidential_election_in_Arizona
-#  https://uselectionatlas.org/RESULTS/state.php?year=2016&fips=4&f=0&off=0&elect=0
 ### 
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
-
-# ip <- as.data.frame(installed.packages())
-# head(ip)
-# ip <- subset(ip, !grepl("MRO", ip$LibPath))
 
 
 # Loading Libraries
