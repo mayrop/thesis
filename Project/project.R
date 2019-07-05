@@ -79,10 +79,9 @@ source("_maps.R")
 ##########
 # setting dataset
 
-indices <- sample(seq(1, 3), size = nrow(republican), replace = TRUE, prob = c(.6, .2, .2))
-train <- republican[indices == 1,]
-test <- republican[indices == 2,]
-val <- republican[indices == 3,]
+indices <- sample(seq(1, 3), size = nrow(republican), replace = TRUE, prob = c(.6, .4))
+train.data <- republican[indices == 1,]
+test.data <- republican[indices == 2,]
 
 # 11 category cols
 category_cols <- c(
@@ -113,7 +112,7 @@ non_demographic_cols <- c(
   "lead_votes"
 )
 
-train_continous <- train[,-which(colnames(train) %in% category_cols)]
+train_continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
 
 correlations_table <- rquery.cormat(train_continous, type="flatten", graph=FALSE)$r %>% 
   filter(!(column %in% non_demographic_cols) & !(row %in% non_demographic_cols)) %>% 
@@ -161,7 +160,7 @@ source("_plots.R")
 
 # votes
 
-plot_party_won_boxplot("income_per_capita_income_past_12_month_2013")
+plot_party_won_boxplot("race_two_races_percent_2014")
 
 # only the correlated columns are here, for adding more check first the distribution
 
@@ -173,12 +172,14 @@ mapping_columns <- list(
   "race_asian_percent_2014" = "race_asian_percent_2014",
   "race_white_no_hispanic_percent_2014" = "race_white_no_hispanic_percent_2014",
   "race_afroamerican_percent_2014" = "race_afroamerican_percent_2014",
+  "race_two_races_percent_2014" = "race_two_races_percent_2014",
   
   "veterans_percent_2013" = "veterans_percent_2013",
   
   "housing_units_in_multiunit_2013" = "housing_units_in_multiunit_2013",
   "housing_homeownership_rate_2013" = "housing_homeownership_rate_2013",
   "housing_median_value_in_housing_units_2013" = "housing_median_value_in_housing_units_2013",
+  "housing_households_rate_2013" = "housing_households_rate_2013",
   
   "age_over_65_percent_2014" = "age_over_65_percent_2014",
   "age_under_18_percent_2014" = "age_under_18_percent_2014",
@@ -207,12 +208,39 @@ for (predictor in predictors) {
 formula <- paste("party_won_num ~ ", formula, sep="")
 formula <- (as.formula(formula))
 
-model <- glm(formula, data=train, family = binomial)
-p_values <- coef(summary(model))[,4]
-
+model <- glm(formula, data=train.data, family = binomial)
 summary(model)
-evaluate_model(model, test, "party_won_num")
-plot(evaluate_model(model, test, "party_won_num")$performance)
+
+all_p_values <- coef(summary(model))[,4]
+p_values <- all_p_values[all_p_values < 0.05]
+
+formula <- ""
+
+for (i in 1:length(names(p_values))) {
+  predictor <- names(p_values)[i]
+  if (predictor == "(Intercept)") {
+    next
+  }
+  
+  sep <- ifelse(formula=="", " ", " + ")
+  formula <- paste(formula, predictor, sep=sep)
+}
+
+formula <- paste("party_won_num ~ ", formula, sep="")
+formula <- (as.formula(formula))
+model <- glm(formula, data=train.data, family = binomial)
+
+
+accuracy(list(model), plotit=TRUE, digits=3)
+
+evaluate <- evaluate_model(model, test.data, "party_won_num")
+RMSPE(y_pred = evaluate$y_predictions + 1, y_true = evaluate$y_true + 1)
+
+
+model3 <- glm("party_won_num ~population_foreign_percent_2013 + housing_units_in_multiunit_2013 
+              + race_white_no_hispanic_percent_2014 + education_bachelor_percent_2013 + veterans_percent_2013  ", data=train.data, family = binomial)
+
+plot(evaluate_model(model, test.data, "party_won_num")$performance)
 
 ##### Penalized logistic regression
 # https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html

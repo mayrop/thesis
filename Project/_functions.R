@@ -57,6 +57,8 @@ evaluate_model <- function(model, data, response_column, prob=0.5) {
   return(list(
     performance=prf,
     auc=auc,
+    y_predictions=as.vector(predictions),
+    y_true=data[[index_response]],
     mean_predictions=mean(predictions == data[index_response]),
     table_predictions=table(predictions, data[[index_response]])
   ))
