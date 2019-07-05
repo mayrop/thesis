@@ -7,7 +7,6 @@
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
 # 
 ### 
-# https://www.datacamp.com/community/tutorials/logistic-regression-R
 
 
 # Loading Libraries
@@ -112,7 +111,10 @@ non_demographic_cols <- c(
   "lead_votes"
 )
 
-train_continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
+train_continous <- republican[,-which(colnames(republican) %in% category_cols)]
+
+continous <- republican[,-which(colnames(republican) %in% category_cols)]
+continous <- continous[,-which(names(continous) %in% non_demographic_cols)]
 
 correlations_table <- rquery.cormat(train_continous, type="flatten", graph=FALSE)$r %>% 
   filter(!(column %in% non_demographic_cols) & !(row %in% non_demographic_cols)) %>% 
@@ -233,19 +235,17 @@ model <- glm(formula, data=train.data, family = binomial)
 
 accuracy(list(model), plotit=TRUE, digits=3)
 
-evaluate <- evaluate_model(model, test.data, "party_won_num")
+evaluate <- evaluate_model(model3, test.data, "party_won_num")
 RMSPE(y_pred = evaluate$y_predictions + 1, y_true = evaluate$y_true + 1)
 
 
 model3 <- glm("party_won_num ~population_foreign_percent_2013 + housing_units_in_multiunit_2013 
-              + race_white_no_hispanic_percent_2014 + education_bachelor_percent_2013 + veterans_percent_2013  ", data=train.data, family = binomial)
+              + race_white_no_hispanic_percent_2014 + education_bachelor_percent_2013 + veterans_percent_2013  ", data=train.data, family = binomial(link="cauchit"))
 
 plot(evaluate_model(model, test.data, "party_won_num")$performance)
 
 ##### Penalized logistic regression
-# https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
-# https://www4.stat.ncsu.edu/~reich/BigData/code/glmnet.html
-# http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
+
 x <- model.matrix(formula, train)
 newx <- model.matrix(formula, test)
 
@@ -262,14 +262,7 @@ coef(cv.elasticnet, s = "lambda.min")
 
 predict(cv.elasticnet, newx=newx, s = "lambda.min", type = "class")
 
-# todo
-# try: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
 
-
-
-##### Removing predictors
-
-# http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
 
 HLTest(model.ridge, g=6)
 
@@ -290,5 +283,17 @@ emplogit(log(republican$education_bachelor_percent_2013), as.numeric(republican$
 empLogitPlot(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
 
 
+ggplot(data = melted_correlation, aes(x=X1, y=X2, fill=value)) + 
+  geom_tile() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+correlation <- cor(continous, use="complete.obs", method="pearson")
+melted_correlation <- melt(correlation)
+correlation[correlation < 0.5] = 0
+
+dissimilarity = 1 - correlation
+
+distance = as.dist(dissimilarity)
+cluster = hclust(distance)
+plot(cluster, cex=0.6)
 

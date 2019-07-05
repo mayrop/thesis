@@ -20,3 +20,32 @@
 - https://www.kaggle.com/kirandipta/do-we-vote-in-our-own-best-interest
 - https://www.kaggle.com/mpoegel/i-love-the-poorly-educated?scriptVersionId=171731
 - https://www.analyticsvidhya.com/blog/2018/05/improve-model-performance-cross-validation-in-python-r/
+
+# https://www.datacamp.com/community/tutorials/logistic-regression-R
+# https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
+# https://www4.stat.ncsu.edu/~reich/BigData/code/glmnet.html
+# http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
+# todo
+# try: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
+
+http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
+
+
+http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
+# Functions from class
+
+https://www.r-bloggers.com/evaluating-logistic-regression-models/
+# CHECK!
+Evaluating Logistic Regression Models
+- Goodness of Fit
+- Likelihood Ratio Test
+- Hosmer-Lemeshow Test
+- Statistical Tests for Individual Predictors
+- Wald Test
+- Variable Importance
+- Validation of Predicted Values
+- Classification Rate
+- K-Fold Cross Validation
+
+file:///Users/mayrop/Downloads/275_LR_ACoP_poster_2015-10-01%20(1).pdf
+- Explanation about multicollinearity and ridge regression - for SAS - check again
