@@ -111,7 +111,7 @@ non_demographic_cols <- c(
   "lead_votes"
 )
 
-train_continous <- republican[,-which(colnames(republican) %in% category_cols)]
+train_continous <- train[,-which(colnames(train) %in% category_cols)]
 
 continous <- republican[,-which(colnames(republican) %in% category_cols)]
 continous <- continous[,-which(names(continous) %in% non_demographic_cols)]
