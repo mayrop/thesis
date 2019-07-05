@@ -17,7 +17,7 @@ libraries <- c(
   "urbnmapr", "reshape2", "corrplot", "caret",
   "ellipse", # https://stackoverflow.com/questions/44502469/r-featureplot-returning-null
   "psych", "betareg", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
-  "car", "rcompanion", "e1071", "sf", "ROCR"
+  "car", "rcompanion", "e1071", "sf", "ROCR", "glmnet"
 )
 
 libraries <- c(
@@ -26,7 +26,8 @@ libraries <- c(
   "skimr",
   "tidyr",
   "ggplot2",
-  "ROCR"
+  "ROCR",
+  "glmnet" # regularized logistic regression
 )
 
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
@@ -51,8 +52,6 @@ elections_uni <- read.csv("data/counties-uni.csv")
 elections_orig <- read.csv("data/counties-original.csv")
 dictionary_orig <- read.csv("data/dictionary.csv")
 facts_orig <- read.csv("data/facts.csv")
-
-significant_p_value <- 0.05
 
 # Changes per:
 # https://www.cdc.gov/nchs/nvss/bridged_race/county_geography-_changes2015.pdf
@@ -90,6 +89,7 @@ category_cols <- c(
   "fips", 
   "map_color", 
   "party_won", 
+  "party_won_num",
   "state", 
   "state_abbreviation", 
   "county", 
@@ -127,7 +127,7 @@ republican_correlation_table <- rquery.cormat(train_continous, type="flatten", g
   mutate(cor_abs = abs(cor)) %>% 
   arrange(desc(cor_abs))
 
-predictors <- correlation_table[republican_correlation_table$cor_abs > 0.2,]
+predictors <- republican_correlation_table[republican_correlation_table$cor_abs > 0.2,]
 predictors <- unique(c(as.character(predictors[,1]), as.character(predictors[,2])))
 
 predictors <- predictors[!(predictors %in% non_demographic_cols)]
@@ -161,7 +161,7 @@ source("_plots.R")
 
 # votes
 
-plot_party_won_boxplot("random_retail_sales_per_capita_2007")
+plot_party_won_boxplot("income_per_capita_income_past_12_month_2013")
 
 # only the correlated columns are here, for adding more check first the distribution
 
@@ -170,7 +170,7 @@ mapping_columns <- list(
   "population_density_2010" = "log2(population_density_2010)",
   "population_foreign_percent_2013" = "population_foreign_percent_2013",
   
-  "race_asian_percent_2014" = "log2(race_asian_percent_2014 + 1)",
+  "race_asian_percent_2014" = "race_asian_percent_2014",
   "race_white_no_hispanic_percent_2014" = "race_white_no_hispanic_percent_2014",
   "race_afroamerican_percent_2014" = "race_afroamerican_percent_2014",
   
@@ -184,8 +184,8 @@ mapping_columns <- list(
   "age_under_18_percent_2014" = "age_under_18_percent_2014",
   "age_under_5_percent_2014" = "age_under_5_percent_2014",
   
-  "random_retail_sales_per_capita_2007" = "random_retail_sales_per_capita_2007",
   "income_persons_below_poverty_percent_2013" = "income_persons_below_poverty_percent_2013",
+  "income_per_capita_income_past_12_month_2013" = "income_per_capita_income_past_12_month_2013",
   
   "education_bachelor_percent_2013" = "education_bachelor_percent_2013"
   
@@ -210,39 +210,40 @@ formula <- (as.formula(formula))
 model <- glm(formula, data=train, family = binomial)
 p_values <- coef(summary(model))[,4]
 
+summary(model)
+evaluate_model(model, test, "party_won_num")
+plot(evaluate_model(model, test, "party_won_num")$performance)
 
 ##### Penalized logistic regression
+# https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
+# https://www4.stat.ncsu.edu/~reich/BigData/code/glmnet.html
 # http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
 x <- model.matrix(formula, train)
+newx <- model.matrix(formula, test)
+
 y <- train$party_won_num
 
-glmnet(x, y, family = "binomial", alpha = 0, lambda = NULL)
+# alpha = 1 -> lasso, 0 -> ridge
+cv.elasticnet <- cv.glmnet(x, y, alpha = 0.5, family = "binomial",  type.measure = "deviance")
+
+plot(cv.elasticnet)
+coef(cv.elasticnet, s = "lambda.min")
+
+
+
+
+predict(cv.elasticnet, newx=newx, s = "lambda.min", type = "class")
+
+# todo
+# try: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
+
+
 
 ##### Removing predictors
 
-as.data.frame(p_values[order(p_values)])
-
-formula <- ""
-
-
-library(glmnet)
-
-for (predictor in predictors) {
-  if (!(predictor %in% names(mapping_columns))) {
-    warning(paste("missing formula for predictor: ", predictor))
-    next
-  }
-  
-  predictor <- mapping_columns[[predictor]]
-  print("p_value")
-  print(p_values[[predictor]])
-  #sep <- ifelse(formula=="", " ", " + ")
-  #formula <- paste(formula, mapping_columns[[predictor]], sep=sep)
-}
-
-
 # http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
-HLTest(glm.fit, g=6)
+
+HLTest(model.ridge, g=6)
 
 pR2(glm.fit)
 
