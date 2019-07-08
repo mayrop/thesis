@@ -93,7 +93,7 @@ facts_vars <- facts_filtered %>%
     other_merchant_sales_rate_2007 = WTN220207 / PST045214,
     other_manufacters_shipments_sales_rate_2007 = MAN450207 / PST045214,
     # random_retail_sales_2007 = RTN130207,
-    other_retail_sales_rate_2007 = RTN131207 / PST045214,
+    other_retail_sales_rate_2007 = RTN130207 / PST045214,
     other_retail_sales_per_capita_2007 = RTN131207,
     
     # veterans
