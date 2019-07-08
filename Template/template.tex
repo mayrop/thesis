@@ -16,8 +16,7 @@ doublespacing % Single line spacing, alternatives: onehalfspacing or doublespaci
 %headsepline, % Uncomment to get a line under the header
 %chapterinoneline, % Uncomment to place the chapter title next to the number on one line
 %consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
-]{Thesis} % The class file specifying the document structure
-
+]{../Thesis} % The class file specifying the document structure
 % Bibliography
 \usepackage[backend=biber,style=numeric,sorting=ynt]{biblatex}
 
@@ -30,6 +29,7 @@ doublespacing % Single line spacing, alternatives: onehalfspacing or doublespaci
 % Usage of python inside latex
 \usepackage[gobble=auto]{pythontex}
 \usepackage{pythontex}
+\usepackage{longtable}
 
 % https://stackoverflow.com/questions/1673942/latex-table-positioning
 \usepackage{float}
