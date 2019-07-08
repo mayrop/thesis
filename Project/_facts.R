@@ -54,7 +54,7 @@ facts_vars <- facts_filtered %>%
     females_percent_2014 = SEX255214,
     
     # housing & buildings & businesses
-    hbb_building_permits_rate_2014 = BPS030214 / PST045214,
+    building_permits_rate_2014 = BPS030214 / PST045214,
     
     # non farm
     nonfarm_private_establishments_rate_2014 = BZA010213 / PST045214,
@@ -72,14 +72,14 @@ facts_vars <- facts_filtered %>%
     housing_households_rate_2013 = HSD410213 / PST045214, 
     housing_median_value_in_housing_units_2013 = HSG495213,
     
-    # Businesses    
-    businesses_rate_2007 = SBO001207 / PST045214,
-    businesses_indian_rate_2007 = SBO115207 / PST045214,
-    businesses_asian_rate_2007 = SBO215207 / PST045214,
-    businesses_afroamerican_rate_2007 = SBO315207 / PST045214,
-    businesses_hispanic_rate_2007 = SBO415207 / PST045214,
-    businesses_hawaiian_rate_2007 = SBO515207 / PST045214,
-    businesses_women_rate_2007 = SBO015207 / PST045214,
+    # Firms    
+    firms_rate_2007 = SBO001207 / PST045214,
+    firms_indian_rate_2007 = SBO115207 / PST045214,
+    firms_asian_rate_2007 = SBO215207 / PST045214,
+    firms_afroamerican_rate_2007 = SBO315207 / PST045214,
+    firms_hispanic_rate_2007 = SBO415207 / PST045214,
+    firms_hawaiian_rate_2007 = SBO515207 / PST045214,
+    firms_women_rate_2007 = SBO015207 / PST045214,
     
     # money
     income_median_household_income_2013 = INC110213,
@@ -87,14 +87,14 @@ facts_vars <- facts_filtered %>%
     income_persons_below_poverty_percent_2013 = PVY020213,
     
     # random
-    random_travel_mean_time_2013 = LFE305213,
-    random_land_area_in_miles_2010 = LND110210,
-    random_accomodation_and_food_sales_rate_2007 = AFN120207 / PST045214,
-    random_merchant_sales_rate_2007 = WTN220207 / PST045214,
-    random_manufacters_shipments_sales_rate_2007 = MAN450207 / PST045214,
+    other_travel_mean_time_2013 = LFE305213,
+    other_land_area_in_miles_2010 = LND110210,
+    other_accomodation_and_food_sales_rate_2007 = AFN120207 / PST045214,
+    other_merchant_sales_rate_2007 = WTN220207 / PST045214,
+    other_manufacters_shipments_sales_rate_2007 = MAN450207 / PST045214,
     # random_retail_sales_2007 = RTN130207,
-    random_retail_sales_rate_2007 = RTN131207 / PST045214,
-    random_retail_sales_per_capita_2007 = RTN131207,
+    other_retail_sales_rate_2007 = RTN131207 / PST045214,
+    other_retail_sales_per_capita_2007 = RTN131207,
     
     # veterans
     veterans_percent_2013 = (VET605213 * 100) / PST045214

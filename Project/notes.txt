@@ -49,3 +49,5 @@ Evaluating Logistic Regression Models
 
 file:///Users/mayrop/Downloads/275_LR_ACoP_poster_2015-10-01%20(1).pdf
 - Explanation about multicollinearity and ridge regression - for SAS - check again
+
+
