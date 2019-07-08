@@ -5,6 +5,16 @@
 \include{Config/Settings}
 \usepackage[utf8]{inputenc}
 
+\begin{pycode} 
+	import scipy
+	import json
+	import pandas
+
+	from tabulate import tabulate
+
+	root = '/Users/mayrop/Github/thesis/Thesis'
+\end{pycode}
+
 \addbibresource{bibliography.bib}
 
 \begin{document}
@@ -15,16 +25,16 @@
 % Default plain style 
 \pagestyle{plain}
 
-\include{Sections/FrontPage}
-\include{Sections/DeclarationOfAuthorship}
-\include{Sections/Quotation}
-\include{Sections/Abstract}
-\include{Sections/Acknowledgements}
-\include{Sections/ListOfContents}
-\include{Sections/Abbreviations}
-\include{Sections/PhysicalConstants}
-\include{Sections/Symbols}
-\include{Sections/Dedication}
+% \include{Sections/FrontPage}
+% \include{Sections/DeclarationOfAuthorship}
+% \include{Sections/Quotation}
+% \include{Sections/Abstract}
+% \include{Sections/Acknowledgements}
+% \include{Sections/ListOfContents}
+% \include{Sections/Abbreviations}
+% \include{Sections/PhysicalConstants}
+% \include{Sections/Symbols}
+% \include{Sections/Dedication}
 
 %////////////////////////////////////////////////////////////////////////
 %   C H A P T E R S
@@ -36,7 +46,7 @@
 % Add nice headings
 \pagestyle{headings}
 
-\include{Chapters/Chapter1}
+% \include{Chapters/Chapter1}
 %\include{Chapters/Chapter2} 
 %\include{Chapters/Chapter3}
 %\include{Chapters/Chapter4} 

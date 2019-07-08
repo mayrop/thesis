@@ -191,6 +191,15 @@
 % https://tex.stackexchange.com/questions/33510/how-do-i-create-the-headings-for-this-multirow-multicolum-table
 \RequirePackage{multirow}
 
+% https://tex.stackexchange.com/questions/165793/how-to-make-a-table-on-more-than-one-page-by-using-the-table-environment
+\RequirePackage{longtable}
+\RequirePackage{ltablex}
+
+% https://tex.stackexchange.com/questions/337/how-to-change-certain-pages-into-landscape-portrait-mode
+\RequirePackage{lscape}
+% \RequirePackage{showframe}
+
+
 %----------------------------------------------------------------------------------------
 %	DEFINE CUSTOM THESIS INFORMATION COMMANDS
 %----------------------------------------------------------------------------------------
