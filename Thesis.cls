@@ -192,7 +192,6 @@
 \RequirePackage{multirow}
 
 % https://tex.stackexchange.com/questions/165793/how-to-make-a-table-on-more-than-one-page-by-using-the-table-environment
-\RequirePackage{longtable}
 \RequirePackage{ltablex}
 
 % https://tex.stackexchange.com/questions/337/how-to-change-certain-pages-into-landscape-portrait-mode
