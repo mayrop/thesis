@@ -269,3 +269,4 @@ TSWLatexianTemp*
 *.RData
 *.Rhistory
 */__latexindent_temp.tex
+Articles/*
