@@ -9,27 +9,81 @@
 
 - file:///Users/mayrop/Downloads/pols_w3245_2009_brown.pdf
 - https://www.jstor.org/stable/pdf/2771413.pdf?refreqid=excelsior%3Ae489f6147ca41ef0465307bb41a41004
+# What aspects make a change in either change parties or to vote for first time
+# Talks about mainly religion & income
+# New York elections 1940/44
+
 - https://www.jstor.org/stable/pdf/2111783.pdf?refreqid=excelsior%3A39b9c326b792e9824c086413c72b3252
+# Hypothesis: Class biases in voter turnout have not substantially increased since the 1960s
+# >> income is the appropriate measure of economic class bias
+
 - https://essay.utwente.nl/73364/1/Drewer_BA_BMS.pdf
+# Thesis about Comparing the influence of socioeconomic factors on participation in national elections and referendums
+# Talks more about participation than selecting parties
+# Check for references
+
 - https://scholarworks.wmich.edu/cgi/viewcontent.cgi?referer=https://www.google.com/&httpsredir=1&article=2044&context=dissertations
-- https://www.demos.org/research/why-voting-matters-large-disparities-turnout-benefit-donor-class
+# Dissertation: Who Voted?: Social Class and Participation in United States Presidential Elections
+# Talks about participation over the years
+# Might have good references. Check for references.
+
+- https://www.demos.org/sites/default/files/publications/Why%20Voting%20Matters_0.pdf
+# Talks about turnout
+# Some nice graphs about comparing turnout by race and inciome
+# Might have "ok" references
+
 - file:///Users/mayrop/Downloads/Socioeconomic_Status_and_Nonvoting_A_Cross-Nationa.pdf
 - https://www4.stat.ncsu.edu/~reich/ABA/code/election2016data
-- https://medium.com/@urban_institute/how-to-create-state-and-county-maps-easily-in-r-577d29300bb2
-- https://www.kaggleusercontent.com/kf/167576/eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..rwVGtMP2AeRGqG1N_sSUGQ.iG8_pShVF90PGQXJaGvRxFrTyw1LOm0QR6RO5i9ImjfqezfItWpddGa-9vm7AS_3ZaZCRTN0e-iU1j5IRcbC4Qmu30qRANoQjtBzX5oE70SJK1k8uOC2M377CWeln4uuOYPfHv2WfJkfBcFa058-X0NHWvsKoAKHa00ia8NPdco.URy5B32Vo5mVXjmmpdfLQQ/output.html
-- https://www.kaggle.com/kirandipta/do-we-vote-in-our-own-best-interest
-- https://www.kaggle.com/mpoegel/i-love-the-poorly-educated?scriptVersionId=171731
-- https://www.analyticsvidhya.com/blog/2018/05/improve-model-performance-cross-validation-in-python-r/
+# Nice analysis of previous elections
+# Check for EDA and for important columns
 
-# https://www.datacamp.com/community/tutorials/logistic-regression-R
-# https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
-# https://www4.stat.ncsu.edu/~reich/BigData/code/glmnet.html
-# http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
-# todo
-# try: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
+- https://medium.com/@urban_institute/how-to-create-state-and-county-maps-easily-in-r-577d29300bb2
+# How to create maps in R
+
+- https://www.kaggle.com/kirandipta/do-we-vote-in-our-own-best-interest
+# Clustering of vars for presidential data
+# Uses PCA for analysis
+
+- https://www.kaggle.com/mpoegel/i-love-the-poorly-educated?scriptVersionId=171731
+# Quick analysis regression about fraction of voters of trump & education
+
+- https://www.analyticsvidhya.com/blog/2018/05/improve-model-performance-cross-validation-in-python-r/
+# Quick blog post about cross validation
+# Check!
+
+- https://www.datacamp.com/community/tutorials/logistic-regression-R
+# Logistic Regression in R Tutorial
+# Really nice explanation about logistic regression
+# Check for code examples
+
+- https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
+# Really nice blog post about glmnet and the logistic penalized regression
+
+- https://www4.stat.ncsu.edu/~reich/BigData/code/glmnet.html
+# R exmaples for doing classifications
+# K nearest neighbors
+# Discriminant analysis
+# Comparison of methods using Brier scores, classification accuracy
+# Nice to check for learning about classification methods
+
+- https://bookdown.org/roback/bookdown-bysh/ch-logreg.html
+# Book about logistic regression in R
+# Has formulas
+# 6.5 Case Study: Reconstructing Alabama
+# 6.5.4 Tests for significance of model coefficients
+# 6.5.5 Confidence intervals for model coefficients
+# 6.5.6 Testing for goodness of fit
+# 6.5.7 Residuals for Binomial Regression
+## CHECK!!!
+
+- http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
+# R code with lasso regression
+
+- http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
+# remove_collinear_columns
 
 http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
-
+# MUST TRY: Cross-Validation for Predictive Analytics Using R
 
 http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
 # Functions from class
@@ -50,4 +104,35 @@ Evaluating Logistic Regression Models
 file:///Users/mayrop/Downloads/275_LR_ACoP_poster_2015-10-01%20(1).pdf
 - Explanation about multicollinearity and ridge regression - for SAS - check again
 
+
+
+###########################################################################
+###########################################################################
+
+Articles
+
+- 01-Article-classification-gene-logistic-regression.pdf
+Title: Classification of gene microarrays by penalized logistic regression
+https://academic.oup.com/biostatistics/article/5/3/427/310192
+- Penalized logistic regression (PLR) vs SVM for classification
+
+02-Article-Collinearity.pdf
+Title: Collinearity: a review of methods to deal with it and a simulation study evaluating their performance
+Cited by: 1771
+https://onlinelibrary.wiley.com/doi/full/10.1111/j.1600-0587.2012.07348.x
+https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1600-0587.2012.07348.x
+
+03-Slide-comparison-machine-learning.pdf
+04-Article-filzmoser_preprint.pdf
+05-Thesis-forecast-presidency.pdf
+06-proportions-model.pdf
+07-Regularization.pdf
+08-ridge-regression.pdf
+09-ShortCourseBetaRegression.pdf
+10-variable-selection-in-logistic-regression.pdf
+11-classificaiton-techniques.pdf
+12-logistic-a-brief-primer.pdf
+13-logistic-check.pdf
+14-logistic-example.pdf
+15-svn-vs-logistic.pdf
 
