@@ -105,6 +105,35 @@ file:///Users/mayrop/Downloads/275_LR_ACoP_poster_2015-10-01%20(1).pdf
 - Explanation about multicollinearity and ridge regression - for SAS - check again
 
 
+https://rcompanion.org/handbook/G_14.html
+# Accuracy and Errors for Models
+>> Not sure if it's only for regression or also logistic
+
+https://cran.r-project.org/web/packages/MLmetrics/MLmetrics.pdf
+# Package ‘MLmetrics’
+# R functions RMSPE etc
+
+http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
+Cross-Validation for Predictive Analytics Using R
+MUST try code for learning cross-validation
+
+https://www.datacamp.com/community/tutorials/k-means-clustering-r
+K-Means Clustering in R Tutorial
+- MUST try code in case centroid is used
+
+http://www.flutterbys.com.au/stats/tut/tut10.5a.html
+Tutorial 10.5a - Logistic regression and proportional and percentage data
+Really nice tutorial for logistic regression
+- MUST try code
+
+##################
+
+Books
+
+https://onlinelibrary-wiley-com.ezproxy.lib.gla.ac.uk/doi/pdf/10.1002/9781118548387
+Applied Logistic Regression
+- > Pending to check
+
 
 ###########################################################################
 ###########################################################################
@@ -121,6 +150,23 @@ Title: Collinearity: a review of methods to deal with it and a simulation study 
 Cited by: 1771
 https://onlinelibrary.wiley.com/doi/full/10.1111/j.1600-0587.2012.07348.x
 https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1600-0587.2012.07348.x
+# Prob not good resource for logistic
+# Part I. When is collinearity a problem? 
+# Part II. Spatio-temporal patterns in collinearity
+# Part III. Methods for dealing with collinearity 
+## Detect it: diagnostics 
+## Removing collinearity prior to analysis 
+>> Before analysis
+- Clustering, PCA, K-means clustering
+  - Central variable from cluster (biased)
+  - Best regressor -> increase of Type 1 errors
+- Cluster-independent methods
+  - Select variables correlated |r| < 0.7
+  - Sequential regression
+>> Modelling with latent variables
+- PCR (principal components regression)
+- DR (Dimension reduction)
+http://www.ecography.org/sites/ecography.org/files/appendix/e7348.pdf #CHECKKKK
 
 03-Slide-comparison-machine-learning.pdf
 04-Article-filzmoser_preprint.pdf
