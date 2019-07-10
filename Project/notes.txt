@@ -169,7 +169,18 @@ https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1600-0587.2012.07348.x
 http://www.ecography.org/sites/ecography.org/files/appendix/e7348.pdf #CHECKKKK
 
 03-Slide-comparison-machine-learning.pdf
+https://www.researchgate.net/publication/284190532_Comparison_of_Machine-Learning_Techniques_for_Handling_Multicollinearity_in_Big_Data_Analytics_and_High_Performance_Data_Mining
+https://pdfs.semanticscholar.org/f15a/d84de4cecb278dab7e7d7b7e149dcee6861d.pdf
+>> Quick comparison between logistic with multicollinear methods
+
 04-Article-filzmoser_preprint.pdf
+Title: Robust and sparse estimation methods for high dimensional linear and logistic regression
+https://arxiv.org/pdf/1703.04951.pdf
+- Nice article about lasso, ridge & elastic net
+- Good resource to link to
+- Has resources about robust logistic regression
+>> Friedman et al. [13] suggested to minimize a penalized negative log-likelihood function
+
 05-Thesis-forecast-presidency.pdf
 06-proportions-model.pdf
 07-Regularization.pdf
