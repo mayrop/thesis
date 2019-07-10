@@ -82,9 +82,6 @@
 - http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
 # remove_collinear_columns
 
-http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
-# MUST TRY: Cross-Validation for Predictive Analytics Using R
-
 http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
 # Functions from class
 
@@ -110,12 +107,23 @@ https://rcompanion.org/handbook/G_14.html
 >> Not sure if it's only for regression or also logistic
 
 https://cran.r-project.org/web/packages/MLmetrics/MLmetrics.pdf
-# Package ‘MLmetrics’
+# Package "MLmetrics"
 # R functions RMSPE etc
+
+###########################################################################
+###########################################################################
+
+
+
+###########################################################################
+###########################################################################
+
+Code Examples
 
 http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
 Cross-Validation for Predictive Analytics Using R
 MUST try code for learning cross-validation
+>> DONE
 
 https://www.datacamp.com/community/tutorials/k-means-clustering-r
 K-Means Clustering in R Tutorial
@@ -126,7 +134,10 @@ Tutorial 10.5a - Logistic regression and proportional and percentage data
 Really nice tutorial for logistic regression
 - MUST try code
 
-##################
+
+
+###########################################################################
+###########################################################################
 
 Books
 
