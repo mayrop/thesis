@@ -181,15 +181,52 @@ https://arxiv.org/pdf/1703.04951.pdf
 - Has resources about robust logistic regression
 >> Friedman et al. [13] suggested to minimize a penalized negative log-likelihood function
 
+16-Article-logistic-regression-multicollinear
+Robust and sparse estimation methods for high-dimensional linear andlogistic regression
+- Comparison between elastic net, enet-LTS raw and enet-LTS
+
 05-Thesis-forecast-presidency.pdf
 06-proportions-model.pdf
+Title: A New Robust Regression Model for Proportions
+https://projecteuclid.org/download/pdfview_1/euclid.ba/1354024464
+> Beta regression model
+# Check after done with logistic
+
 07-Regularization.pdf
+Title: Regularization and variable selection via the elastic net
+https://web.stanford.edu/~hastie/Papers/B67.2%20(2005)%20301-320%20Zou%20&%20Hastie.pdf
+- Seems a very good resource about elastic net
+- Something to check when implementing, however, seems not to talk much about logistic regression
+
 08-ridge-regression.pdf
+Title: Lecture notes on ridge regression
+https://arxiv.org/abs/1509.09169
+- This is like a book on lasso/ridge etc
+- Something worth checking is: Penalty parameter selection
+- Meijer and Goeman (2013) describe a computationally efficient approximation of the leave-one-out crossvalidated loglikelihood
+
 09-ShortCourseBetaRegression.pdf
+
 10-variable-selection-in-logistic-regression.pdf
+Title: Variable Selection of Correlated Predictors in Logistic Regression: Investigating the Diet-Heart Hypothesis
+Electronic Theses, Treatises and Dissertations The Graduate School
+- Pending to read
+
 11-classificaiton-techniques.pdf
+Title: Supervised Machine Learning: A Review of Classification Techniques
+- Really nice resource about classification techniques
+- There's a nice table at the end about comparison on classification techniques
+
 12-logistic-a-brief-primer.pdf
+Title: Logistic Regression: A Brief Primer
+- One of my favs
+
 13-logistic-check.pdf
+Title: The practical value of logistic regression
+- Very old paper
+- Seems to use SAS
+
 14-logistic-example.pdf
 15-svn-vs-logistic.pdf
-
+Title: Comparison between SVM and Logistic Regression: Which One is Better to Discriminate?
+http://www.kurims.kyoto-u.ac.jp/EMIS/journals/RCE/V35/v35n2a03.pdf
