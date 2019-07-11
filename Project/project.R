@@ -72,13 +72,12 @@ source("_sanity_checks.R")
 ## Joins
 source("_joins.R")
 
-## Maps
-source("_maps.R")
 
 ##########
 # setting dataset
 
-indices <- sample(seq(1, 3), size = nrow(republican), replace = TRUE, prob = c(.6, .4))
+indices <- sample(seq(1, 2), size = nrow(republican), replace = TRUE, prob = c(0.6, 0.4))
+
 train.data <- republican[indices == 1,]
 test.data <- republican[indices == 2,]
 
@@ -111,7 +110,7 @@ non_demographic_cols <- c(
   "lead_votes"
 )
 
-train_continous <- train[,-which(colnames(train) %in% category_cols)]
+train_continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
 
 continous <- republican[,-which(colnames(republican) %in% category_cols)]
 continous <- continous[,-which(names(continous) %in% non_demographic_cols)]
@@ -128,6 +127,7 @@ republican_correlation_table <- rquery.cormat(train_continous, type="flatten", g
   mutate(cor_abs = abs(cor)) %>% 
   arrange(desc(cor_abs))
 
+
 predictors <- republican_correlation_table[republican_correlation_table$cor_abs > 0.2,]
 predictors <- unique(c(as.character(predictors[,1]), as.character(predictors[,2])))
 
@@ -136,6 +136,19 @@ predictors <- predictors[!(predictors %in% non_demographic_cols)]
 
 correlations <- cor(facts_vars[,which(colnames(facts_vars) %in% predictors)])
 corrplot::corrplot(correlations, method="circle")
+
+### Cluster of variables
+
+correlation <- cor(continous, use="complete.obs", method="pearson")
+melted_correlation <- melt(correlation)
+correlation[correlation < 0.5] = 0
+
+dissimilarity = 1 - correlation
+
+distance = as.dist(dissimilarity)
+cluster = hclust(distance)
+plot(cluster, cex=0.6)
+
 
 #correlations <- cor(train[,-which(colnames(train) %in% c("fips", "map_color", "party_won", "state", "state_abbreviation", "county", "candidate", "party", "lead_party", "area_name", "state_facts"))])
 
@@ -155,14 +168,28 @@ for (col in predictors) {
 }
 
 
+plot_party_won_boxplot("housing_units_in_multiunit_2013") 
+plot_party_won_boxplot("race_white_no_hispanic_percent_2014") 
+plot_party_won_boxplot("housing_median_value_in_housing_units_2013") 
+plot_party_won_boxplot("education_bachelor_percent_2013") 
+plot_party_won_boxplot("race_asian_percent_2014")
+plot_party_won_boxplot("population_foreign_percent_2013")
+plot_party_won_boxplot("population_2014")
+plot_party_won_boxplot("other_accomodation_and_food_sales_rate_2007")
+plot_party_won_boxplot("age_under_18_percent_2014")
+plot_party_won_boxplot("age_under_5_percent_2014")
+plot_party_won_boxplot("age_over_65_percent_2014")
+plot_party_won_boxplot("population_density_2010")
+
+
 source("_plots.R")
 
+## Maps
+source("_maps.R")
 
  #####################################
 
 # votes
-
-plot_party_won_boxplot("race_two_races_percent_2014")
 
 # only the correlated columns are here, for adding more check first the distribution
 
@@ -282,18 +309,8 @@ summary(model)
 emplogit(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
 empLogitPlot(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
 
-
 ggplot(data = melted_correlation, aes(x=X1, y=X2, fill=value)) + 
   geom_tile() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-correlation <- cor(continous, use="complete.obs", method="pearson")
-melted_correlation <- melt(correlation)
-correlation[correlation < 0.5] = 0
-
-dissimilarity = 1 - correlation
-
-distance = as.dist(dissimilarity)
-cluster = hclust(distance)
-plot(cluster, cex=0.6)
 

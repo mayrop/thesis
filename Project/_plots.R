@@ -33,15 +33,11 @@ ggplot(republican, aes(
   geom_boxplot()
 
 ggplot(republican, aes(
-  x = as.factor(party_won), y = businesses_hispanic_rate)) +
+  x = as.factor(party_won), y = other_accomodation_and_food_sales_rate_2007)) +
   geom_boxplot()
 
 ggplot(republican, aes(
-  x = as.factor(party_won), y = random_accomodation_and_food_sales_rate_2007)) +
-  geom_boxplot()
-
-ggplot(republican, aes(
-  x = as.factor(party_won), y = random_retail_sales_per_capita_2007)) +
+  x = as.factor(party_won), y = other_retail_sales_per_capita_2007)) +
   geom_boxplot()
 
 ggplot(republican, aes(
