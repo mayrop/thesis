@@ -220,6 +220,7 @@ no problem will arise. However, if one makes a prediction at an inconsistent
 combination of these two variables, the predictions may be inaccurate and
 have high standard errors.
 Classical and Modern Regression with Applications 
+https://lib.ugent.be/en/catalog/rug01:000851135
 
 =========================
 
