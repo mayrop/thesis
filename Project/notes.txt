@@ -242,6 +242,11 @@ Robust and sparse estimation methods for high-dimensional linear andlogistic reg
 - Comparison between elastic net, enet-LTS raw and enet-LTS
 
 05-Thesis-forecast-presidency.pdf
+
+#https://bookdown.org/roback/bookdown-bysh/ch-logreg.html#learning-objectives-5
+
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
+
 06-proportions-model.pdf
 Title: A New Robust Regression Model for Proportions
 https://projecteuclid.org/download/pdfview_1/euclid.ba/1354024464

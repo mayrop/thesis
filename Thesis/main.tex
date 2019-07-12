@@ -17,6 +17,7 @@
 	root = '/Users/mayrop/Github/thesis/Thesis'
 \end{pycode}
 
+\DeclareLanguageMapping{english}{american-apa}
 \addbibresource{bibliography.bib}
 
 \begin{document}
@@ -48,7 +49,7 @@
 % Add nice headings
 \pagestyle{headings}
 
-% \include{Chapters/Chapter1}
+\include{Chapters/Chapter1}
 %\include{Chapters/Chapter2} 
 %\include{Chapters/Chapter3}
 %\include{Chapters/Chapter4} 
@@ -60,14 +61,14 @@
 
 \appendix
 
-\include{Appendices/AppendixA}
+% \include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
 %\include{Appendices/AppendixC}
 
 %////////////////////////////////////////////////////////////////////////
 %	B I B L I O G R A P H Y
 %////////////////////////////////////////////////////////////////////////
-
+% title={References},heading=bibintoc
 \printbibliography[title={References},heading=bibintoc]
 
 %////////////////////////////////////////////////////////////////////////
