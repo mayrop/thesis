@@ -110,6 +110,26 @@ https://cran.r-project.org/web/packages/MLmetrics/MLmetrics.pdf
 # Package "MLmetrics"
 # R functions RMSPE etc
 
+https://pdfs.semanticscholar.org/5a89/1e686fedc226942727b76ba568602ac94006.pdf?_ga=2.208120274.1742245575.1562854939-375471410.1562854939
+Title: Multicollinearity: What Is It, Why Should We Care, and How Can It Be
+Controlled?
+SAS article - may not be good reference but content is good
+
+Collinearity is especially problematic when a model's purpose is explanation rather than prediction. In the case of explanation, it is more difficult for a model containing collinear variables to achieve significance of the different parameters. In the case of prediction, if the estimates end up being statistically significant, they are still only as reliable as any other variable in the model, and if they are not significant, then the sum of the coefficient is likely to be reliable. In summary if collinearity is found in a model testing
+prediction, then one need only increase the sample size of the model. However, if collinearity is found in a model seeking to explain, then more intense measures are needed. The primary concern resulting from multicollinearity is that as the degree of collinearity increases, the regression model estimates of the coefficients become unstable and the standard errors for the coefficients become wildly inflated. 
+
+Checking collinearity through tolerance (nothing below 0.1) and VIF
+
+
+https://onlinelibrary.wiley.com/doi/pdf/10.1002/for.3980030206
+Collinearity and Forecasting
+
+
+
+http://www.sthda.com/english/wiki/print.php?id=237
+>>>> Need to check for clustering variables
+
+
 ###########################################################################
 ###########################################################################
 
@@ -178,6 +198,30 @@ https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1600-0587.2012.07348.x
 - PCR (principal components regression)
 - DR (Dimension reduction)
 http://www.ecography.org/sites/ecography.org/files/appendix/e7348.pdf #CHECKKKK
+
+>>> Could be used as a reference to say that for prediction collinearity is not an issue
+=====
+1) When the correct form of the functional relationship is known, collinearity does not harm the fitting and therefore prediction to changing collinearity structures. 
+=====
+Under very high collinearity, penalised methods are somewhat more robust, but here the issue of changes in collinearity structure also becomes graver. For predictions, our results indicate sensitivity to the way predictors correlate: small changes will affect predictions only moderately, but substantial changes lead to a dramatic loss of prediction accuracy.
+=====
+There are some situations in which the effects of collinearity have limited impact. If the main use of the model is to predict new cases within the range of the sampled data (i.e. to interpolate), the model will do this reliably as long as the collinearity between variables remains constant (Harrell 2001).
+=====
+ Harrell, F. E. Jr 2001. Regression modeling strategies  -  with appli-cations to linear models, logistic regression, and survival analysis.  -   Springer. 
+ https://link-springer-com.ezproxy.lib.gla.ac.uk/content/pdf/10.1007%2F978-3-319-19425-7.pdf
+ 
+ Collinearity does not affect predictions made on the same dataset used to
+estimate the model parameters or on new data that have the same degree
+of collinearity as the original data [470, pp. 379-381] as long as extreme
+extrapolation is not attempted. Consider as two predictors the total and LDL
+cholesterols that are highly correlated. If predictions are made at the same
+combinations of total and LDL cholesterol that occurred in the training data,
+no problem will arise. However, if one makes a prediction at an inconsistent
+combination of these two variables, the predictions may be inaccurate and
+have high standard errors.
+Classical and Modern Regression with Applications 
+
+=========================
 
 03-Slide-comparison-machine-learning.pdf
 https://www.researchgate.net/publication/284190532_Comparison_of_Machine-Learning_Techniques_for_Handling_Multicollinearity_in_Big_Data_Analytics_and_High_Performance_Data_Mining
