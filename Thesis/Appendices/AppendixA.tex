@@ -4,89 +4,24 @@
 
 \label{AppendixA} % For referencing this appendix elsewhere, use \ref{AppendixA}
 
-\begin{pycode} 
-	appendix1 = pandas.read_csv(root + '/Data/Appendices/appendix-01.csv')
+% \begin{pycode} 
+% 	appendix1 = pandas.read_csv(root + '/Data/Appendices/appendix-01.csv')
 	
-	headers = ["Variable", "Description"]
-\end{pycode}
+% 	headers = ["Variable", "Description"]
+% \end{pycode}
 
-\begin{table}[H]	
-\begin{center}
-\caption{Extensive list}
-\small{
-	\pyc{print(tabulate(appendix1, colalign=("left", "left"), headers=headers, tablefmt="latex_booktabs", floatfmt=".2f", showindex=False))}
-}
-\end{center}
-\end{table}
+% \begin{table}[H]	
+% \begin{center}
+% \caption{Extensive list}
+% \small{
+% 	\pyc{print(tabulate(appendix1, colalign=("left", "left"), headers=headers, tablefmt="latex_booktabs", floatfmt=".2f", showindex=False))}
+% }
+% \end{center}
+% \end{table}
+
+\renewcommand{\arraystretch}{1.25}
+\extrarowheight = -0.8ex
 
 \input{./Appendices/a01.tex}
 
-\extrarowheight = -0.5ex
-\renewcommand{\arraystretch}{1.25}
-
-\pagestyle{plain}
-\begin{landscape}
-\small{
-\begin{tabularx}{\linewidth}[Httt]{cXX}
-    \caption{Example of an table}\\
-    \toprule
-    \textbf{Original Name} & \textbf{New Name} & \textbf{Formula} \\[6pt]
-    \midrule
-    \endhead
-	PST045214 & population\_2014 & \( \mathit{PST045214} \) \\
-	PST120214 & population\_percent\_changed & \( \mathit{PST120214} \) \\
-	POP060210 & population\_density\_2010 & \( \mathit{POP060210} \) \\
-	POP010210 & population\_2010 & \( \mathit{POP010210} \) \\
-	POP715213 & population\_same\_house\_percent\_2013 & \( \mathit{POP715213} \) \\
-	POP645213 & population\_foreign\_percent\_2013 & \( \mathit{POP645213} \) \\
-	POP815213 & population\_other\_language\_percent\_2013 & \( \mathit{POP815213} \) \\
-	AGE135214 & age\_under\_5\_percent\_2014 & \( \frac{\mathit{AGE135214} \cdot 100}{\mathit{PST045214}} \) \\ 
-	AGE295214 & age\_under\_18\_percent\_2014 & \( \frac{\mathit{AGE295214} \cdot 100}{\mathit{PST045214}} \) \\
-	AGE775214 & age\_over\_65\_percent\_2014 & \( \frac{\mathit{AGE775214} \cdot 100}{\mathit{PST045214}} \) \\
-	SEX255214 & females\_percent\_2014 & \( \mathit{SEX255214} \) \\
-	EDU635213 & education\_high\_school\_percent\_2013 & \( \mathit{EDU635213} \) \\
-	EDU685213 & education\_bachelor\_percent\_2013 & \( \mathit{EDU685213} \) \\
-	RHI125214 & race\_white\_percent\_2014 & \( \mathit{RHI125214} \) \\
-	RHI225214 & race\_afroamerican\_percent\_2014 & \( \mathit{RHI225214} \) \\
-	RHI725214 & race\_latino\_percent\_2014 & \( \mathit{RHI725214} \) \\
-	RHI825214 & race\_white\_no\_hispanic\_percent\_2014  & \( \mathit{RHI825214} \) \\
-	RHI325214 & race\_native\_percent\_2014 & \( \mathit{RHI325214} \) \\
-	RHI425214 & race\_asian\_percent\_2014 & \( \mathit{RHI425214} \) \\
-	RHI525214 & race\_hawaiian\_percent\_2014 & \( \mathit{RHI525214} \) \\
-	RHI625214 & race\_two\_races\_percent\_2014 & \( \mathit{RHI625214} \) \\
-	BPS030214 & hbb\_building\_permits\_rate\_2014 & \( \frac{\mathit{BPS030214}}{\mathit{PST045214}} \) \\
-	BZA010213 & nonfarm\_private\_establishments\_rate\_2014 & \( \frac{\mathit{BZA010213}}{\mathit{PST045214}} \) \\
-	BZA110213 & nonfarm\_private\_employment\_rate\_2013 &  \( \frac{\mathit{BZA110213}}{\mathit{PST045214}} \) \\
-	BZA115213 & nonfarm\_private\_employment\_percent\_change\_2013 & \( \mathit{BZA115213} \) \\
-	NES010213 & nonemployer\_establishments\_rate\_2013 & \( \frac{\mathit{NES010213}}{\mathit{PST045214}} \) \\
-	HSG010214 & housing\_units\_rate\_2014              & \( \frac{\mathit{HSG010214}}{\mathit{PST045214}} \) \\
-	HSD310213 & housing\_person\_per\_household\_2013 & \( \mathit{HSD310213} \) \\
-	HSG096213 & housing\_units\_in\_multiunit\_2013 & \( \mathit{HSG096213} \) \\
-	HSG445213 & housing\_homeownership\_rate\_2013 & \( \mathit{HSG445213} \) \\
-	HSD410213 & housing\_households\_rate\_2013 & \( \frac{\mathit{HSD410213}}{\mathit{PST045214}} \) \\
-	HSG495213 & housing\_median\_value\_in\_housing\_units\_2013 &  \( \mathit{HSG495213} \) \\
-	SBO001207 & firms\_rate\_2007 & \( \frac{\mathit{SBO001207}}{\mathit{PST045214}} \) \\
-	SBO115207 & firms\_indian\_rate\_2007 &  \( \frac{\mathit{SBO115207}}{\mathit{PST045214}} \)  \\
-	SBO215207 & firms\_asian\_rate\_2007 & \( \frac{\mathit{SBO215207}}{\mathit{PST045214}} \) \\
-	SBO315207 & firms\_afroamerican\_rate\_2007 & \( \frac{\mathit{SBO315207}}{\mathit{PST045214}} \) \\
-	SBO415207 & firms\_hispanic\_rate\_2007 & \( \frac{\mathit{SBO415207}}{\mathit{PST045214}} \) \\
-	SBO515207 & firms\_hawaiian\_rate\_2007 & \( \frac{\mathit{SBO515207}}{\mathit{PST045214}} \) \\
-	SBO015207 & firms\_women\_rate\_2007 & \( \frac{\mathit{SBO015207}}{\mathit{PST045214}} \) \\
-	INC110213 & income\_median\_household\_income\_2013  & \( \mathit{INC110213} \) \\
-	INC910213 & income\_per\_capita\_income\_past\_12\_month\_2013 &  \( \mathit{INC910213} \)                    \\
-	PVY020213 & income\_persons\_below\_poverty\_percent\_2013 &  \( \mathit{PVY020213} \) \\
-	LFE305213 & other\_travel\_mean\_time\_2013          &  \( \mathit{LFE305213} \) \\
-	LND110210 & other\_land\_area\_in\_miles\_2010        &  \( \mathit{LND110210} \) \\
-	AFN120207 & other\_accomodation\_and\_food\_sales\_rate\_2007    & \( \frac{\mathit{AFN120207}}{\mathit{PST045214}} \) \\
-	WTN220207 & other\_merchant\_sales\_rate\_2007 & \( \frac{\mathit{WTN220207}}{\mathit{PST045214}} \) \\
-	MAN450207 & other\_manufacters\_shipments\_sales\_rate\_2007 & \( \frac{\mathit{MAN450207}}{\mathit{PST045214}} \) \\
-	RTN130207 & other\_retail\_sales\_rate\_2007 & \( \frac{\mathit{RTN130207}}{\mathit{PST045214}} \) \\
-	RTN131207 & other\_retail\_sales\_per\_capita\_2007 &  \( \mathit{RTN131207} \) \\
-	VET605213 & veterans\_percent\_2013 & \( \frac{\mathit{VET605213} \cdot 100}{\mathit{PST045214}} \) \\
-	\bottomrule
-\end{tabularx}
-}
-\end{landscape}
-\pagestyle{headings}
-
-TEST HERE
+\input{./Appendices/a02.tex}
