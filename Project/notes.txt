@@ -1,3 +1,5 @@
+
+
 # so two votes for every state because each has two senators
 # and 1 vote for each congressperson
 # so the smallest states have at minimum 3 electoral college votes
@@ -6,6 +8,8 @@
 # that also, more often then note, are VERY white demographically
 # white folk are on average older then total population and markedly wealthier than other groups. 
 # both attributes also make them far more reliable voters
+# https://rstudio-pubs-static.s3.amazonaws.com/431668_94857a2237f24827b3fad12d6d9d851c.html
+# http://blog.elliotmarsden.com/us_election_2016.html
 
 - file:///Users/mayrop/Downloads/pols_w3245_2009_brown.pdf
 - https://www.jstor.org/stable/pdf/2771413.pdf?refreqid=excelsior%3Ae489f6147ca41ef0465307bb41a41004
@@ -210,7 +214,7 @@ There are some situations in which the effects of collinearity have limited impa
  Harrell, F. E. Jr 2001. Regression modeling strategies  -  with appli-cations to linear models, logistic regression, and survival analysis.  -   Springer. 
  https://link-springer-com.ezproxy.lib.gla.ac.uk/content/pdf/10.1007%2F978-3-319-19425-7.pdf
  
- Collinearity does not affect predictions made on the same dataset used to
+Collinearity does not affect predictions made on the same dataset used to
 estimate the model parameters or on new data that have the same degree
 of collinearity as the original data [470, pp. 379-381] as long as extreme
 extrapolation is not attempted. Consider as two predictors the total and LDL

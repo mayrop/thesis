@@ -22,82 +22,83 @@ facts_filtered %>%
 facts_vars <- facts_filtered %>%
   mutate(
     # population
-    population_2014 = PST045214,
-    population_density_2010 = POP060210,
+    pop_14 = PST045214,
+    pop_density_10 = POP060210,
     
-    population_2010 = POP010210,
-    population_percent_change = PST120214,
-    population_same_house_percent_2013 = POP715213, 
-    population_foreign_percent_2013 = POP645213, 
-    population_other_language_percent_2013 = POP815213,
+    pop_10 = POP010210,
+    pop_pct_change = PST120214,
+    pop_same_house_pct_13 = POP715213, 
+    pop_foreign_pct_13 = POP645213, 
+    pop_other_lang_pct_13 = POP815213,
     
     # age
-    age_under_5_percent_2014 = (AGE135214 * 100) / PST045214,
-    age_under_18_percent_2014 = (AGE295214 * 100) / PST045214,
-    age_over_65_percent_2014 = (AGE775214 * 100) / PST045214,
+    age_u5_pct_14 = (AGE135214 * 100) / PST045214,
+    age_u18_pct_14 = (AGE295214 * 100) / PST045214,
+    age_o65_pct_14 = (AGE775214 * 100) / PST045214,
     
     # education
-    education_high_school_percent_2013 = EDU635213,
-    education_bachelor_percent_2013 = EDU685213,
+    edu_hs_pct_13 = EDU635213,
+    edu_bachelor_pct_13 = EDU685213,
     
     # race
-    race_white_percent_2014 = RHI125214, 
-    race_afroamerican_percent_2014 = RHI225214,
-    race_latino_percent_2014 = RHI725214,
-    race_white_no_hispanic_percent_2014 = RHI825214,
-    race_native_percent_2014 = RHI325214,
-    race_asian_percent_2014 = RHI425214,
-    race_hawaiian_percent_2014 = RHI525214,
-    race_two_races_percent_2014 = RHI625214,
+    race_white_pct_14 = RHI125214, 
+    race_afroamerican_pct_14 = RHI225214,
+    race_latino_pct_14 = RHI725214,
+    race_white_no_hisp_pct_14 = RHI825214,
+    race_native_pct_14 = RHI325214,
+    race_asian_pct_14 = RHI425214,
+    race_hawaiian_pct_14 = RHI525214,
+    race_two_races_pct_14 = RHI625214,
     
     # sex
-    females_percent_2014 = SEX255214,
+    females_pct_14 = SEX255214,
     
     # housing & buildings & businesses
-    building_permits_rate_2014 = BPS030214 / PST045214,
+    bldg_permits_rate_14 = BPS030214 / PST045214,
     
     # non farm
-    nonfarm_private_establishments_rate_2014 = BZA010213 / PST045214,
-    nonfarm_private_employment_rate_2013 = BZA110213 / PST045214,
-    nonfarm_private_employment_percent_change_2013 = BZA115213, # private nonfarm employment
+    nf_priv_establ_rate_13 = BZA010213 / PST045214,
+    nf_priv_emplt_rate_13 = BZA110213 / PST045214,
+    nf_priv_emplt_pct_chg_13 = BZA115213, # private nonfarm employment
     
     # non employer
-    nonemployer_establishments_rate_2013 = NES010213 / PST045214,
+    nonemployer_establ_rate_13 = NES010213 / PST045214,
     
     # household
-    housing_units_rate_2014 = HSG010214 / PST045214,
-    housing_person_per_household_2013 = HSD310213, 
-    housing_units_in_multiunit_2013 = HSG096213, 
-    housing_homeownership_rate_2013 = HSG445213, 
-    housing_households_rate_2013 = HSD410213 / PST045214, 
-    housing_median_value_in_housing_units_2013 = HSG495213,
+    housing_units_rate_14 = HSG010214 / PST045214,
+    housing_person_per_household_13 = HSD310213, 
+    housing_units_in_multiunit_13 = HSG096213, 
+    housing_homeownership_rate_13 = HSG445213, 
+    housing_househ_rate_13 = HSD410213 / PST045214, 
+    housing_median_val_housing_units_13 = HSG495213,
     
     # Firms    
-    firms_rate_2007 = SBO001207 / PST045214,
-    firms_indian_rate_2007 = SBO115207 / PST045214,
-    firms_asian_rate_2007 = SBO215207 / PST045214,
-    firms_afroamerican_rate_2007 = SBO315207 / PST045214,
-    firms_hispanic_rate_2007 = SBO415207 / PST045214,
-    firms_hawaiian_rate_2007 = SBO515207 / PST045214,
-    firms_women_rate_2007 = SBO015207 / PST045214,
+    firms_rate_07 = SBO001207 / PST045214,
+    firms_indian_rate_07 = SBO115207 / PST045214,
+    firms_asian_rate_07 = SBO215207 / PST045214,
+    firms_afroamerican_rate_07 = SBO315207 / PST045214,
+    firms_hispanic_rate_07 = SBO415207 / PST045214,
+    firms_hawaiian_rate_07 = SBO515207 / PST045214,
+    firms_women_rate_07 = SBO015207 / PST045214,
     
     # money
-    income_median_household_income_2013 = INC110213,
-    income_per_capita_income_past_12_month_2013 = INC910213,
-    income_persons_below_poverty_percent_2013 = PVY020213,
+    inc_med_househ_income_13 = INC110213,
+    inc_pc_past_12_month_13 = INC910213,
+    inc_pers_blw_povt_pct_13 = PVY020213,
     
     # random
-    other_travel_mean_time_2013 = LFE305213,
-    other_land_area_in_miles_2010 = LND110210,
-    other_accomodation_and_food_sales_rate_2007 = AFN120207 / PST045214,
-    other_merchant_sales_rate_2007 = WTN220207 / PST045214,
-    other_manufacters_shipments_sales_rate_2007 = MAN450207 / PST045214,
+    o_travel_mean_time_13 = LFE305213,
+    o_land_area_in_miles_10 = LND110210,
+    
+    o_accom_food_sales_rate_07 = AFN120207 / PST045214,
+    o_merchant_sales_rate_07 = WTN220207 / PST045214,
+    o_manufacters_shipt_sales_rate_07 = MAN450207 / PST045214,
     # random_retail_sales_2007 = RTN130207,
-    other_retail_sales_rate_2007 = RTN130207 / PST045214,
-    other_retail_sales_per_capita_2007 = RTN131207,
+    o_retail_sales_rate_07 = RTN130207 / PST045214,
+    o_retail_sales_pc_07 = RTN131207,
     
     # veterans
-    veterans_percent_2013 = (VET605213 * 100) / PST045214
+    veterans_pct_13 = (VET605213 * 100) / PST045214
   ) %>%
   dplyr::select(
     -PST045214,
@@ -175,17 +176,14 @@ facts_vars <- facts_filtered %>%
     
     # reduntant
       # reduntant with population_2014 and population_density_2010
-    -population_2010,
+    -pop_10
     
       # reduntant with race_white_no_hispanic_percent_2014
-    -race_white_percent_2014,
-    
-      # reduntant with population_foreign_percent_2013
-    -population_other_language_percent_2013,
+    #-race_white_percent_2014,
 
       # reduntant with nonfarm_private_employment_percent_change_2013 
       # & nonfarm_private_establishments_rate_2014
-    -nonfarm_private_employment_rate_2013 
+    #-nf_priv_emplt_rate_13 
   )
 
 # Analysis

@@ -16,7 +16,7 @@ libraries <- c(
   "urbnmapr", "reshape2", "corrplot", "caret",
   "ellipse", # https://stackoverflow.com/questions/44502469/r-featureplot-returning-null
   "psych", "betareg", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
-  "car", "rcompanion", "e1071", "sf", "ROCR", "glmnet"
+  "car", "rcompanion", "e1071", "sf", "ROCR", "glmnet", "tibble", "dendextend"
 )
 
 libraries <- c(
@@ -26,7 +26,9 @@ libraries <- c(
   "tidyr",
   "ggplot2",
   "ROCR",
-  "glmnet" # regularized logistic regression
+  "glmnet", # regularized logistic regression
+  "tibble", # for `rownames_to_column` and `column_to_rownames`
+  "dendextend"
 )
 
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
@@ -44,7 +46,7 @@ for (library in libraries) {
 
 # Setting project directory
 # setwd("~/Github/thesis/Project")
-# setwd("H:/Project")
+# setwd("H:/thesis-master/Project")
 
 # Reading datasets
 elections_uni <- read.csv("data/counties-uni.csv")
@@ -113,41 +115,65 @@ non_demographic_cols <- c(
 train_continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
 
 continous <- republican[,-which(colnames(republican) %in% category_cols)]
-continous <- continous[,-which(names(continous) %in% non_demographic_cols)]
 
-correlations_table <- rquery.cormat(train_continous, type="flatten", graph=FALSE)$r %>% 
+
+correlations_table <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
   filter(!(column %in% non_demographic_cols) & !(row %in% non_demographic_cols)) %>% 
   # Only interested in the cols correlated to prop_republican
   mutate(cor_abs = abs(cor)) %>% 
   arrange(desc(cor_abs))
 
-republican_correlation_table <- rquery.cormat(train_continous, type="flatten", graph=FALSE)$r %>% 
+republican_correlation_table <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
   # Only interested in the cols correlated to prop_republican
   filter(column=="prop_republican" | row=="prop_republican") %>% 
-  mutate(cor_abs = abs(cor)) %>% 
-  arrange(desc(cor_abs))
+  filter(
+    !(column %in% non_demographic_cols & column != "prop_republican") & 
+      !(row %in% non_demographic_cols & row != "prop_republican")) %>% 
+  mutate(cor_abs = abs(cor), var=ifelse(row=="prop_republican",as.character(column),as.character(row))) %>% 
+  arrange(desc(cor_abs)) %>% 
+  select(var, cor, p, cor_abs)
 
 
 predictors <- republican_correlation_table[republican_correlation_table$cor_abs > 0.2,]
-predictors <- unique(c(as.character(predictors[,1]), as.character(predictors[,2])))
+predictors <- predictors$var
 
-predictors <- predictors[!(predictors %in% non_demographic_cols)]
+#predictors <- predictors[!grepl("_07",predictors)]
+
 #correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
 
 correlations <- cor(facts_vars[,which(colnames(facts_vars) %in% predictors)])
-corrplot::corrplot(correlations, method="circle")
+#https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
+corrplot::corrplot(correlations, order = "hclust", addrect = 10, tl.col = "black", tl.srt = 45)
 
-### Cluster of variables
+   ### Cluster of variables
+
+continous <- republican[,-which(colnames(republican) %in% category_cols)]
+continous <- continous[,-which(names(continous) %in% non_demographic_cols)]
+continous <- continous[,-which(grepl("_07",names(continous)))]
 
 correlation <- cor(continous, use="complete.obs", method="pearson")
-melted_correlation <- melt(correlation)
 correlation[correlation < 0.5] = 0
 
 dissimilarity = 1 - correlation
 
-distance = as.dist(dissimilarity)
+dissimilarity2 <- as.data.frame(dissimilarity) %>%
+  rownames_to_column('mycol') %>%
+  filter(!(rowSums(dissimilarity) == nrow(dissimilarity) - 1)) %>%
+  column_to_rownames('mycol') %>%
+  select(rownames((dissimilarity[!(rowSums(dissimilarity) == nrow(dissimilarity) - 1),])))
+
+distance = as.dist(dissimilarity2)
 cluster = hclust(distance)
-plot(cluster, cex=0.6)
+plot(cluster, cex=0.7)
+
+# using dendrogram objects
+hcd = as.dendrogram(cluster, hang=0.05) %>% 
+  set("branches_k_color", k=13)
+
+# alternative way to get a dendrogram
+plot(hcd, main="test", horiz=T, xlim=c(1, -0.5))
+
+library(viridis)
 
 
 #correlations <- cor(train[,-which(colnames(train) %in% c("fips", "map_color", "party_won", "state", "state_abbreviation", "county", "candidate", "party", "lead_party", "area_name", "state_facts"))])
@@ -179,7 +205,7 @@ plot_party_won_boxplot("other_accomodation_and_food_sales_rate_2007")
 plot_party_won_boxplot("age_under_18_percent_2014")
 plot_party_won_boxplot("age_under_5_percent_2014")
 plot_party_won_boxplot("age_over_65_percent_2014")
-plot_party_won_boxplot("population_density_2010")
+plot_party_won_boxplot("other_retail_sales_rate_2007")
 
 
 source("_plots.R")
