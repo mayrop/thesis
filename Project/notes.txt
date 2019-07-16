@@ -1,5 +1,3 @@
-
-
 # so two votes for every state because each has two senators
 # and 1 vote for each congressperson
 # so the smallest states have at minimum 3 electoral college votes
@@ -10,6 +8,7 @@
 # both attributes also make them far more reliable voters
 # https://rstudio-pubs-static.s3.amazonaws.com/431668_94857a2237f24827b3fad12d6d9d851c.html
 # http://blog.elliotmarsden.com/us_election_2016.html
+# https://brilliantmaps.com/2016-county-election-map/
 
 - file:///Users/mayrop/Downloads/pols_w3245_2009_brown.pdf
 - https://www.jstor.org/stable/pdf/2771413.pdf?refreqid=excelsior%3Ae489f6147ca41ef0465307bb41a41004
