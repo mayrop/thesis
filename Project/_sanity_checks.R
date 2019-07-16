@@ -1,3 +1,21 @@
+#nrow(elections_orig[elections_orig$year==2016 & !is.na(elections_orig$state_po), ]) / 3
+#elections_fips <- unique(elections_orig[elections_orig$year==2016 & !is.na(elections_orig$state_po), "FIPS"])
+
+# one more because of the one that dissappearded
+length(elections$fips)
+elections_fips <- as.numeric(elections[elections$state_abbreviation!="AK",]$fips)
+
+length(facts$fips)
+facts_fips <- as.numeric(facts[facts$state_facts!="AK",]$fips)
+
+diff <- facts_fips[! facts_fips %in% elections_fips]
+facts[facts$fips %in% diff,]
+
+diff <- elections_fips[! elections_fips %in% facts_fips]
+elections[elections$fips %in% diff,]
+
+
+
 # Complete cases: Elections
 sum(complete.cases(elections)) / length(unique(elections$party))
 

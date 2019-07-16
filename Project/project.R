@@ -54,13 +54,15 @@ elections_orig <- read.csv("data/counties-original.csv")
 dictionary_orig <- read.csv("data/dictionary.csv")
 facts_orig <- read.csv("data/facts.csv")
 
-# Changes per:
-# https://www.cdc.gov/nchs/nvss/bridged_race/county_geography-_changes2015.pdf
-elections_orig[elections_orig$FIPS==46113 & !is.na(elections_orig$FIPS),]$FIPS <- 46102
-facts_orig[facts_orig$fips==46113 &  !is.na(facts_orig$fips),]$fips <- 46102
+
+##########################
+##########################
 
 # Source code for all the functions
 source("_functions.R")
+
+# Here we fix some data inconsistencies
+source("_data_fixes.R")
 
 # Here we process elections dataset
 source("_elections.R")

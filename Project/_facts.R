@@ -1,25 +1,21 @@
 # Working with the facts
 
-facts_filtered <- facts_orig %>%
+facts <- facts %>%
   mutate(
     fips = str_pad(fips, 5, pad="0"),
     state_facts = state_abbreviation
-  ) %>%
-  filter(
-    state_facts != "",
-    PST045214 != 0 # fips == 51515, this is not in elections, so not a problem
   ) %>%
   dplyr::select(
     -state_abbreviation
   )
 
 # Double checking
-facts_filtered %>% 
+facts %>% 
   dplyr::select(-fips, -area_name, -state_facts) %>% 
   skim()
 
 # Renaming variables for better readibility
-facts_vars <- facts_filtered %>%
+facts_vars <- facts %>%
   mutate(
     # population
     pop_14 = PST045214,
@@ -172,11 +168,11 @@ facts_vars <- facts_filtered %>%
     -BPS030214,
     
     # veterans
-    -VET605213,
+    -VET605213
     
     # reduntant
       # reduntant with population_2014 and population_density_2010
-    -pop_10
+    #-pop_10
     
       # reduntant with race_white_no_hispanic_percent_2014
     #-race_white_percent_2014,
@@ -187,8 +183,15 @@ facts_vars <- facts_filtered %>%
   )
 
 # Analysis
-facts_vars %>% 
+facts %>% 
   dplyr::select(-fips, -area_name, -state_facts) %>% 
   skim()
 
-# Correlations
+# separating
+facts_states <- facts %>%
+  dplyr::filter(state_facts == "")
+
+facts <- facts %>%
+  dplyr::filter(state_facts != "")
+
+
