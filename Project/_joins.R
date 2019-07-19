@@ -1,19 +1,40 @@
+# Main Join for both datasets
 
 all <- full_join(
-  elections, facts_vars, by="fips"
+  elections, facts, by="fips"
 )
 
-# Missing values
+# Handling the data for maps
 
-# Counties with missing votes information
-all[is.na(all$party) & all$state_facts != "AK",15:36]
-# 2 counties
+map_columns <- list(
+  "population" = "pop_14_level",
+  "education" = "edu_bachelor_pct_13_level",
+  "race_white" = "race_white_no_hisp_pct_14_level",
+  "housing_units" = "housing_units_in_multiunit_13_level"
+)
 
-all[is.na(all$area_name) & all$state_abbreviation != "AK",]
-# 1 county, Kansas City
+for (column in names(map_columns)) {
+  new_col = paste("map_", column, sep="")
+  new_col_fill = paste("map_fill_", column, sep="")
+  
+  all <- all %>%
+    mutate(
+      !!new_col := paste(
+        party_won, "-", !!rlang::sym(map_columns[[column]])
+      )
+    ) %>%
+    left_join(
+      color_scale %>% rename(!!new_col_fill := fill), by = setNames("group", new_col)
+    )
+}
 
 # Removing incomplete rows
 all <- all[complete.cases(all),]
 
-republican <- all[all$party=="republican",]
-democrat <- all[all$party=="democrat",]
+# It removes AK rows
+nrow(all)
+# 3112 
+
+spatial_data <- inner_join(all, get_urbn_map(map = "counties", sf = TRUE),
+                           by = c("fips" = "county_fips"))
+

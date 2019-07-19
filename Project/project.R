@@ -12,11 +12,13 @@
 # Loading Libraries
 libraries <- c(
   "ggplot2", "GGally", "gridExtra", "dplyr", 
-  "moderndive", "skimr", "plotly", "tidyr", "tidyverse", 
+  "moderndive", "skimr", "plotly", "tidyr", 
+  "tidyverse", 
   "urbnmapr", "reshape2", "corrplot", "caret",
   "ellipse", # https://stackoverflow.com/questions/44502469/r-featureplot-returning-null
-  "psych", "betareg", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
-  "car", "rcompanion", "e1071", "sf", "ROCR", "glmnet", "tibble", "dendextend"
+#  "psych", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
+  "car", "rcompanion", "e1071", "ROCR", "glmnet", "tibble", "dendextend",
+  "sf", "cowplot", "magrittr"
 )
 
 libraries <- c(
@@ -54,12 +56,12 @@ elections_orig <- read.csv("data/counties-original.csv")
 dictionary_orig <- read.csv("data/dictionary.csv")
 facts_orig <- read.csv("data/facts.csv")
 
-
 ##########################
 ##########################
 
 # Source code for all the functions
 source("_functions.R")
+source("_theme.R")
 
 # Here we fix some data inconsistencies
 source("_data_fixes.R")
@@ -75,48 +77,57 @@ source("_sanity_checks.R")
 
 ## Joins
 source("_joins.R")
-
-
+    
 ##########
 # setting dataset
 
-indices <- sample(seq(1, 2), size = nrow(republican), replace = TRUE, prob = c(0.6, 0.4))
+indices <- sample(seq(1, 2), size = nrow(all), replace = TRUE, prob = c(0.6, 0.4))
 
-train.data <- republican[indices == 1,]
-test.data <- republican[indices == 2,]
+train.data <- all[indices == 1,]
+test.data <- all[indices == 2,]
+
 
 # 11 category cols
 category_cols <- c(
   "fips", 
   "map_color", 
   "party_won", 
-  "party_won_num",
+  "party_lead", 
   "state", 
   "state_abbreviation", 
   "county", 
   "candidate", 
   "party", 
-  "lead_party", 
   "area_name", 
-  "state_facts"
+  "state_facts",
+  ############
+  "pop_14_level",
+  "map_population",
+  "fill"
 )
 
 non_demographic_cols <- c(
-  "total_votes", 
-  "votes", 
+  "votes_total", 
   "votes_democrat", 
+  "votes_other", 
   "votes_republican", 
+  
   "prop_democrat", 
   "prop_republican",
+  
   "frac_votes", 
   "frac_democrat", 
   "frac_republican", 
-  "lead_votes"
+  "lead_votes",
+  
+  "party_frac_lead",
+  "party_republican_won"
 )
+
 
 train_continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
 
-continous <- republican[,-which(colnames(republican) %in% category_cols)]
+continous <- all[,-which(colnames(all) %in% category_cols)]
 
 
 correlations_table <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
@@ -139,17 +150,20 @@ republican_correlation_table <- rquery.cormat(continous, type="flatten", graph=F
 predictors <- republican_correlation_table[republican_correlation_table$cor_abs > 0.2,]
 predictors <- predictors$var
 
+
+predictors <- c(predictors, "prop_republican")
+
 #predictors <- predictors[!grepl("_07",predictors)]
 
 #correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
 
-correlations <- cor(facts_vars[,which(colnames(facts_vars) %in% predictors)])
+correlations <- cor(all[,which(colnames(all) %in% predictors)])
 #https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
 corrplot::corrplot(correlations, order = "hclust", addrect = 10, tl.col = "black", tl.srt = 45)
 
    ### Cluster of variables
 
-continous <- republican[,-which(colnames(republican) %in% category_cols)]
+continous <- all[,-which(colnames(all) %in% category_cols)]
 continous <- continous[,-which(names(continous) %in% non_demographic_cols)]
 continous <- continous[,-which(grepl("_07",names(continous)))]
 

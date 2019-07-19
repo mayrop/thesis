@@ -44,3 +44,24 @@ facts <- facts[complete.cases(facts),]
 # They are not valid counties, so we filter them out
 elections <- elections[!is.na(elections$FIPS),]
 #########################################
+
+# Joining Kansas City & Jackson County
+cond1 <- elections$FIPS == 29095 & elections$year==2016
+cond2 <- elections$FIPS == 36000 & elections$year==2016
+
+e29095 <- elections[cond1, c("party", "candidatevotes")]
+e36000 <- elections[cond2, c("party", "candidatevotes")]
+
+elections_fix <- inner_join(e29095, e36000, by="party")
+elections_fix$candidatevotes <- elections_fix$candidatevotes.x + elections_fix$candidatevotes.y
+
+for (party in elections[cond1,]$party) {
+  cond <- cond1 & elections$party == party
+  elections[cond,]$candidatevotes <- elections_fix[elections_fix$party == party,]$candidatevotes
+}
+
+elections[cond1,]$totalvotes <- sum(elections[cond1,]$candidatevotes)
+elections[cond2,] <- NA
+
+###### Remove this one again
+elections <- elections[!is.na(elections$FIPS),]

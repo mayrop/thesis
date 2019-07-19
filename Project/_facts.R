@@ -9,16 +9,22 @@ facts <- facts %>%
     -state_abbreviation
   )
 
+
 # Double checking
 facts %>% 
   dplyr::select(-fips, -area_name, -state_facts) %>% 
   skim()
 
+# This is for categorizing certain variables
+levels <- c("low", "med", "high")
+
 # Renaming variables for better readibility
-facts_vars <- facts %>%
+facts <- facts %>%
   mutate(
     # population
     pop_14 = PST045214,
+    pop_14_level = factor(cut(log(PST045214), length(levels)), labels=levels),
+    
     pop_density_10 = POP060210,
     
     pop_10 = POP010210,
@@ -35,6 +41,9 @@ facts_vars <- facts %>%
     # education
     edu_hs_pct_13 = EDU635213,
     edu_bachelor_pct_13 = EDU685213,
+
+    # education - categorical
+    edu_bachelor_pct_13_level = factor(cut(EDU685213, length(levels)), labels=levels),
     
     # race
     race_white_pct_14 = RHI125214, 
@@ -45,6 +54,9 @@ facts_vars <- facts %>%
     race_asian_pct_14 = RHI425214,
     race_hawaiian_pct_14 = RHI525214,
     race_two_races_pct_14 = RHI625214,
+
+    # race - categorical
+    race_white_no_hisp_pct_14_level = factor(cut(RHI825214, length(levels)), labels=levels),
     
     # sex
     females_pct_14 = SEX255214,
@@ -60,13 +72,16 @@ facts_vars <- facts %>%
     # non employer
     nonemployer_establ_rate_13 = NES010213 / PST045214,
     
-    # household
+    # housing
     housing_units_rate_14 = HSG010214 / PST045214,
     housing_person_per_household_13 = HSD310213, 
     housing_units_in_multiunit_13 = HSG096213, 
     housing_homeownership_rate_13 = HSG445213, 
     housing_househ_rate_13 = HSD410213 / PST045214, 
     housing_median_val_housing_units_13 = HSG495213,
+    
+    # housing - categorial
+    housing_units_in_multiunit_13_level = factor(cut(HSG096213, length(levels)), labels=levels),
     
     # Firms    
     firms_rate_07 = SBO001207 / PST045214,
@@ -181,6 +196,9 @@ facts_vars <- facts %>%
       # & nonfarm_private_establishments_rate_2014
     #-nf_priv_emplt_rate_13 
   )
+
+#######
+
 
 # Analysis
 facts %>% 

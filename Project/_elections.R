@@ -14,6 +14,7 @@ elections <- elections %>%
   mutate(
     party_frac_lead=frac_votes[1]-frac_votes[2],
     party_won=party[1],
+    party_republican_won=ifelse(party[1]=="republican",1,0),
     map_color=get_map_color(party[1], frac_votes[1]-frac_votes[2])
   ) %>%
   arrange(fips, party) %>%
@@ -44,10 +45,10 @@ elections <- elections %>%
     prop_republican,
     party_frac_lead,
     party_won,
+    party_republican_won,
     map_color
   ) %>% 
   group_by(fips) %>%
   filter(row_number()==1)
   
 elections$map_color <- factor(elections$map_color)
-
