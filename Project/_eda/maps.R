@@ -1,7 +1,6 @@
 ########################################
 # Map by final election by county
 
-
 #counties <- get_urbn_map(map = "counties", sf = TRUE)
 #missing<- counties[!(counties$county_fips %in% all$fips),]
 
@@ -70,7 +69,6 @@ my_map$size_normalized <- (b-a) * ((my_map$size - min_size) / (max_size - min_si
 my_map$alpha_size_normalized <- (0.9-0.5) * ((my_map$size - min_size) / (max_size - min_size)) + 0.5
 
 
-
 map <- ggplot(
     data = spatial_data
   ) +
@@ -91,6 +89,25 @@ map <- ggplot(
   ) +
   scale_color_manual(values=c("#0e4375", "#c32b0d")) +
   theme_map()
+
+
+map <- ggplot(
+  data = spatial_data
+) +
+  scale_alpha(
+    name="",
+    range=c(0.6,0),
+    guide=F
+  ) +
+  geom_sf(
+    aes(
+      fill=map_fill_population
+    )
+  ) +
+  scale_fill_identity() + 
+  theme_map()
+
+
 
 ggdraw() + draw_plot(map, 0, 0, 1, 1)
 
@@ -135,22 +152,22 @@ for (i in 1:nrow(annotations)) {
 
 
 
-pop_color_scale %<>%
+color_scale %<>%
   separate(group, into = c("gini", "mean"), sep = " - ") %>%
   mutate(gini = ifelse(gini=="democrat", 0, 1),
-         mean = ifelse(mean=="low", 0, ifelse(mean=="medium", 1, 2)))
+         mean = ifelse(mean=="low", 0, ifelse(mean=="med", 1, 2)))
 
 legend <- ggplot() +
   geom_tile(
-    data = pop_color_scale,
+    data = color_scale,
     mapping = aes(
       x = gini,
       y = mean,
       fill = fill)
   ) +
   scale_fill_identity() +
-  labs(x = "Higher inequality →️️",
-       y = "Higher income →️") +
+  labs(x = "Higher inequality ->",
+       y = "Higher income ->") +
   theme_map() +
   # make font small enough
   theme(

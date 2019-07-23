@@ -19,6 +19,8 @@ for (column in names(map_columns)) {
   
   all <- all %>%
     mutate(
+      # use !! for dynamic variable name assignment
+      # use !!rlang::sym for dynamic variable name to get from data
       !!new_col := paste(
         party_won, "-", !!rlang::sym(map_columns[[column]])
       )
@@ -27,6 +29,9 @@ for (column in names(map_columns)) {
       color_scale %>% rename(!!new_col_fill := fill), by = setNames("group", new_col)
     )
 }
+
+################################################
+################################################
 
 # Removing incomplete rows
 all <- all[complete.cases(all),]
