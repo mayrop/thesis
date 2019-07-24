@@ -50,37 +50,3 @@ elections[elections$fips %in% elections_fips[!(elections_fips %in% facts_fips)] 
 
 print("Extras in facts")
 facts[facts$fips %in% facts_fips[!(facts_fips %in% elections_fips)],]
-# 15005 does not have data
-
-  
-############################ 
-
-#atlas <- read.csv("data/uselectionatlas.csv")
-#atlas[atlas$fips==46113,]$fips <- 46102
-
-#atlas_fips <- unique(atlas$fips)
-
-#setdiff(atlas_fips, elections_fips)
-#setdiff(elections_fips, atlas_fips)
-
-#View(elections[elections$fips %in% setdiff(elections_fips, atlas_fips),])
-
-
-############################ 
-
-#scraped <- read.csv("scraped/2012-2016.csv")
-#scraped_orig <- scraped
-#scraped <- scraped[!is.na(scraped$county_fips),]
-
-#dem_won_fips <- scraped[scraped$votes_dem_2016>scraped$votes_gop_2016,]$combined_fips
-#dem_won_fips_mine <- as.numeric(elections[elections$votes_democrat>elections$votes_republican&elections$state_abbreviation!="AK",]$fips)
-
-#dem_won_fips_mine[!(dem_won_fips_mine %in% dem_won_fips)]
-#dem_won_fips[!(dem_won_fips %in% dem_won_fips_mine)]
-
-#check <- c(dem_won_fips_mine[!(dem_won_fips_mine %in% dem_won_fips)], dem_won_fips[!(dem_won_fips %in% dem_won_fips_mine)])
-# facts[facts$fips==46113 &  !is.na(facts$fips),]$fips <- 46102
-
-#elections[elections$fips==29095,]
-
-
