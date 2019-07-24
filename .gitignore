@@ -270,3 +270,4 @@ TSWLatexianTemp*
 *.Rhistory
 */__latexindent_temp.tex
 Articles/*
+docs/Articles/*
