@@ -1,12 +1,7 @@
 ########################################
-# Map by final election by county
-
-#counties <- get_urbn_map(map = "counties", sf = TRUE)
-#missing<- counties[!(counties$county_fips %in% all$fips),]
-
-#Error: stat_sf requires the following missing aesthetics: geometry
-#packageurl <- "http://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.0.0.tar.gz"
-#install.packages(packageurl, repos=NULL, type="source")
+# Error: stat_sf requires the following missing aesthetics: geometry
+# packageurl <- "http://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.0.0.tar.gz"
+# install.packages(packageurl, repos=NULL, type="source")
 
 spatial_data %>% 
   ggplot() + 
@@ -164,7 +159,7 @@ for (i in 1:nrow(annotations)) {
 }
 
 
-width = 0.35
+tile_width = 0.35
 
 color_scale <- tibble(
     "democrat - low" = "#C0CCDD",
@@ -199,8 +194,6 @@ de2 <- rbind(
 )
 
 color_scale <- rbind(color_scale, de)
-  
-
 
 arrow <- stri_unescape_unicode(gsub("\\U", "\\u", "\\U2192", fixed=TRUE))
 
@@ -245,9 +238,6 @@ legend <- ggplot(
   ) +
   # quadratic tiles
   coord_fixed()
-
-
-
 
 ggdraw() + draw_plot(map, 0, 0, 1, 1) +
   draw_plot(legend, 0.05, 0.135, 0.2, 0.2)
