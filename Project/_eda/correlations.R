@@ -36,12 +36,12 @@ predictors <- predictors$var
 
 predictors <- c(predictors, "prop_republican")
 
-#predictors <- predictors[!grepl("_07",predictors)]
-
-#correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
+# TODO - Backup the idea of removing _07 variables
+# predictors <- predictors[!grepl("_07",predictors)]
+# correlations <- cor(facts_vars[,-which(colnames(facts_vars) %in% c("fips", "area_name", "state_facts"))])
 
 correlations <- cor(all[,which(colnames(all) %in% predictors)])
-#https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
+# https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
 corrplot::corrplot(correlations, order = "hclust", addrect = 10, tl.col = "black", tl.srt = 45)
 
 ### Cluster of variables
@@ -55,13 +55,13 @@ correlation[correlation < 0.5] = 0
 
 dissimilarity = 1 - correlation
 
-dissimilarity2 <- as.data.frame(dissimilarity) %>%
+dissimilarity <- as.data.frame(dissimilarity) %>%
   rownames_to_column('mycol') %>%
   filter(!(rowSums(dissimilarity) == nrow(dissimilarity) - 1)) %>%
   column_to_rownames('mycol') %>%
   select(rownames((dissimilarity[!(rowSums(dissimilarity) == nrow(dissimilarity) - 1),])))
 
-distance = as.dist(dissimilarity2)
+distance = as.dist(dissimilarity)
 cluster = hclust(distance, method="complete")
 plot(cluster, cex=0.7)
 
@@ -77,31 +77,32 @@ plot(hcd, horiz=T, xlim=c(1, -0.5))
 ##############################################
 ##############################################
 
-exclude <- unique(c(
-  which(colnames(all) %in% category_cols[category_cols != "party_won"]),
-  which(colnames(all) %in% elections_cols[elections_cols != "party_won"]) 
-))
+# TODO - Check later
+# exclude <- unique(c(
+  # which(colnames(all) %in% category_cols[category_cols != "party_won"]),
+  # which(colnames(all) %in% elections_cols[elections_cols != "party_won"]) 
+# ))
 
-pairs_matrix <- all[,-c(exclude)]
+# pairs_matrix <- all[,-c(exclude)]
 
-pairs(pairs_matrix[,c(1:7)], col=pairs_matrix$party_won)
-pairs(pairs_matrix[,c(8:12)], col=pairs_matrix$party_won)
-pairs(pairs_matrix[,c(13:17)], col=pairs_matrix$party_won)
-pairs(pairs_matrix[,c(20:24)], col=pairs_matrix$party_won)
+# pairs(pairs_matrix[,c(1:7)], col=pairs_matrix$party_won)
+# pairs(pairs_matrix[,c(8:12)], col=pairs_matrix$party_won)
+# pairs(pairs_matrix[,c(13:17)], col=pairs_matrix$party_won)
+# pairs(pairs_matrix[,c(20:24)], col=pairs_matrix$party_won)
 
-x <- pairs_matrix[,-c(1)]
-y <- pairs_matrix[,]$party_won
+# x <- pairs_matrix[,-c(1)]
+# y <- pairs_matrix[,]$party_won
 
-# load the data
-data(iris)
-# pair-wise plots of all 4 attributes, dots colored by class
-featurePlot(x=iris[,1:4], y=iris[,5], plot="pairs", auto.key=list(columns=3))
+## load the data
+# data(iris)
+## pair-wise plots of all 4 attributes, dots colored by class
+# featurePlot(x=iris[,1:4], y=iris[,5], plot="pairs", auto.key=list(columns=3))
 
-scales <- list(x=list(relation="free"), y=list(relation="free"))
-featurePlot(x=x[1:12], y=y, plot="density", scales=scales)
-featurePlot(x=x[13:24], y=y, plot="density", scales=scales)
-featurePlot(x=x[25:36], y=y, plot="density", scales=scales)
-featurePlot(x=log(x[37:48]), y=y, plot="density", scales=scales)
-featurePlot(x=log(x[49:50]), y=y, plot="density", scales=scales)
+# scales <- list(x=list(relation="free"), y=list(relation="free"))
+# featurePlot(x=x[1:12], y=y, plot="density", scales=scales)
+# featurePlot(x=x[13:24], y=y, plot="density", scales=scales)
+# featurePlot(x=x[25:36], y=y, plot="density", scales=scales)
+# featurePlot(x=log(x[37:48]), y=y, plot="density", scales=scales)
+# featurePlot(x=log(x[49:50]), y=y, plot="density", scales=scales)
 
 
