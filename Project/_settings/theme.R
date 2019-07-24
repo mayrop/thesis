@@ -16,11 +16,11 @@ color_scale <- tibble(
   "republican - high" = "#c32b0d"
 ) %>% gather("group", "fill")
 
-
+loadfonts()
 theme_map <- function(...) {
   theme_minimal() +
     theme(
-      text = element_text(family = "Arial",
+      text = element_text(family = "Arial Unicode MS",
                           color = default_font_color),
       # remove all axes
       axis.line = element_blank(),

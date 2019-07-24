@@ -20,7 +20,9 @@ libraries <- c(
   "ellipse", # https://stackoverflow.com/questions/44502469/r-featureplot-returning-null
   # "psych", "emmeans", "lmtest", # https://rcompanion.org/handbook/J_02.html
   "car", "rcompanion", "e1071", "ROCR", "glmnet", "tibble", "dendextend",
-  "sf", "cowplot" # maps
+  "sf", "cowplot",  # maps
+  #"extrafont",
+  "stringi" #https://stackoverflow.com/questions/29265172/print-unicode-character-string-in-r
 )
 
 

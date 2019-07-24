@@ -46,7 +46,7 @@ my_map <- spatial_data %>%
   mutate(
     longitude=map_dbl(geometry, ~st_centroid(.x)[[1]]),
     latitude=map_dbl(geometry, ~st_centroid(.x)[[2]]),
-    size=ifelse(party_won=="democrat",votes_democrat,votes_republican),
+    size=ifelse(party_won=="democrat",sqrt(votes_democrat),sqrt(votes_republican)),
     color=party_won
   )
 
@@ -59,7 +59,7 @@ my_map <- my_map %>%
     color
   )
 
-b<-15
+b<-10
 a<-0.001
 min_size <- min(my_map$size)
 max_size <- max(my_map$size)
@@ -77,40 +77,53 @@ map <- ggplot(
     range=c(0.6,0),
     guide=F
   ) +
-  geom_sf() + 
+  geom_sf(
+    color = "gray",
+    size = 0.1
+  ) + 
   geom_point(
     data=my_map,
     aes(
       x=longitude,
       y=latitude,
       color=color      
-    ), size=my_map$size_normalized,
+    ), 
+    size=my_map$size_normalized,
     alpha = my_map$alpha_size_normalized
   ) +
   scale_color_manual(values=c("#0e4375", "#c32b0d")) +
   theme_map()
 
 
+ggdraw() + draw_plot(map, 0, 0, 1, 1)
+
 map <- ggplot(
-  data = spatial_data
-) +
+    data = spatial_data
+  ) +
   scale_alpha(
     name="",
     range=c(0.6,0),
     guide=F
-  ) +
+  ) +  
   geom_sf(
     aes(
       fill=map_fill_population
-    )
+    ),
+    color = "white",
+    size = 0.1
   ) +
-  scale_fill_identity() + 
-  theme_map()
-
-
+  geom_sf(
+    data = states_data,
+    aes(), 
+    fill = "transparent",
+    color = "white", 
+    size = 0.25
+  ) + 
+  coord_sf(crs = "+proj=merc +lat_1=25 +lat_2=50 +lon_0=-100") +
+  scale_fill_identity(guide = "legend")
 
 ggdraw() + draw_plot(map, 0, 0, 1, 1)
-
+ 
 for (i in 1:nrow(annotations)) {
   current <- annotations[i,]
   
@@ -151,33 +164,93 @@ for (i in 1:nrow(annotations)) {
 }
 
 
+width = 0.35
 
-color_scale %<>%
-  separate(group, into = c("gini", "mean"), sep = " - ") %>%
-  mutate(gini = ifelse(gini=="democrat", 0, 1),
-         mean = ifelse(mean=="low", 0, ifelse(mean=="med", 1, 2)))
+color_scale <- tibble(
+    "democrat - low" = "#C0CCDD",
+    "democrat - med" = "#819ABB",
+    "democrat - high" = "#0e4375",
+  
+    "republican - low" = "#ddbdbd",
+    "republican - med" = "#cf6a55",
+    "republican - high" = "#c32b0d"
+  ) %>% 
+  gather("group", "fill")  %>%
+  separate(group, into = c("x", "y"), sep = " - ") %>%
+  mutate(
+    x = ifelse(x=="democrat", 0, width * 1.25),
+    y = ifelse(y=="low", 0, ifelse(y=="med", width, width*2)),
+    w = rep(width, 6),
+    h = rep(width, 6),
+    label = "",
+    size = rep(1, 6)
+  )
+  
 
-legend <- ggplot() +
-  geom_tile(
+de <- rbind(
+  data.frame(x=width*1.75, y=0, fill="transparent", label="$30K - $40K", w=width*3, h=width*2, size=3),
+  data.frame(x=width*1.75, y=width, fill="transparent", label="$20K - $30K", w=width*3, h=width*2, size=3),
+  data.frame(x=width*1.75, y=width*2, fill="transparent", label="$17K - $20K", w=width*3, h=width*2, size=3)
+)
+  
+de2 <- rbind(
+  data.frame(x=0, y=width/-1.35, fill="transparent", label="Clinton", w=width*3, h=width/2, size=3),
+  data.frame(x=width, y=width/-1.35, fill="transparent", label="Trump", w=width*3, h=width/2, size=3)
+)
+
+color_scale <- rbind(color_scale, de)
+  
+
+
+arrow <- stri_unescape_unicode(gsub("\\U", "\\u", "\\U2192", fixed=TRUE))
+
+legend <- ggplot(
     data = color_scale,
-    mapping = aes(
-      x = gini,
-      y = mean,
-      fill = fill)
+    aes(
+      x = x,
+      y = y,
+      width = w,
+      height = h
+    )) +
+  geom_tile(
+    aes(
+      fill = fill
+    )) +
+  geom_text(
+    data = de,
+    aes(
+      label = label,
+      size = size
+    ),
+    hjust = 0
+  ) +
+  geom_text(
+    data = de2,
+    aes(
+      label = label,
+      size = size
+    )
   ) +
   scale_fill_identity() +
-  labs(x = "Higher inequality ->",
-       y = "Higher income ->") +
+  scale_size_identity() +
+  #labs(
+  #  y = paste("Highder income ", arrow)
+  #) +
   theme_map() +
   # make font small enough
   theme(
-    axis.title = element_text(size = 6)
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    legend.position = "none"
   ) +
   # quadratic tiles
   coord_fixed()
 
+
+
+
 ggdraw() + draw_plot(map, 0, 0, 1, 1) +
-  draw_plot(legend, 0.05, 0.075, 0.2, 0.2)
+  draw_plot(legend, 0.05, 0.135, 0.2, 0.2)
   
 
  spatial_data %>% 
