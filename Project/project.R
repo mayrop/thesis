@@ -13,12 +13,17 @@
 # Setting project directory
 # setwd("~/Github/thesis/Project")
 # setwd("H:/thesis-master/Project")
-source("_settings/load_data.R")
+library(config)
+config <- config::get()
+
+source("_settings/functions.R")
+load_libraries(config$settings$libraries)
+load_sources(config$settings$sources)
+
+datasets <- load_datasets(config$settings$data_folder)
 
 # S E T T I N G S
 
-source("_settings/libraries.R")
-source("_settings/functions.R")
 source("_settings/theme.R")
 
 ############################
@@ -40,121 +45,35 @@ source("_data_preprocessing/sanity_checks.R")
 
 ## Joins
 source("_data_preprocessing/joins.R")
-    
-##########
-# setting dataset
 
-indices <- sample(seq(1, 2), size = nrow(all), replace = TRUE, prob = c(0.6, 0.4))
+############################################
+############################################
 
-train.data <- all[indices == 1,]
-test.data <- all[indices == 2,]
+set.seed(2019)
+indices = createDataPartition(all$party_republican_won_factor, p = 0.6, list = FALSE)
+train.data = all[indices,]
+test.data = all[-indices,]
+
+# Double checking proportions
+
+prop.table(table(train.data$party_republican_won_factor))
+table(train.data$party_republican_won_factor)
+
+prop.table(table(test.data$party_republican_won_factor))
+table(test.data$party_republican_won_factor)
+
+############################################
+############################################
+
+# Exploratory Data Analysis
+
+## Joins
+source("_eda/predictors.R")
 
 source("_eda/correlations.R")
 # source("_eda/plots.R") # TODO check & improve
 source("_eda/maps.R")
 
 
- #####################################
-
-# votes
-
-
-mapping_columns <- list(
-  "pop_14" = "log2(pop_14)",
-  "pop_density_10" = "log2(pop_density_10)"
-)
-
-formula <- ""
-
-for (predictor in predictors) {
-  if (!grepl("_13", predictor) & !grepl("_14", predictor)) {
-    next
-  }
-  
-  if (!(predictor %in% names(mapping_columns))) {
-    mapping_columns[[predictor]] <- predictor
-  }
-  
-  sep <- ifelse(formula == "", " ", " + ")
-  formula <- paste(formula, mapping_columns[[predictor]], sep=sep)
-}
-
-formula <- as.formula(paste("party_republican_won ~ ", formula, sep=""))
-
-model <- glm(formula, data=train.data, family = binomial)
-summary(model)
-
-all_p_values <- coef(summary(model))[,4]
-p_values <- all_p_values[all_p_values < 0.05]
-
-formula <- ""
-
-for (i in 1:length(names(p_values))) {
-  predictor <- names(p_values)[i]
-  if (predictor == "(Intercept)") {
-    next
-  }
-  
-  sep <- ifelse(formula=="", " ", " + ")
-  formula <- paste(formula, predictor, sep=sep)
-}
-
-formula <- paste("party_republican_won ~ ", formula, sep="")
-formula <- (as.formula(formula))
-model <- glm(formula, data=train.data, family = binomial)
-summary(model)
-
-accuracy(list(model), plotit=TRUE, digits=3)
-
-evaluate <- evaluate_model(model, test.data, "party_republican_won")
-RMSPE(y_pred = evaluate$y_predictions + 1, y_true = evaluate$y_true + 1)
-
-plot(evaluate$performance)
-
-HosmerLemeshow(model, g = 10)
-
-HLTest2(model, g=8)
-
-##### Penalized logistic regression
-
-x <- model.matrix(formula, train)
-newx <- model.matrix(formula, test)
-
-y <- train$party_won_num
-
-# alpha = 1 -> lasso, 0 -> ridge
-cv.elasticnet <- cv.glmnet(x, y, alpha = 0.5, family = "binomial",  type.measure = "deviance")
-
-plot(cv.elasticnet)
-coef(cv.elasticnet, s = "lambda.min")
-
-
-
-
-predict(cv.elasticnet, newx=newx, s = "lambda.min", type = "class")
-
-
-
-HLTest(model.ridge, g=6)
-
-pR2(glm.fit)
-
-
-evaluation <- evaluate_model(model, test, "party_won")
-
-
-Anova(model, 
-      type="II", 
-      test="Wald")
-
-nagelkerke(model)
-summary(model)
-
-emplogit(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
-empLogitPlot(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
-
-ggplot(data = melted_correlation, aes(x=X1, y=X2, fill=value)) + 
-  geom_tile() + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
+#####################################
 

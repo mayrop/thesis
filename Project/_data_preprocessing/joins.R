@@ -6,14 +6,7 @@ all <- full_join(
 
 # Handling the data for maps
 
-map_columns <- list(
-  "population" = "pop_14_level",
-  "education" = "edu_bachelor_pct_13_level",
-  "race_white" = "race_white_no_hisp_pct_14_level",
-  "housing_units" = "housing_units_in_multiunit_13_level"
-)
-
-for (column in names(map_columns)) {
+for (column in names(config$maps$mapping)) {
   new_col = paste("map_", column, sep="")
   new_col_fill = paste("map_fill_", column, sep="")
   
@@ -22,7 +15,7 @@ for (column in names(map_columns)) {
       # use !! for dynamic variable name assignment
       # use !!rlang::sym for dynamic variable name to get from data
       !!new_col := paste(
-        party_won, "-", !!rlang::sym(map_columns[[column]])
+        party_won, "_", !!rlang::sym(config$maps$mapping[[column]]), sep=""
       )
     ) %>%
     left_join(
@@ -57,3 +50,11 @@ spatial_data <- left_join(counties_data, all,
 
 # TODO - Improve readability
 spatial_data <- spatial_data[!is.na(spatial_data$state_abbreviation),]
+
+
+#################################################################################
+######### Cleanup
+rm(column)
+rm(new_col)
+rm(new_col_fill)
+

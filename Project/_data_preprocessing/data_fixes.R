@@ -1,8 +1,8 @@
 # Changes per:
 # https://www.cdc.gov/nchs/nvss/bridged_race/county_geography-_changes2015.pdf
 
-elections <- elections_orig
-facts <- facts_orig
+elections <- datasets[["counties_orig"]]
+facts <- datasets[["facts_orig"]]
 
 #########################################
 # Fixing factor for "Other" candidate (since it has <NA>)
@@ -65,3 +65,14 @@ elections[cond2,] <- NA
 
 ###### Remove this one again
 elections <- elections[!is.na(elections$FIPS),]
+
+
+#################################################################################
+######### Cleanup
+rm(e29095)
+rm(e36000)
+rm(cond)
+rm(cond1)
+rm(cond2)
+rm(party)
+rm(elections_fix)

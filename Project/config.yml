@@ -1,0 +1,49 @@
+# opoios mu xanatei gia istoria apo strato tha tu po ti pathaino stin periodo
+default:
+  settings:
+    data_folder: "data"
+    load_fonts: 1
+    libraries: !expr c(
+        "ggplot2", "GGally", "gridExtra", "dplyr", 
+        "moderndive", "skimr", "plotly", "tidyr", "magrittr", 
+        "tidyverse", "reshape2", "corrplot", "caret", "ellipse", "car", "rcompanion", 
+        "e1071", "ROCR", "glmnet", 
+        "tibble",
+        "dendextend", 
+        "urbnmapr", "sf", "cowplot",  
+        "extrafont",
+        "digest",
+        "stringi"
+      )
+    sources: !expr c(
+        "http://www.sthda.com/upload/rquery_cormat.r"
+      )
+  predictors:
+    correlation: 0.22
+    regression_variable: "frac_republican"
+    remove_2007: 1 # TODO - Backup the idea of removing _07 variables
+    use_all_for_correlations: 1 # TODO - Get better naming convention
+  theme:
+    font_family: "Arial"
+    font_color: "#4e4d47"
+    bg_color: "#f5f5f2"
+    border_color: "#e8e8e5"
+  maps:
+    colors: !expr data.frame(
+        "democrat_low" = "#C0CCDD",
+        "democrat_med_low" = "#a9bbd3",
+        "democrat_med" = "#819ABB",
+        "democrat_med_high" = "#26659b",
+        "democrat_high" = "#0e4375",
+        "republican_low" = "#ddbdbd",
+        "republican_med_low" = "#db8f7f",
+        "republican_med" = "#cf6a55",
+        "republican_med_high" = "#c95d47",  
+        "republican_high" = "#c32b0d"
+      )
+    mapping: !expr list(
+        "population" = "pop_14_level",
+        "education" = "edu_bachelor_pct_13_level",
+        "race_white" = "race_white_no_hisp_pct_14_level",
+        "housing_units" = "housing_units_in_multiunit_13_level"
+      )

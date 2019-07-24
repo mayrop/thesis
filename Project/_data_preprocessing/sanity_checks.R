@@ -2,6 +2,8 @@
 #elections_fips <- unique(elections_orig[elections_orig$year==2016 & !is.na(elections_orig$state_po), "FIPS"])
 
 ####################
+elections_uni <- datasets[["elections_uni"]]
+
 sum(elections$votes_other) / sum(elections$votes_total)
 # [1] 0.05620822
 sum(elections$votes_republican) / sum(elections$votes_total)
@@ -50,3 +52,15 @@ elections[elections$fips %in% elections_fips[!(elections_fips %in% facts_fips)] 
 
 print("Extras in facts")
 facts[facts$fips %in% facts_fips[!(facts_fips %in% elections_fips)],]
+
+
+#################################################################################
+######### Cleanup
+rm(levels)
+rm(facts_fips)
+rm(elections_fips)
+rm(elections_other_donald)
+rm(elections_uni_donald)
+rm(missing)
+rm(elections_uni)
+
