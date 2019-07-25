@@ -4,7 +4,7 @@
 types <- sapply(all, class)
 cols <- names(types)
 
-category_cols <- cols[types=="character"|types=="factor"]
+category_cols <- cols[types=="character" | types=="factor"]
 elections_cols <- cols[grepl("votes_|frac_|party_|prop_", cols)]
 
 continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
@@ -36,12 +36,14 @@ elections_correlation_table <- rquery.cormat(continous, type="flatten", graph=FA
 predictors <- elections_correlation_table[elections_correlation_table$cor_abs > config$predictors$correlation,]
 predictors <- predictors$var
 
+# Removing 2007 variables if needed
+regex <- paste(config$predictors$valid_suffixes, collapse="|")
+predictors <- predictors[grepl(regex,predictors)]  
+
 # Adding the regression variable to the predictos vector
 # TODO - Check & document why
 predictors <- c(predictors, config$predictors$regression_variable)
 
-# Removing 2007 variables if needed
-if (config$predictors$remove_2007) {
-  predictors <- predictors[!grepl("_07",predictors)]  
-}
-
+#################################################################################
+######### Cleanup
+rm(regex)

@@ -19,7 +19,7 @@ for (column in names(config$maps$mapping)) {
       )
     ) %>%
     left_join(
-      color_scale %>% rename(!!new_col_fill := fill), by = setNames("group", new_col)
+      color_scale %>% rename(!!new_col_fill := fill), by=setNames("group", new_col)
     )
 }
 

@@ -49,18 +49,22 @@ source("_data_preprocessing/joins.R")
 ############################################
 ############################################
 
-set.seed(2019)
-indices = createDataPartition(all$party_republican_won_factor, p = 0.6, list = FALSE)
+set.seed(config$seed)
+response <- config$predictors$response_variable
+
+indices = createDataPartition(pull(all[,response]), p = 0.6, list = FALSE)
 train.data = all[indices,]
 test.data = all[-indices,]
 
+rm(indices)
+
 # Double checking proportions
 
-prop.table(table(train.data$party_republican_won_factor))
-table(train.data$party_republican_won_factor)
+prop.table(table(train.data[,response]))
+table(train.data[,response])
 
-prop.table(table(test.data$party_republican_won_factor))
-table(test.data$party_republican_won_factor)
+prop.table(table(test.data[,response]))
+table(test.data[,response])
 
 ############################################
 ############################################
@@ -69,8 +73,11 @@ table(test.data$party_republican_won_factor)
 
 ## Joins
 source("_eda/predictors.R")
+length(predictors)
+predictors
 
 source("_eda/correlations.R")
+
 # source("_eda/plots.R") # TODO check & improve
 source("_eda/maps.R")
 

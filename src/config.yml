@@ -1,4 +1,5 @@
 default:
+  seed: 2019
   settings:
     data_folder: "data"
     load_fonts: 1
@@ -18,10 +19,18 @@ default:
         "http://www.sthda.com/upload/rquery_cormat.r"
       )
   predictors:
-    correlation: 0.22
+    response_variable: "party_republican_won_factor"
+    correlation: 0.225
     regression_variable: "frac_republican"
-    remove_2007: 1 # TODO - Backup the idea of removing _07 variables
     use_all_for_correlations: 1 # TODO - Get better naming convention
+    transformations: !expr list(
+        "pop_14" = "log2(pop_14)",
+        "pop_density_10" = "log2(pop_density_10)"
+      )
+    valid_suffixes: !expr c(
+        "_13$", 
+        "_14$"
+      )
   theme:
     font_family: "Arial"
     font_color: "#4e4d47"

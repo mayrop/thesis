@@ -1,26 +1,11 @@
 # votes
 
-mapping_columns <- list(
-  "pop_14" = "log2(pop_14)",
-  "pop_density_10" = "log2(pop_density_10)"
+formula <- build_initial_formula(
+  response=response,
+  predictors=predictors,
+  regex=paste(config$predictors$valid_suffixes, collapse="|"),
+  transformations=config$predictors$transformations
 )
-
-formula <- ""
-
-for (predictor in predictors) {
-  if (!grepl("_13", predictor) & !grepl("_14", predictor)) {
-    next
-  }
-  
-  if (!(predictor %in% names(mapping_columns))) {
-    mapping_columns[[predictor]] <- predictor
-  }
-  
-  sep <- ifelse(formula == "", " ", " + ")
-  formula <- paste(formula, mapping_columns[[predictor]], sep=sep)
-}
-
-formula <- as.formula(paste("party_republican_won_factor ~ ", formula, sep=""))
 
 model = train(
   form = formula,
@@ -33,7 +18,7 @@ model = train(
   ),
   method = "glm",
   family = "binomial",
-  metric="ROC"
+  metric = "ROC"
 )
 
 varImp(model)
@@ -42,12 +27,13 @@ summary(model)
 
 models = list()
 
-add_model <- function(model, name) {
+add_model <- function(model, name, newdata) {
   # hash <- digest(toString(summary(model)), "md5", serialize = FALSE)
   
   models[[name]]$model <<- model
   models[[name]]$i <<- length(models)
   models[[name]]$name <<- name
+  models[[name]]$results <<- model$results
 }
 
 add_model(model, "testing4")

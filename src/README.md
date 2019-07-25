@@ -290,6 +290,8 @@ Electronic Theses, Treatises and Dissertations The Graduate School
 - Functions from class
 - **Link**: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
 - remove_collinear_columns
+- **Link**: http://www.medicine.mcgill.ca/epidemiology/joseph/courses/EPIB-621/logselect.pdf
+Model Selection in Logistic Regression
 
 
 # Notes

@@ -1,19 +1,24 @@
+library(RColorBrewer)
+
 
 correlations <- cor(all[,which(colnames(all) %in% predictors)])
 # https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
-corrplot::corrplot(correlations, order = "hclust", addrect = 10, tl.col = "black", tl.srt = 45)
+corrplot::corrplot(
+  correlations, order="hclust", 
+  addrect=10, tl.col="black", tl.srt=45, col=brewer.pal(n=10, name="RdYlBu")
+)
 
 ### Cluster of variables
+regex <- paste(config$predictors$valid_suffixes, collapse="|")
 
 continous <- all[,-which(colnames(all) %in% category_cols)]
 continous <- continous[,-which(names(continous) %in% elections_cols)]
-continous <- continous[,-which(grepl("_07", names(continous)))]
+continous <- continous[,which(grepl(regex, names(continous)))]
 
 correlation <- cor(continous, use="complete.obs", method="pearson")
 correlation[correlation < 0.5] = 0
 
-dissimilarity = 1 - correlation
-
+dissimilarity <- 1 - correlation
 dissimilarity <- as.data.frame(dissimilarity) %>%
   rownames_to_column('mycol') %>%
   filter(!(rowSums(dissimilarity) == nrow(dissimilarity) - 1)) %>%
