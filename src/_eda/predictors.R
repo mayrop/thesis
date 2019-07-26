@@ -1,6 +1,18 @@
 ##############################################
 ##############################################
 
+#pattern <- paste(config$predictors$valid_suffixes, collapse="|")
+
+#importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], 
+#                           y = pull(all[,response]))
+
+#importants <- importants[order(-importants$yes),]
+#importants <- importants[1:17,]
+#importants_names <- rownames(importants)
+
+#setdiff(importants_names, predictors)
+#setdiff(predictors, importants_names)
+
 types <- sapply(all, class)
 cols <- names(types)
 
@@ -39,6 +51,9 @@ predictors <- predictors$var
 # Removing 2007 variables if needed
 regex <- paste(config$predictors$valid_suffixes, collapse="|")
 predictors <- predictors[grepl(regex,predictors)]  
+
+
+
 
 # Adding the regression variable to the predictos vector
 # TODO - Check & document why

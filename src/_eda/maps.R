@@ -86,8 +86,7 @@ map <- ggplot(
     size=my_map$size_normalized,
     alpha = my_map$alpha_size_normalized
   ) +
-  scale_color_manual(values=c("#0e4375", "#c32b0d")) +
-  theme_map()
+  scale_color_manual(values=c("#0e4375", "#c32b0d"))
 
 
 ggdraw() + draw_plot(map, 0, 0, 1, 1)

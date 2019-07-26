@@ -7,6 +7,70 @@ formula <- build_initial_formula(
   transformations=config$predictors$transformations
 )
 
+model <- glm(
+  formula, data=train.data, family=binomial()
+)
+
+threshold <- 0.05
+
+p_values <- data.frame(
+  covariate = names(coef(summary(model))[,4]),
+  p_value = coef(summary(model))[,4]
+)
+
+p_values <- p_values[order(-p_values$p_value),]
+p_values <- p_values[p_values$covariate!="(Intercept)",]
+
+if (p_values[1, "p_value"] > threshold) {
+  # removing one variable
+}
+
+
+
+mydataset <- train.data[,which(colnames(train.data) %in% c(predictors, "party_republican_won"))]
+mydataset %<>% 
+  rename(
+    y=party_republican_won
+  ) %>% 
+  mutate(
+    pop_14 = log(pop_14)
+  ) %>% 
+  select(
+    -!!config$predictors$regression_variable
+  ) %>%
+  select(
+    -y, y
+  )
+mydataset <- as.data.frame(mydataset)
+
+methods <- c("AIC", "BIC", "BICg", "BICq", "LOOCV", "CV")
+
+data(SAheart)
+bestglm(SAheart, IC="BIC", family=binomial)
+
+bestAIC <- bestglm(mydataset, IC="BIC", family=binomial)
+bestBIC <- bestglm(mydataset, IC="AIC", family=binomial)
+bestEBIC <- bestglm(mydataset, IC="BICg", family=binomial())
+bestBICq <- bestglm(mydataset, IC="BICq", family=binomial())
+
+ins_p_values <- all_p_values[all_p_values < 0.05]
+
+formula <- ""
+
+for (i in 1:length(names(p_values))) {
+  predictor <- names(p_values)[i]
+  
+  if (predictor == "(Intercept)") {
+    next
+  }
+  
+  sep <- ifelse(formula=="", " ", " + ")
+  formula <- paste(formula, predictor, sep=sep)
+}
+
+
+cdplot(formula, data=train.data)
+
 model = train(
   form = formula,
   data = train.data,
@@ -52,39 +116,6 @@ perf <- performance(pred, measure = "tpr", x.measure = "fpr")
 
 predict(model, newdata=test.data, type="prob")
 
-Null deviance: 1626.33  on 1867  degrees of freedom
-Residual deviance:  668.18  on 1858  degrees of freedom
-AIC: 688.18
-
-Number of Fisher Scoring iterations: 7
-
-> model$results
-parameter       ROC      Sens     Spec      ROCSD     SensSD     SpecSD
-1      none 0.9532191 0.6796552 0.972676 0.02050938 0.09506711 0.01200
-
-Null deviance: 1626.33  on 1867  degrees of freedom
-Residual deviance:  663.19  on 1852  degrees of freedom
-AIC: 695.19
-
-Number of Fisher Scoring iterations: 7
-
-parameter       ROC      Sens      Spec      ROCSD     SensSD     SpecSD
-1      none 0.9538329 0.6836782 0.9714464 0.01720152 0.08185938 0.01554758
-
-all_p_values <- coef(summary(model))[,4]
-p_values <- all_p_values[all_p_values < 0.05]
-
-formula <- ""
-
-for (i in 1:length(names(p_values))) {
-  predictor <- names(p_values)[i]
-  if (predictor == "(Intercept)") {
-    next
-  }
-  
-  sep <- ifelse(formula=="", " ", " + ")
-  formula <- paste(formula, predictor, sep=sep)
-}
 
 formula <- paste("party_republican_won_factor ~ ", formula, sep="")
 formula <- (as.formula(formula))
