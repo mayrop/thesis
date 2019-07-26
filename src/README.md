@@ -2,6 +2,12 @@
 
 ## Literature Review 
 
+### The Design and Analysis of Benchmark Experiments
+- **Link**: https://homepage.boku.ac.at/leisch/papers/Hothorn+Leisch+Zeileis-2005.pdf
+- **Link (Code)**: https://topepo.github.io/caret/model-training-and-tuning.html
+- **Link (Code)**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
+- **Link (Code)**: https://www.rdocumentation.org/packages/bestglm/versions/0.37/topics/bestglm
+
 ### Independent Relationship of Changes in Death Rates with Changes in US Presidential Voting
 - **Link**: https://link.springer.com/article/10.1007/s11606-018-4568-6  
 - Very good resource to reference and take ideas from  
