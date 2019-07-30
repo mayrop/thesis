@@ -1,17 +1,24 @@
 ##############################################
 ##############################################
 
-#pattern <- paste(config$predictors$valid_suffixes, collapse="|")
+# pattern <- paste(config$predictors$valid_suffixes, collapse="|")
 
-#importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], 
-#                           y = pull(all[,response]))
+# importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], y = pull(all[,response]))
 
-#importants <- importants[order(-importants$yes),]
-#importants <- importants[1:17,]
-#importants_names <- rownames(importants)
+# importants <- importants[order(-importants$yes),]
+# importants <- importants[1:20,]
+# importants_names <- rownames(importants)
 
-#setdiff(importants_names, predictors)
-#setdiff(predictors, importants_names)
+# setdiff(importants_names, predictors)
+# setdiff(predictors, importants_names)
+
+# knnFit <- train(as.data.frame(all[,which(grepl(pattern, names(all)))]), pull(all[,response]), "knn")
+# knnImp <- varImp(knnFit)
+# dotPlot(knnImp)
+# }
+
+# featurePlot(x=x[1:12], y=y, plot="density", )
+# 
 
 types <- sapply(all, class)
 cols <- names(types)
@@ -33,32 +40,31 @@ demographic_correlations_table <- rquery.cormat(continous, type="flatten", graph
 
 elections_correlation_table <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
   # Only interested in the cols correlated to prop_republican
-  filter(column==config$predictors$regression_variable | row==config$predictors$regression_variable) %>% 
+  filter(column=="response_regression" | row=="response_regression") %>% 
   filter(
-    !(column %in% elections_cols & column != config$predictors$regression_variable) & 
-      !(row %in% elections_cols & row != config$predictors$regression_variable)) %>% 
+    !(column %in% elections_cols & column != "response_regression") & 
+      !(row %in% elections_cols & row != "response_regression")) %>% 
   mutate(
     cor_abs = abs(cor), 
-    var = ifelse(row == config$predictors$regression_variable, as.character(column), as.character(row))
+    var = ifelse(row == "response_regression", as.character(column), as.character(row))
   ) %>% 
   arrange(desc(cor_abs)) %>% 
-  select(var, cor, p, cor_abs)
+  dplyr::select(var, cor, p, cor_abs)
 
 # Filtering out variables that are not highly correlated
-predictors <- elections_correlation_table[elections_correlation_table$cor_abs > config$predictors$correlation,]
+predictors <- elections_correlation_table[elections_correlation_table$cor_abs >= config$predictors$correlation,]
 predictors <- predictors$var
 
-# Removing 2007 variables if needed
+# 
 regex <- paste(config$predictors$valid_suffixes, collapse="|")
 predictors <- predictors[grepl(regex,predictors)]  
 
 
-
-
 # Adding the regression variable to the predictos vector
 # TODO - Check & document why
-predictors <- c(predictors, config$predictors$regression_variable)
+predictors <- c(predictors, c("response_regression"))
 
 #################################################################################
 ######### Cleanup
 rm(regex)
+
