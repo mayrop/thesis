@@ -7,6 +7,10 @@
 - **Link (Code)**: https://topepo.github.io/caret/model-training-and-tuning.html
 - **Link (Code)**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
 - **Link (Code)**: https://www.rdocumentation.org/packages/bestglm/versions/0.37/topics/bestglm
+- **Link (Code)**: https://www.machinelearningplus.com/machine-learning/caret-package/
+- **Link (Code)**: http://www.kimberlycoffey.com/blog/2016/7/16/compare-multiple-caret-run-machine-learning-models
+- **Link (Code)**: https://daviddalpiaz.github.io/r4sl/logistic-regression.html
+https://www.snopes.com/fact-check/trump-clinton-counties-won/
 
 ### Independent Relationship of Changes in Death Rates with Changes in US Presidential Voting
 - **Link**: https://link.springer.com/article/10.1007/s11606-018-4568-6  
