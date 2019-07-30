@@ -1,5 +1,9 @@
 # votes
+library(LOGIT)
+library(data.table)
+library(doParallel)
 
+install.packages("https://cran.r-project.org/src/contrib/Archive/LOGIT/LOGIT_1.3.tar.gz", repos=NULL, type="source")
 
 get_tune_grid <- function(model, type) {
   # coef(models[["glmnet"]]$finalModel, models[["glmnet"]]$finalModel$lambdaOpt)
