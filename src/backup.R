@@ -1,178 +1,198 @@
 # votes
+library(LOGIT)
+library(data.table)
+library(doParallel)
 
-formula <- build_initial_formula(
-  response=response,
+install.packages("https://cran.r-project.org/src/contrib/Archive/LOGIT/LOGIT_1.3.tar.gz", repos=NULL, type="source")
+
+get_tune_grid <- function(model, type) {
+  # coef(models[["glmnet"]]$finalModel, models[["glmnet"]]$finalModel$lambdaOpt)
+  if (type == "glmnet") {
+    return(expand.grid(
+      as.list(model$finalModel$tuneValue)
+    ))
+  }
+  
+  if (type == "rf") {
+    return(expand.grid(
+      as.list(model$bestTune)
+    ))
+  }
+}
+
+get_my_model <- function(method, data, control, family="binomial", metric="ROC", preProc=c("center", "scale")) {
+  # ifelse is vectorized, so use `if`
+  my_list = list(
+    form=data$form,
+    data=data$data,
+    method=`if`(!is.null(data$method), data$method, method),  
+    family=`if`(!is.null(data$family), data$family, family),
+    metric=`if`(!is.null(data$metric), data$metric, metric),
+    trControl=`if`(!is.null(data$control), data$control, control),
+    preProc=`if`(is.array(data$preProc), data$preProc, preProc),
+    tuneGrid=`if`(!is.null(data$tuneGrid), data$tuneGrid, c())
+  )
+  
+  params=`if`(is.list(data$params), data$params, list())  
+  
+  set.seed(config$seed)
+  
+  # multithreading....
+  cl <- makeCluster(3)
+  registerDoParallel(cl)
+
+  # https://www.r-bloggers.com/a-new-r-trick-for-me-at-least/
+  my_model <- do.call('train', as.list(c(my_list, params)))
+  
+  stopCluster(cl)
+  registerDoSEQ()
+  rm(cl)
+  
+  return(my_model)
+}
+
+
+# length is = (nresampling)+1
+seeds <- vector(mode = "list", length = nrow(train.data) + 1)
+seeds <- lapply(seeds, function(x) {
+  1:20
+})
+seeds[[nrow(train.data) + 1]] <- 1 # 1 for the last one
+
+control <- trainControl(
+  method="cv", 
+  number=10, 
+  classProbs=TRUE, 
+  summaryFunction=twoClassSummary, 
+  seeds=seeds,
+  allowParallel=FALSE
+)
+
+my_formula <- build_initial_formula(
+  response="response_factor",
   predictors=predictors,
   regex=paste(config$predictors$valid_suffixes, collapse="|"),
   transformations=config$predictors$transformations
 )
 
-model <- glm(
-  formula, data=train.data, family=binomial()
-)
-
-threshold <- 0.05
-
-p_values <- data.frame(
-  covariate = names(coef(summary(model))[,4]),
-  p_value = coef(summary(model))[,4]
-)
-
-p_values <- p_values[order(-p_values$p_value),]
-p_values <- p_values[p_values$covariate!="(Intercept)",]
-
-if (p_values[1, "p_value"] > threshold) {
-  # removing one variable
-}
+my_models <- list()
+my_resamples <- list()
+my_metrics <- list()
+source("_models/methods.R")
 
 
-
-mydataset <- train.data[,which(colnames(train.data) %in% c(predictors, "party_republican_won"))]
-mydataset %<>% 
-  rename(
-    y=party_republican_won
-  ) %>% 
-  mutate(
-    pop_14 = log(pop_14)
-  ) %>% 
-  select(
-    -!!config$predictors$regression_variable
-  ) %>%
-  select(
-    -y, y
-  )
-mydataset <- as.data.frame(mydataset)
-
-methods <- c("AIC", "BIC", "BICg", "BICq", "LOOCV", "CV")
-
-data(SAheart)
-bestglm(SAheart, IC="BIC", family=binomial)
-
-bestAIC <- bestglm(mydataset, IC="BIC", family=binomial)
-bestBIC <- bestglm(mydataset, IC="AIC", family=binomial)
-bestEBIC <- bestglm(mydataset, IC="BICg", family=binomial())
-bestBICq <- bestglm(mydataset, IC="BICq", family=binomial())
-
-ins_p_values <- all_p_values[all_p_values < 0.05]
-
-formula <- ""
-
-for (i in 1:length(names(p_values))) {
-  predictor <- names(p_values)[i]
+for (method in names(my_methods)) {
+  ################################## 
+  control$allowParallel <- `if`(!is.null(my_methods[[method]]$allowParallel), my_methods[[method]]$allowParallel, FALSE)
   
-  if (predictor == "(Intercept)") {
-    next
+  print(paste("Running", method))
+  start_time <- Sys.time()
+  
+  # defaulting the formula
+  my_methods[[method]]$form = `if`(!is.null(my_methods[[method]]$form), my_methods[[method]]$form, my_formula)
+  my_methods[[method]]$data = `if`(!is.null(my_methods[[method]]$data), my_methods[[method]]$data, train.data)
+  
+  my_models[[method]] = get_my_model(method, my_methods[[method]], control=control)
+  
+  my_models[[method]]$benchmarks = list(
+    start=start_time,
+    end=Sys.time()
+  )
+  
+  # Get the optimized parameters
+  if (!is.null(my_methods[[method]]$optimizeGrid)) {
+    start_time <- Sys.time()
+    
+    my_methods[[method]]$tuneGrid = get_tune_grid(my_models[[method]], my_methods[[method]]$optimizeGrid)
+    print("New optimized grid...")
+    print(my_methods[[method]]$tuneGrid)
+    my_methods[[method]]$optimizeGrid = NULL
+    
+    print("Running again...")
+    my_models[[method]] = get_my_model(method, my_methods[[method]], control=control)
+    
+    my_models[[method]]$benchmarks$tuning <- list(
+      start=start_time,
+      end=Sys.time()
+    )
   }
   
-  sep <- ifelse(formula=="", " ", " + ")
-  formula <- paste(formula, predictor, sep=sep)
+  ##################################
+  # Getting the values for the test data
+  
+  post <- list()
+  
+  post$probs <- predict(my_models[[method]], newdata=test.data,  type="prob")
+  post$raw <- predict(my_models[[method]], newdata=test.data,  type="raw")
+  post$roc <- roc(
+    response = test.data$response_factor,
+    predictor = post$probs[, "yes"],
+    levels = levels(test.data$response_factor)
+  )
+  post$matrix <- confusionMatrix(
+    data=post$raw, test.data$response_factor
+  )
+
+  post$metrics <- c(
+    post$matrix$byClass, 
+    as.list(post$matrix$overall), 
+    list(AUC=post$roc$auc)
+  )
+  
+  # Removing spaces
+  names(post$metrics) <- sapply(names(post$metrics), function(name) {
+    return(gsub(" ", "", name))
+  })
+  
+  my_models[[method]]$post <- post
+  
+  ##################
+  my_name <- my_methods[[method]]$name
+  my_resamples[[my_name]] <- my_models[[method]]
+  
+  ################
+  my_metrics[[method]] <- c(
+    name=my_name,
+    post$metrics
+  )
 }
 
 
-cdplot(formula, data=train.data)
-
-model = train(
-  form = formula,
-  data = train.data,
-  trControl = trainControl(
-    method = "cv", 
-    number = 10,
-    classProbs=TRUE, 
-    summaryFunction=twoClassSummary
-  ),
-  method = "glm",
-  family = "binomial",
-  metric = "ROC"
-)
-
-varImp(model)
-
-summary(model)
-
-models = list()
-
-add_model <- function(model, name, newdata) {
-  # hash <- digest(toString(summary(model)), "md5", serialize = FALSE)
-  
-  models[[name]]$model <<- model
-  models[[name]]$i <<- length(models)
-  models[[name]]$name <<- name
-  models[[name]]$results <<- model$results
-}
-
-add_model(model, "testing4")
-
-pred <- predict(model, newdata=test.data)
-accuracy <- table(pred, test.data$party_republican_won_factor)
-
-sum(diag(accuracy))/sum(accuracy)
-confusionMatrix(data=pred, as.factor(
-  test.data$party_republican_won_factor)
-)
-
-prob <- predict(model, newdata=test.data, type="response")
-prediction <- prediction(prob, test.data$party_republican_won_factor)
-perf <- performance(pred, measure = "tpr", x.measure = "fpr")
-
-predict(model, newdata=test.data, type="prob")
+stats <- rbindlist(my_metrics)
+resamps <- resamples(my_resamples)
 
 
-formula <- paste("party_republican_won_factor ~ ", formula, sep="")
-formula <- (as.formula(formula))
+grp10 <- HLTest(obj=models[["glmnet"]]$finalModel, g=6)
+cbind(grp10$observed, round(grp10$expect, digits = 1))
+grp10
 
-confusionMatrix(data = test.data$pred, reference = test.data$obs)
+# https://stackoverflow.com/questions/48079660/extract-the-coefficients-for-the-best-tuning-parameters-in-caret
+
+#compare_models(models[["glmnet"]], models[["glm_step_ltr"]])
+#compare_models(models)
+#The ideas and methods here are based on Hothorn et al. (2005) and Eugster et al. (2008).
 
 
-accuracy(list(model), plotit=TRUE, digits=3)
+bwplot(resamps, layout = c(3, 1))
+dotplot(resamps, metric = "ROC")
+splom(resamps)
 
-evaluate <- evaluate_model(model, test.data, "party_republican_won_factor")
 
-RMSPE(y_pred = evaluate$y_predictions + 1, y_true = evaluate$y_true + 1)
+#plot(density(models[["rf"]]$))
+#lines(density(MyData$Column2))
+#densityplot(models[["rf"]], pch = "|")
 
-plot(evaluate$performance)
+
+minfo <- my_models[["glmnet"]]$modelInfo$parameters
+HLTest(models[['glm']],g=6)
 
 
 
-evaluate_model <- function(model, data, response_column, prob=0.5) {
-  probs <- predict(model, data, type="response")
-  predictions <- ifelse(probs > prob, 1, 0)
-  
-  index_response <- which(colnames(data)==response_column)
-  
-  p <- predict(model, data, type="response")
-  pr <- prediction(p, data[index_response])
-  prf <- performance(pr, measure = "tpr", x.measure = "fpr")
-  
-  auc <- performance(pr, measure = "auc")
-  auc <- auc@y.values[[1]]
-  
-  return(list(
-    performance=prf,
-    auc=auc,
-    y_predictions=as.vector(predictions),
-    y_true=data[[index_response]],
-    mean_predictions=mean(predictions == data[index_response]),
-    table_predictions=table(predictions, data[[index_response]])
-  ))
-}
-
-##### Penalized logistic regression
-
-x <- model.matrix(formula, train)
-newx <- model.matrix(formula, test)
-
-y <- train$party_won_num
-
-# alpha = 1 -> lasso, 0 -> ridge
-cv.elasticnet <- cv.glmnet(x, y, alpha = 0.5, family = "binomial",  type.measure = "deviance")
-
-plot(cv.elasticnet)
-coef(cv.elasticnet, s = "lambda.min")
-
-
-
-
-predict(cv.elasticnet, newx=newx, s = "lambda.min", type = "class")
+difValues <- diff(resamps, metric="ROC", adjustment="none")
+summary(difValues)
+bwplot(difValues, layout = c(3, 1))
+dotplot(difValues)
+dotplot(resamps, metric = "ROC")
 
 
 
@@ -181,14 +201,11 @@ HLTest(model.ridge, g=6)
 pR2(glm.fit)
 
 
-evaluation <- evaluate_model(model, test, "party_won")
-
-
 Anova(model, 
       type="II", 
       test="Wald")
 
-nagelkerke(model)
+nagelkerke(models[["glm_step_ltr"]]$finalModel)
 summary(model)
 
 emplogit(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
@@ -201,34 +218,7 @@ ggplot(data = melted_correlation, aes(x=X1, y=X2, fill=value)) +
 
 
 
-data(Default, package = "ISLR")
-library(caret)
 
-default_glm_mod = train(
-  form = default ~ student + balance,
-  data = default_trn,
-  trControl = trainControl(
-    method = "cv", 
-    number = 10,
-    classProbs=TRUE, 
-    summaryFunction=twoClassSummary
-  ),
-  method = "glm",
-  family = "binomial",
-  metric="ROC"
-)
-
-
-default_glm_mod2 = train(
-  form = default ~ student + balance,
-  data = default_trn,
-  trControl = trainControl(
-    method = "cv", 
-    number = 10
-  ),
-  method = "glm",
-  family = "binomial"
-)
 
 # https://statisticalhorizons.com/wp-content/uploads/GOFForLogisticRegression-Paper.pdf
 print(default_glm_mod)
@@ -245,16 +235,6 @@ calc_acc = function(actual, predicted) {
   mean(actual == predicted)
 }
 
-# test acc
-calc_acc(actual = default_tst$default,
-         predicted = predict(default_glm_mod, newdata = default_tst))
-
-get_best_result = function(caret_fit) {
-  best = which(rownames(caret_fit$results) == rownames(caret_fit$bestTune))
-  best_result = caret_fit$results[best, ]
-  rownames(best_result) = NULL
-  best_result
-}
 source("http://bioconductor.org/biocLite.R")
 biocLite("BiocUpgrade")
 
@@ -264,3 +244,49 @@ library(limma)
 get_best_result(default_glm_mod)
 library(MKmisc)
 HLgof.test(fit = fitted(mod_fit_one), obs = training$Class)
+
+
+
+Xy <- train.data[,which(colnames(train.data) %in% c(predictors, "response_binary"))]
+Xy %<>% 
+  rename(
+    y=response_binary
+  ) %>% 
+  mutate(
+    pop_14 = log(pop_14),
+    age_o65_pct_14 = log(age_o65_pct_14)
+  ) %>% 
+  select(
+    -response_regression
+  ) %>%
+  select(
+    -y, y
+  )
+Xy <- as.data.frame(Xy)
+Xy$y <- as.integer(Xy$y)
+
+library(bestglm)
+BIC <- bestglm(Xy, IC="BIC", family=binomial)
+AIC <- bestglm(Xy, IC="AIC", family=binomial)
+CV <- bestglm(Xy, IC="CV", t=100)
+
+maxvar <- 7 
+direction <- "backward"
+
+set.seed(config$seed)
+
+models[["stepLDA"]] <- train(
+  form = formula,
+  data = train.data,
+  trControl = controls[["cv"]],
+  method = "stepLDA",
+  family = "binomial",
+  preProc = c("center", "scale"),
+  metric = "ROC",
+  tuneGrid = data.frame(maxvar, direction)
+)
+
+set.seed(config$seed)
+
+grid <- expand.grid(C = c(0,0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2,5))
+

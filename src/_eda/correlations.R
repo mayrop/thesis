@@ -1,5 +1,20 @@
 library(RColorBrewer)
 
+pattern <- paste(config$predictors$valid_suffixes, collapse="|")
+importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], y = all$response_factor)
+
+importants <- importants[order(-importants$yes),]
+importants <- importants[1:length(predictors),]
+importants_names <- rownames(importants)
+
+featurePlot(
+  x=as.data.frame(train.data[, which(colnames(all) %in% predictors[predictors != "response_regression"])]), 
+  y=pull(train.data[, which(colnames(all) %in% "response_factor")]), 
+  plo ="density",
+  scales=list(x=list(relation="free"), y=list(relation="free")),
+  strip=strip.custom(par.strip.text=list(cex=.7)),
+  auto.key=list(space="top", columns=2, cex.title=1)
+)
 
 correlations <- cor(all[,which(colnames(all) %in% predictors)])
 # https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
@@ -16,14 +31,14 @@ continous <- continous[,-which(names(continous) %in% elections_cols)]
 continous <- continous[,which(grepl(regex, names(continous)))]
 
 correlation <- cor(continous, use="complete.obs", method="pearson")
-correlation[correlation < 0.5] = 0
+correlation[correlation < 0.55] = 0
 
 dissimilarity <- 1 - correlation
 dissimilarity <- as.data.frame(dissimilarity) %>%
   rownames_to_column('mycol') %>%
   filter(!(rowSums(dissimilarity) == nrow(dissimilarity) - 1)) %>%
   column_to_rownames('mycol') %>%
-  select(rownames((dissimilarity[!(rowSums(dissimilarity) == nrow(dissimilarity) - 1),])))
+  dplyr::select(rownames((dissimilarity[!(rowSums(dissimilarity) == nrow(dissimilarity) - 1),])))
 
 distance = as.dist(dissimilarity)
 cluster = hclust(distance, method="complete")
@@ -33,7 +48,7 @@ rect.hclust(cluster, k = 15, border = 2:5)
 
 # using dendrogram objects
 hcd = as.dendrogram(cluster, hang=0.05) %>% 
-  set("branches_k_color", k=13)
+  dendextend::set("branches_k_color", k=10)
 
 # alternative way to get a dendrogram
 plot(hcd, horiz=T, xlim=c(1, -0.5))
@@ -62,11 +77,6 @@ plot(hcd, horiz=T, xlim=c(1, -0.5))
 ## pair-wise plots of all 4 attributes, dots colored by class
 # featurePlot(x=iris[,1:4], y=iris[,5], plot="pairs", auto.key=list(columns=3))
 
-# scales <- list(x=list(relation="free"), y=list(relation="free"))
-# featurePlot(x=x[1:12], y=y, plot="density", scales=scales)
-# featurePlot(x=x[13:24], y=y, plot="density", scales=scales)
-# featurePlot(x=x[25:36], y=y, plot="density", scales=scales)
-# featurePlot(x=log(x[37:48]), y=y, plot="density", scales=scales)
-# featurePlot(x=log(x[49:50]), y=y, plot="density", scales=scales)
+
 
 

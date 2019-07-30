@@ -52,7 +52,7 @@ source("_data_preprocessing/joins.R")
 set.seed(config$seed)
 response <- config$predictors$response_variable
 
-indices = createDataPartition(pull(all[,response]), p = 0.6, list = FALSE)
+indices = createDataPartition(all$response_binary, p = 0.6, list = FALSE)
 train.data = all[indices,]
 test.data = all[-indices,]
 
@@ -60,11 +60,11 @@ rm(indices)
 
 # Double checking proportions
 
-prop.table(table(train.data[,response]))
-table(train.data[,response])
+prop.table(table(train.data$response_binary))
+table(train.data$response_binary)
 
-prop.table(table(test.data[,response]))
-table(test.data[,response])
+prop.table(table(test.data$response_binary))
+table(test.data$response_binary)
 
 ############################################
 ############################################
