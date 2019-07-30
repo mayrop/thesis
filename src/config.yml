@@ -1,3 +1,5 @@
+# For Penalized logistic regression: # alpha = 1 -> lasso, 0 -> ridge
+
 default:
   seed: 2019
   settings:
@@ -7,7 +9,7 @@ default:
         "ggplot2", "GGally", "gridExtra", "dplyr", 
         "moderndive", "skimr", "plotly", "tidyr", "magrittr", 
         "tidyverse", "reshape2", "corrplot", "caret", "ellipse", "car", "rcompanion", 
-        "e1071", "ROCR", "glmnet", 
+        "e1071", "pROC", "glmnet", 
         "tibble",
         "dendextend", 
         "urbnmapr", "sf", "cowplot",  
@@ -19,13 +21,15 @@ default:
         "http://www.sthda.com/upload/rquery_cormat.r"
       )
   predictors:
-    response_variable: "party_republican_won_factor"
-    correlation: 0.225
-    regression_variable: "frac_republican"
+    correlation: 0.23
     use_all_for_correlations: 1 # TODO - Get better naming convention
     transformations: !expr list(
-        "pop_14" = "log2(pop_14)",
-        "pop_density_10" = "log2(pop_density_10)"
+        "pop_14" = "log(pop_14)",
+        "pop_10" = "log(pop_10)",
+        "pop_density_10" = "log(pop_density_10)",
+        "age_o65_pct_14" = "log(age_o65_pct_14)",
+        "age_u5_pct_14" = "log(age_u5_pct_14)",
+        "age_u18_pct_14" = "log(age_u18_pct_14)"
       )
     valid_suffixes: !expr c(
         "_13$", 
@@ -54,4 +58,50 @@ default:
         "education" = "edu_bachelor_pct_13_level",
         "race_white" = "race_white_no_hisp_pct_14_level",
         "housing_units" = "housing_units_in_multiunit_13_level"
+      )    
+  models: !expr list(
+      "glm" = list(
+        name="Logistic Regression",
+        preProc=c()    
+      ),
+      "glm_ltr" = list(
+        name="LR Backward Elimination (LTR)",
+        method="glm",
+        preProc=c()
+      ),
+      "glm_aic" = list(
+        method="glmStepAIC",
+        name="LR Backward Elimination (AIC)"
+      ),
+      "glm_bic" = list(
+        method="glmStepAIC",
+        name="LR Backward Elimination (BIC)"
+      ),
+      "glmnet" = list(
+        name="Penalized Logistic Regression",
+        tuneGrid=expand.grid(
+          alpha=seq(0.05, 0.95, by=0.05),
+          lambda=seq(0.001, 0.01, by=0.001)
+        ), 
+        optimizeGrid="glmnet"
+      ),
+      "rf" = list(
+        name="Random Forest",
+        tuneGrid=expand.grid(.mtry=c(1:10)),
+        params=list(
+          ntree=100,
+          importance=TRUE
+        ),
+        optimizeGrid="rf"
+      ),
+      "svmLinear"=list(
+        name="SVM with Linear Kernel"
+      ),
+      "svmPoly"=list(
+        name="SVM with Polynomial Kernel"
+      ),
+      "svmRadial"=list(
+        name="Radial Basis Function Kernel"
       )
+    )
+
