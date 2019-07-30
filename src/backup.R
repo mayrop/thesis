@@ -68,9 +68,6 @@ control <- trainControl(
   allowParallel=FALSE
 )
 
-sum(diag(accuracy))/sum(accuracy)
-confusionMatrix(data=pred, as.factor(
-  test.data$party_republican_won_factor)
 my_formula <- build_initial_formula(
   response="response_factor",
   predictors=predictors,
@@ -78,15 +75,11 @@ my_formula <- build_initial_formula(
   transformations=config$predictors$transformations
 )
 
-prob <- predict(model, newdata=test.data, type="response")
-prediction <- prediction(prob, test.data$party_republican_won_factor)
-perf <- performance(pred, measure = "tpr", x.measure = "fpr")
 my_models <- list()
 my_methods <- list()
 my_resamples <- list()
 my_metrics <- list()
 
-predict(model, newdata=test.data, type="prob")
 
 my_methods[["glm"]] <- list(
   name="Logistic Regression",
@@ -202,7 +195,6 @@ for (method in names(my_methods)) {
     data=post$raw, test.data$response_factor
   )
 
-accuracy(list(model), plotit=TRUE, digits=3)
   post$metrics <- c(
     post$matrix$byClass, 
     as.list(post$matrix$overall), 
@@ -227,59 +219,37 @@ accuracy(list(model), plotit=TRUE, digits=3)
   )
 }
 
-evaluate <- evaluate_model(model, test.data, "party_republican_won_factor")
 
-RMSPE(y_pred = evaluate$y_predictions + 1, y_true = evaluate$y_true + 1)
 stats <- rbindlist(my_metrics)
 resamps <- resamples(my_resamples)
 
-plot(evaluate$performance)
+
+grp10 <- HLTest(obj=models[["glmnet"]]$finalModel, g=6)
+cbind(grp10$observed, round(grp10$expect, digits = 1))
+grp10
+
+# https://stackoverflow.com/questions/48079660/extract-the-coefficients-for-the-best-tuning-parameters-in-caret
+
+#compare_models(models[["glmnet"]], models[["glm_step_ltr"]])
+#compare_models(models)
+#The ideas and methods here are based on Hothorn et al. (2005) and Eugster et al. (2008).
 
 
-
-evaluate_model <- function(model, data, response_column, prob=0.5) {
-  probs <- predict(model, data, type="response")
-  predictions <- ifelse(probs > prob, 1, 0)
-  
-  index_response <- which(colnames(data)==response_column)
-  
-  p <- predict(model, data, type="response")
-  pr <- prediction(p, data[index_response])
-  prf <- performance(pr, measure = "tpr", x.measure = "fpr")
-  
-  auc <- performance(pr, measure = "auc")
-  auc <- auc@y.values[[1]]
-  
-  return(list(
-    performance=prf,
-    auc=auc,
-    y_predictions=as.vector(predictions),
-    y_true=data[[index_response]],
-    mean_predictions=mean(predictions == data[index_response]),
-    table_predictions=table(predictions, data[[index_response]])
-  ))
-}
-
-##### Penalized logistic regression
-
-x <- model.matrix(formula, train)
-newx <- model.matrix(formula, test)
 bwplot(resamps, layout = c(3, 1))
 dotplot(resamps, metric = "ROC")
 splom(resamps)
 
-y <- train$party_won_num
 
-# alpha = 1 -> lasso, 0 -> ridge
-cv.elasticnet <- cv.glmnet(x, y, alpha = 0.5, family = "binomial",  type.measure = "deviance")
-
-plot(cv.elasticnet)
-coef(cv.elasticnet, s = "lambda.min")
+#plot(density(models[["rf"]]$))
+#lines(density(MyData$Column2))
+#densityplot(models[["rf"]], pch = "|")
 
 
+minfo <- my_models[["glmnet"]]$modelInfo$parameters
+HLTest(models[['glm']],g=6)
 
 
-predict(cv.elasticnet, newx=newx, s = "lambda.min", type = "class")
+
 difValues <- diff(resamps, metric="ROC", adjustment="none")
 summary(difValues)
 bwplot(difValues, layout = c(3, 1))
@@ -293,14 +263,11 @@ HLTest(model.ridge, g=6)
 pR2(glm.fit)
 
 
-evaluation <- evaluate_model(model, test, "party_won")
-
-
 Anova(model, 
       type="II", 
       test="Wald")
 
-nagelkerke(model)
+nagelkerke(models[["glm_step_ltr"]]$finalModel)
 summary(model)
 
 emplogit(log(republican$education_bachelor_percent_2013), as.numeric(republican$party_won)-1)
@@ -313,34 +280,7 @@ ggplot(data = melted_correlation, aes(x=X1, y=X2, fill=value)) +
 
 
 
-data(Default, package = "ISLR")
-library(caret)
 
-default_glm_mod = train(
-  form = default ~ student + balance,
-  data = default_trn,
-  trControl = trainControl(
-    method = "cv", 
-    number = 10,
-    classProbs=TRUE, 
-    summaryFunction=twoClassSummary
-  ),
-  method = "glm",
-  family = "binomial",
-  metric="ROC"
-)
-
-
-default_glm_mod2 = train(
-  form = default ~ student + balance,
-  data = default_trn,
-  trControl = trainControl(
-    method = "cv", 
-    number = 10
-  ),
-  method = "glm",
-  family = "binomial"
-)
 
 # https://statisticalhorizons.com/wp-content/uploads/GOFForLogisticRegression-Paper.pdf
 print(default_glm_mod)
@@ -357,16 +297,6 @@ calc_acc = function(actual, predicted) {
   mean(actual == predicted)
 }
 
-# test acc
-calc_acc(actual = default_tst$default,
-         predicted = predict(default_glm_mod, newdata = default_tst))
-
-get_best_result = function(caret_fit) {
-  best = which(rownames(caret_fit$results) == rownames(caret_fit$bestTune))
-  best_result = caret_fit$results[best, ]
-  rownames(best_result) = NULL
-  best_result
-}
 source("http://bioconductor.org/biocLite.R")
 biocLite("BiocUpgrade")
 
@@ -376,3 +306,49 @@ library(limma)
 get_best_result(default_glm_mod)
 library(MKmisc)
 HLgof.test(fit = fitted(mod_fit_one), obs = training$Class)
+
+
+
+Xy <- train.data[,which(colnames(train.data) %in% c(predictors, "response_binary"))]
+Xy %<>% 
+  rename(
+    y=response_binary
+  ) %>% 
+  mutate(
+    pop_14 = log(pop_14),
+    age_o65_pct_14 = log(age_o65_pct_14)
+  ) %>% 
+  select(
+    -response_regression
+  ) %>%
+  select(
+    -y, y
+  )
+Xy <- as.data.frame(Xy)
+Xy$y <- as.integer(Xy$y)
+
+library(bestglm)
+BIC <- bestglm(Xy, IC="BIC", family=binomial)
+AIC <- bestglm(Xy, IC="AIC", family=binomial)
+CV <- bestglm(Xy, IC="CV", t=100)
+
+maxvar <- 7 
+direction <- "backward"
+
+set.seed(config$seed)
+
+models[["stepLDA"]] <- train(
+  form = formula,
+  data = train.data,
+  trControl = controls[["cv"]],
+  method = "stepLDA",
+  family = "binomial",
+  preProc = c("center", "scale"),
+  metric = "ROC",
+  tuneGrid = data.frame(maxvar, direction)
+)
+
+set.seed(config$seed)
+
+grid <- expand.grid(C = c(0,0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2,5))
+
