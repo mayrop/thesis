@@ -1,28 +1,6 @@
 # votes
 
-formula <- build_initial_formula(
-  response=response,
-  predictors=predictors,
-  regex=paste(config$predictors$valid_suffixes, collapse="|"),
-  transformations=config$predictors$transformations
-)
 
-model <- glm(
-  formula, data=train.data, family=binomial()
-)
-
-threshold <- 0.05
-
-p_values <- data.frame(
-  covariate = names(coef(summary(model))[,4]),
-  p_value = coef(summary(model))[,4]
-)
-
-p_values <- p_values[order(-p_values$p_value),]
-p_values <- p_values[p_values$covariate!="(Intercept)",]
-
-if (p_values[1, "p_value"] > threshold) {
-  # removing one variable
 get_tune_grid <- function(model, type) {
   # coef(models[["glmnet"]]$finalModel, models[["glmnet"]]$finalModel$lambdaOpt)
   if (type == "glmnet") {
@@ -38,21 +16,6 @@ get_tune_grid <- function(model, type) {
   }
 }
 
-
-
-mydataset <- train.data[,which(colnames(train.data) %in% c(predictors, "party_republican_won"))]
-mydataset %<>% 
-  rename(
-    y=party_republican_won
-  ) %>% 
-  mutate(
-    pop_14 = log(pop_14)
-  ) %>% 
-  select(
-    -!!config$predictors$regression_variable
-  ) %>%
-  select(
-    -y, y
 get_my_model <- function(method, data, control, family="binomial", metric="ROC", preProc=c("center", "scale")) {
   # ifelse is vectorized, so use `if`
   my_list = list(
@@ -65,71 +28,18 @@ get_my_model <- function(method, data, control, family="binomial", metric="ROC",
     preProc=`if`(is.array(data$preProc), data$preProc, preProc),
     tuneGrid=`if`(!is.null(data$tuneGrid), data$tuneGrid, c())
   )
-mydataset <- as.data.frame(mydataset)
-
-methods <- c("AIC", "BIC", "BICg", "BICq", "LOOCV", "CV")
-
-data(SAheart)
-bestglm(SAheart, IC="BIC", family=binomial)
-
-bestAIC <- bestglm(mydataset, IC="BIC", family=binomial)
-bestBIC <- bestglm(mydataset, IC="AIC", family=binomial)
-bestEBIC <- bestglm(mydataset, IC="BICg", family=binomial())
-bestBICq <- bestglm(mydataset, IC="BICq", family=binomial())
-
-ins_p_values <- all_p_values[all_p_values < 0.05]
-
-formula <- ""
-
-for (i in 1:length(names(p_values))) {
-  predictor <- names(p_values)[i]
   
-  if (predictor == "(Intercept)") {
-    next
-  }
   params=`if`(is.list(data$params), data$params, list())  
   
-  sep <- ifelse(formula=="", " ", " + ")
-  formula <- paste(formula, predictor, sep=sep)
-}
-
-
-cdplot(formula, data=train.data)
-
-model = train(
-  form = formula,
-  data = train.data,
-  trControl = trainControl(
-    method = "cv", 
-    number = 10,
-    classProbs=TRUE, 
-    summaryFunction=twoClassSummary
-  ),
-  method = "glm",
-  family = "binomial",
-  metric = "ROC"
-)
-
-varImp(model)
-
-summary(model)
-
-models = list()
   set.seed(config$seed)
   
   # multithreading....
   cl <- makeCluster(3)
   registerDoParallel(cl)
 
-add_model <- function(model, name, newdata) {
-  # hash <- digest(toString(summary(model)), "md5", serialize = FALSE)
   # https://www.r-bloggers.com/a-new-r-trick-for-me-at-least/
   my_model <- do.call('train', as.list(c(my_list, params)))
   
-  models[[name]]$model <<- model
-  models[[name]]$i <<- length(models)
-  models[[name]]$name <<- name
-  models[[name]]$results <<- model$results
   stopCluster(cl)
   registerDoSEQ()
   rm(cl)
@@ -137,10 +47,7 @@ add_model <- function(model, name, newdata) {
   return(my_model)
 }
 
-add_model(model, "testing4")
 
-pred <- predict(model, newdata=test.data)
-accuracy <- table(pred, test.data$party_republican_won_factor)
 # length is = (nresampling)+1
 seeds <- vector(mode = "list", length = nrow(train.data) + 1)
 seeds <- lapply(seeds, function(x) {
@@ -237,10 +144,7 @@ my_methods[["svmRadial"]] <- list(
   )
 )
 
-formula <- paste("party_republican_won_factor ~ ", formula, sep="")
-formula <- (as.formula(formula))
 
-confusionMatrix(data = test.data$pred, reference = test.data$obs)
 
 for (method in names(my_methods)) {
   ################################## 
