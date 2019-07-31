@@ -46,17 +46,17 @@ facts <- facts %>%
     edu_bachelor_pct_13_level = factor(cut(EDU685213, length(levels)), labels=levels),
     
     # race
-    race_white_pct_14 = RHI125214, 
-    race_afroamerican_pct_14 = RHI225214,
-    race_latino_pct_14 = RHI725214,
-    race_white_no_hisp_pct_14 = RHI825214,
-    race_native_pct_14 = RHI325214,
-    race_asian_pct_14 = RHI425214,
-    race_hawaiian_pct_14 = RHI525214,
-    race_two_races_pct_14 = RHI625214,
+    rh_white_pct_14 = RHI125214, 
+    rh_afroamerican_pct_14 = RHI225214,
+    rh_latino_pct_14 = RHI725214,
+    rh_white_no_hisp_pct_14 = RHI825214,
+    rh_native_pct_14 = RHI325214,
+    rh_asian_pct_14 = RHI425214,
+    rh_hawaiian_pct_14 = RHI525214,
+    rh_two_races_pct_14 = RHI625214,
 
     # race - categorical
-    race_white_no_hisp_pct_14_level = factor(cut(RHI825214, length(levels)), labels=levels),
+    rh_white_no_hisp_pct_14_level = factor(cut(RHI825214, length(levels)), labels=levels),
     
     # sex
     females_pct_14 = SEX255214,
@@ -73,15 +73,16 @@ facts <- facts %>%
     nonemployer_establ_rate_13 = NES010213 / PST045214,
     
     # housing
-    housing_units_rate_14 = HSG010214 / PST045214,
-    housing_person_per_household_13 = HSD310213, 
-    housing_units_in_multiunit_13 = HSG096213, 
-    housing_homeownership_rate_13 = HSG445213, 
-    housing_househ_rate_13 = HSD410213 / PST045214, 
-    housing_median_val_housing_units_13 = HSG495213,
+    hsg_units_rate_14 = HSG010214 / PST045214,
+    hsg_units_in_multiunit_13 = HSG096213, 
+    hsg_homeownership_rate_13 = HSG445213, 
+    hsg_median_val_housing_units_13 = HSG495213,
+
+    hsd_persons_per_household_13 = HSD310213, 
+    hsd_household_rate_13 = HSD410213 / PST045214, 
     
     # housing - categorial
-    housing_units_in_multiunit_13_level = factor(cut(HSG096213, length(levels)), labels=levels),
+    hsg_units_in_multiunit_13_level = factor(cut(HSG096213, length(levels)), labels=levels),
     
     # Firms    
     firms_rate_07 = SBO001207 / PST045214,
@@ -189,8 +190,8 @@ facts <- facts %>%
       # reduntant with population_2014 and population_density_2010
     #-pop_10
     
-      # reduntant with race_white_no_hispanic_percent_2014
-    #-race_white_percent_2014,
+      # reduntant with rh_white_no_hispanic_percent_2014
+    #-rh_white_percent_2014,
 
       # reduntant with nonfarm_private_employment_percent_change_2013 
       # & nonfarm_private_establishments_rate_2014

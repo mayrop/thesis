@@ -59,7 +59,7 @@ default:
     mapping: !expr list(
         "population" = "pop_14_level",
         "education" = "edu_bachelor_pct_13_level",
-        "race_white" = "race_white_no_hisp_pct_14_level",
-        "housing_units" = "housing_units_in_multiunit_13_level"
+        "race_white" = "rh_white_no_hisp_pct_14_level",
+        "housing_units" = "hsg_units_in_multiunit_13_level"
       )
 
