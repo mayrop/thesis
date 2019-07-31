@@ -16,12 +16,34 @@ featurePlot(
   auto.key=list(space="top", columns=2, cex.title=1)
 )
 
-correlations <- cor(all[,which(colnames(all) %in% predictors)])
+temp_predictors <- predictors
+temp_predictors[temp_predictors=="response_regression"] <- "frac_republican"
+
 # https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
+correlations <- cor(all[,which(colnames(all) %in% temp_predictors)])
+
+png(filename="figures/corrplot.png", width=450, height=260, bg="white", unit="mm", res=300)
 corrplot::corrplot(
-  correlations, order="hclust", 
-  addrect=10, tl.col="black", tl.srt=45, col=brewer.pal(n=10, name="RdYlBu")
+  correlations,
+  order="hclust",
+  hclust.method="complete",
+  # careful with this
+  tl.col=c(
+    rep("black", 2),
+    "#92000a",
+    rep("black", 13)
+  ), 
+  tl.srt=45,
+  #tl.pos="ld",
+  addrect=11,
+  col=brewer.pal(n=10, name="RdYlBu"),
+  win.asp=.5
 )
+
+title("Correlation Matrix between frac_republican and covariates", line=2, font=24)
+dev.off()
+
+# heatmap(x = correlations,  symm = TRUE)
 
 ### Cluster of variables
 regex <- paste(config$predictors$valid_suffixes, collapse="|")
