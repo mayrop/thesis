@@ -1,96 +1,185 @@
 # Notes
 
-## Literature Review 
+## Code Examples
 
-### The Design and Analysis of Benchmark Experiments
-- **Link**: https://homepage.boku.ac.at/leisch/papers/Hothorn+Leisch+Zeileis-2005.pdf
-- **Link (Code)**: https://topepo.github.io/caret/model-training-and-tuning.html
-- **Link (Code)**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
-- **Link (Code)**: https://www.rdocumentation.org/packages/bestglm/versions/0.37/topics/bestglm
-- **Link (Code)**: https://www.machinelearningplus.com/machine-learning/caret-package/
-- **Link (Code)**: http://www.kimberlycoffey.com/blog/2016/7/16/compare-multiple-caret-run-machine-learning-models
-- **Link (Code)**: https://daviddalpiaz.github.io/r4sl/logistic-regression.html
-https://www.snopes.com/fact-check/trump-clinton-counties-won/
+### Hierarchical Clustering Essentials - Unsupervised Machine Learning
+http://www.sthda.com/english/wiki/print.php?id=237
+- Need to check for clustering variables
 
-### Independent Relationship of Changes in Death Rates with Changes in US Presidential Voting
-- **Link**: https://link.springer.com/article/10.1007/s11606-018-4568-6  
-- Very good resource to reference and take ideas from  
+### Logistic Regression in R Tutorial
+- Type: Tutorial
+- **Link**: https://www.datacamp.com/community/tutorials/logistic-regression-R
 
-### Social Status and Political Behavior
-- **Link**: https://www.jstor.org/stable/pdf/2771413.pdf?refreqid=excelsior%3Ae489f6147ca41ef0465307bb41a41004
-- What aspects make a change in either change parties or to vote for first time  
-- Talks about mainly religion & income  
-- New York elections 1940/44  
+Notes:
+- Really nice explanation about logistic regression
+- TODO: Check for code examples
 
-### Participation Rates, Socioeconomic Class Biases, and Congressional Elections: A Crossvalidation
-- **Link**: https://www.jstor.org/stable/2111783    
-- **Hypothesis**: Class biases in voter turnout have not substantially increased since the 1960s income is the appropriate measure of economic class bias
+### Cross-Validation for Predictive Analytics Using R
+- Type: Blog post / Tutorial
+- **Link**: http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
 
-### Comparing the influence of socioeconomic factors on participation in national elections and referendums
-- Type: Thesis
-- Link: https://essay.utwente.nl/73364/1/Drewer_BA_BMS.pdf
-- Talks more about participation than selecting parties
-- Check for references
+TODO:
+- MUST try code for learning cross-validation (DONE)
 
-### Who Voted?: Social Class and Participation in United States Presidential Elections
-- Type: Dissertation
-- **Link**: https://scholarworks.wmich.edu/cgi/viewcontent.cgi?referer=https://www.google.com/&httpsredir=1&article=2044&context=dissertations
-- Talks about participation over the years
-- Might have good references. Check for references.
+### K-Means Clustering in R Tutorial
+- Type: Blog post / Tutorial
+**Link**: https://www.datacamp.com/community/tutorials/k-means-clustering-r
 
-### Why Voting Matters: Large disparities in turnout benefit the donor class
-- **Link**: https://www.demos.org/sites/default/files/publications/Why%20Voting%20Matters_0.pdf
-- Talks about turnout
-- Some nice graphs about comparing turnout by race and inciome
-- Might have "ok" references
+TODO:
+- MUST try code in case centroid is used
 
-### Analysis of county-level voting patterns in the 2016 Presidential elections
-- Type: Blog post
-- **Link**: https://www4.stat.ncsu.edu/~reich/ABA/code/election2016data
-- Nice analysis of previous elections
-- Check for EDA and for important columns
+### Tutorial 10.5a - Logistic regression and proportional and percentage data
+- Type: Blog post / Tutorial
+**Link**: http://www.flutterbys.com.au/stats/tut/tut10.5a.html
+Really nice tutorial for logistic regression
 
-### How to Create State and County Maps Easily in R
-- Type: Blog post
-- **Link**: https://medium.com/@urban_institute/how-to-create-state-and-county-maps-easily-in-r-577d29300bb2
+TODO:
+- MUST try code
 
 ### Do we vote in our own best interest?
 - Type: Kaggle
 - **Link**: https://www.kaggle.com/kirandipta/do-we-vote-in-our-own-best-interest
+
+Notes:
 - Clustering of vars for presidential data
 - Uses PCA for analysis
 
 ### I love the poorly educated
 - Type: Kaggle
 - **Link**: https://www.kaggle.com/mpoegel/i-love-the-poorly-educated?scriptVersionId=171731
+
+Notes:
 - Quick analysis regression about fraction of voters of trump & education
 
 ### Improve Your Model Performance using Cross Validation (in Python and R)
+- Type: Blog post
 - **Link**: https://www.analyticsvidhya.com/blog/2018/05/improve-model-performance-cross-validation-in-python-r/
+
+Notes:
 - Quick blog post about cross validation
 - Check!
-
-### Logistic Regression in R Tutorial
-- Type: Tutorial
-- **Link**: https://www.datacamp.com/community/tutorials/logistic-regression-R
-- Really nice explanation about logistic regression
-- TODO: Check for code examples
-
-### Glmnet Vignette
-- **Link**: https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
-- Really nice blog post about glmnet and the logistic penalized regression
 
 ### Comparison of classification methods for the homes data
 - Type: Blog post
 - **Link**: https://www4.stat.ncsu.edu/~reich/BigData/code/glmnet.html
+
+Notes:
 - R exmaples for doing classifications
 - K nearest neighbors
 - Discriminant analysis
 - Comparison of methods using Brier scores, classification accuracy
 - Nice to check for learning about classification methods
 
+### Accuracy and Errors for Models
+- Type: Blog post
+- **Link**: https://rcompanion.org/handbook/G_14.html
+
+Notes:
+- Accuracy and Errors for Models 
+- Not sure if it's only for regression or also logistic
+
+### Benchmarking
+- **Link (Code)**: https://topepo.github.io/caret/model-training-and-tuning.html
+- **Link (Code)**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
+- **Link (Code)**: https://www.rdocumentation.org/packages/bestglm/versions/0.37/topics/bestglm
+- **Link (Code)**: https://www.machinelearningplus.com/machine-learning/caret-package/
+- **Link (Code)**: http://www.kimberlycoffey.com/blog/2016/7/16/compare-multiple-caret-run-machine-learning-models
+- **Link (Code)**: https://daviddalpiaz.github.io/r4sl/logistic-regression.html
+
+### Penalized Logistic Regression Essentials in R: Ridge, Lasso and Elastic Net
+- **Link**: http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
+
+Notes:
+- R code with lasso regression
+
+---------------------
+
+## Literature Review (Context)
+
+### Independent Relationship of Changes in Death Rates with Changes in US Presidential Voting
+- Type: Article
+- **Link**: https://link.springer.com/article/10.1007/s11606-018-4568-6  
+
+Notes:
+- Very good resource to reference and take ideas from 
+
+### Social Status and Political Behavior
+- Type: Article?
+- **Link**: https://www.jstor.org/stable/pdf/2771413.pdf?refreqid=excelsior%3Ae489f6147ca41ef0465307bb41a41004
+
+Notes:
+- What aspects make a change in either change parties or to vote for first time  
+- Talks about mainly religion & income  
+- New York elections 1940/44  
+
+### Participation Rates, Socioeconomic Class Biases, and Congressional Elections: A Crossvalidation
+- Type: Article
+- **Link**: https://www.jstor.org/stable/2111783    
+
+Notes:
+- **Hypothesis**: Class biases in voter turnout have not substantially increased since the 1960s income is the appropriate measure of economic class bias
+
+### Retrospective Forecasts Of The 2016 U.S. Primary Elections
+- Type: Dissertation
+- **Link**: http://www.scriptiesonline.uba.uva.nl/document/658181
+
+### Who Voted?: Social Class and Participation in United States Presidential Elections
+- Type: Dissertation
+- **Link**: https://scholarworks.wmich.edu/cgi/viewcontent.cgi?referer=https://www.google.com/&httpsredir=1&article=2044&context=dissertations
+
+Notes:
+- Talks about participation over the years
+- Might have good references. Check for references.
+
+### Why Voting Matters: Large disparities in turnout benefit the donor class
+- Type: Marketing?
+- **Link**: https://www.demos.org/sites/default/files/publications/Why%20Voting%20Matters_0.pdf
+
+Notes:
+- Talks about turnout
+- Some nice graphs about comparing turnout by race and inciome
+- Might have "ok" references
+
+### Comparing the influence of socioeconomic factors on participation in national elections and referendums
+- Type: Thesis
+- **Link**: https://essay.utwente.nl/73364/1/Drewer_BA_BMS.pdf
+
+Notes:
+- Talks more about participation than selecting parties
+- Check for references
+
+### Did Trump Win 3,084 of 3,141 Counties in 2016, While Clinton Won Only 57?
+- Type: Blog post
+- **Link**: https://www.snopes.com/fact-check/trump-clinton-counties-won/
+
+### Analysis of county-level voting patterns in the 2016 Presidential elections
+- Type: Blog post
+- **Link**: https://www4.stat.ncsu.edu/~reich/ABA/code/election2016data
+
+Notes:
+- Nice analysis of previous elections
+- Check for EDA and for important columns
+
+---------------------
+
+## Literature Review (Stats)
+
+### The Design and Analysis of Benchmark Experiments
+- **Link**: https://homepage.boku.ac.at/leisch/papers/Hothorn+Leisch+Zeileis-2005.pdf
+
+### How to Create State and County Maps Easily in R
+- Type: Blog post
+- **Link**: https://medium.com/@urban_institute/how-to-create-state-and-county-maps-easily-in-r-577d29300bb2
+
+### Glmnet Vignette
+- **Link**: https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
+- Really nice blog post about glmnet and the logistic penalized regression
+
+
 ### Chapter 6 Logistic Regression
 - **Link**: https://bookdown.org/roback/bookdown-bysh/ch-logreg.html
+
+Notes:
 - Book about logistic regression in R
 - Has formulas
 - 6.5 Case Study: Reconstructing Alabama
@@ -100,14 +189,10 @@ https://www.snopes.com/fact-check/trump-clinton-counties-won/
 - 6.5.7 Residuals for Binomial Regression
 - CHECK!!!
 
-### Penalized Logistic Regression Essentials in R: Ridge, Lasso and Elastic Net
-- **Link**: http://www.sthda.com/english/articles/36-classification-methods-essentials/149-penalized-logistic-regression-essentials-in-r-ridge-lasso-and-elastic-net/
-- R code with lasso regression
-
-
-
 ### Evaluating Logistic Regression Models
 - **Link**: https://www.r-bloggers.com/evaluating-logistic-regression-models/
+
+Notes:
 - Goodness of Fit
 - Likelihood Ratio Test
 - Hosmer-Lemeshow Test
@@ -119,20 +204,20 @@ https://www.snopes.com/fact-check/trump-clinton-counties-won/
 - K-Fold Cross Validation
 - TODO: Check
 
-### Systemization of Logistic Regression Analysis for Pharmacometric Applications
+Systemization of Logistic Regression Analysis for Pharmacometric Applications
+- Type: Article
 - **Link**: https://www.researchgate.net/publication/292785254_Systemization_of_Logistic_Regression_Analysis_for_Pharmacometric_Applications
-- Explanation about multicollinearity and ridge regression - for SAS - check again
 
-- **Link**: https://rcompanion.org/handbook/G_14.html
-- Accuracy and Errors for Models
-- Not sure if it's only for regression or also logistic
+Notes:
+- Explanation about multicollinearity and ridge regression - for SAS
 
-- **Link**: https://cran.r-project.org/web/packages/MLmetrics/MLmetrics.pdf
-- Package "MLmetrics"
-- R functions RMSPE etc
+TODO: 
+- Check again
 
 ### Multicollinearity: What Is It, Why Should We Care, and How Can It Be Controlled?
 - **Link**: https://pdfs.semanticscholar.org/5a89/1e686fedc226942727b76ba568602ac94006.pdf?_ga=2.208120274.1742245575.1562854939-375471410.1562854939
+
+Notes:
 - SAS article - may not be good reference but content is good
 
 ```
@@ -140,47 +225,16 @@ Collinearity is especially problematic when a model's purpose is explanation rat
 
 Checking collinearity through tolerance (nothing below 0.1) and VIF
 ```
-
-https://onlinelibrary.wiley.com/doi/pdf/10.1002/for.3980030206
-Collinearity and Forecasting
-
-http://www.sthda.com/english/wiki/print.php?id=237
-- Need to check for clustering variables
-
----------------------
-
-## Code Examples
-
-### Cross-Validation for Predictive Analytics Using R
-- **Link**: http://www.milanor.net/blog/cross-validation-for-predictive-analytics-using-r/
-- MUST try code for learning cross-validation (DONE)
-
-### K-Means Clustering in R Tutorial
-**Link**: https://www.datacamp.com/community/tutorials/k-means-clustering-r
-- MUST try code in case centroid is used
-
-### Tutorial 10.5a - Logistic regression and proportional and percentage data
-**Link**: http://www.flutterbys.com.au/stats/tut/tut10.5a.html
-Really nice tutorial for logistic regression
-- MUST try code
-
----------------------------------------------
-
-## Books
-
-**Link**: https://onlinelibrary-wiley-com.ezproxy.lib.gla.ac.uk/doi/pdf/10.1002/9781118548387
-Applied Logistic Regression
-- Pending to check
-
----------------------------------------------
-
-## Articles
+### Collinearity and Forecasting
+- **Link**: https://onlinelibrary.wiley.com/doi/pdf/10.1002/for.3980030206
 
 ### Classification of gene microarrays by penalized logistic regression
+Type: Article
 **Link**: https://academic.oup.com/biostatistics/article/5/3/427/310192
 - Penalized logistic regression (PLR) vs SVM for classification
 
 ### Collinearity: a review of methods to deal with it and a simulation study evaluating their performance
+Type: Article
 - **Note**: Cited by: 1771  
 - **Link**: https://onlinelibrary.wiley.com/doi/full/10.1111/j.1600-0587.2012.07348.x  
 - **Link**: http://www.ecography.org/sites/ecography.org/files/appendix/e7348.pdf 
@@ -232,7 +286,6 @@ https://lib.ugent.be/en/catalog/rug01:000851135
 Notes:
 - Quick comparison between logistic with multicollinear methods
 
-
 ### Robust and sparse estimation methods for high dimensional linear and logistic regression
 - **Link**: https://arxiv.org/pdf/1703.04951.pdf
 
@@ -243,24 +296,18 @@ Notes:
 - Friedman et al. [13] suggested to minimize a penalized negative log-likelihood function
 - Comparison between elastic net, enet-LTS raw and enet-LTS
 
-### Retrospective Forecasts Of The 2016 U.S. Primary Elections
-- **Link**: http://www.scriptiesonline.uba.uva.nl/document/658181
-
-
-### A New Robust Regression Model for Proportions
-- **Link**: https://projecteuclid.org/download/pdfview_1/euclid.ba/1354024464
-Notes: 
-- Beta regression model
-- Check after done with logistic
-
 ### Regularization and variable selection via the elastic net
 - **Link**: https://web.stanford.edu/~hastie/Papers/B67.2%20(2005)%20301-320%20Zou%20&%20Hastie.pdf
+
 Notes: 
 - Seems a very good resource about elastic net
 - Something to check when implementing, however, seems not to talk much about logistic regression
 
 ### Lecture notes on ridge regression
+- Type: Article/book?
 - **Link**: https://arxiv.org/abs/1509.09169
+
+Notes:
 - This is like a book on lasso/ridge etc
 - Something worth checking is: Penalty parameter selection
 - Meijer and Goeman (2013) describe a computationally efficient approximation of the leave-one-out crossvalidated loglikelihood
@@ -269,39 +316,72 @@ Notes:
 
 10-variable-selection-in-logistic-regression.pdf
 ### Variable Selection of Correlated Predictors in Logistic Regression: Investigating the Diet-Heart Hypothesis
-Electronic Theses, Treatises and Dissertations The Graduate School
+- Type: Electronic Theses, Treatises and Dissertations The Graduate School
 - Pending to read
 
-11-classificaiton-techniques.pdf
 ### Supervised Machine Learning: A Review of Classification Techniques
+- Type: Article
+- **Link**: https://datajobs.com/data-science-repo/Supervised-Learning-[SB-Kotsiantis].pdf
 - Really nice resource about classification techniques
 - There's a nice table at the end about comparison on classification techniques
 
 ### Logistic Regression: A Brief Primer
+- Type: Article
 - **Link**: https://www.ncbi.nlm.nih.gov/pubmed/21996075
 
 ### The practical value of logistic regression
+- Type: Article
 - **Link**: https://pdfs.semanticscholar.org/2f1a/c6401855dd86aacd47d8eb85b1c6b3f21615.pdf
 - Very old paper
 - Seems to use SAS
 
-14-logistic-example.pdf
 ### Comparison between SVM and Logistic Regression: Which One is Better to Discriminate?
+Type: Article
 - **Link**: http://www.kurims.kyoto-u.ac.jp/EMIS/journals/RCE/V35/v35n2a03.pdf
 
 - https://rstudio-pubs-static.s3.amazonaws.com/431668_94857a2237f24827b3fad12d6d9d851c.html
 - http://blog.elliotmarsden.com/us_election_2016.html
 - https://brilliantmaps.com/2016-county-election-map/
 
+### A New Robust Regression Model for Proportions
+- **Link**: https://projecteuclid.org/download/pdfview_1/euclid.ba/1354024464  
+
+Notes: 
+- Beta regression model
+- Check after done with logistic
+
+---------------------------------------------
+
+## Books
+### Applied Logistic Regression
+Type: Book
+**Link**: https://onlinelibrary-wiley-com.ezproxy.lib.gla.ac.uk/doi/pdf/10.1002/9781118548387
+Applied Logistic Regression
+- Pending to check
+
+14-logistic-example.pdf
+
 --------------------------
 
 ## Resources
 - **Link**: http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
 - Functions from class
+
 - **Link**: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/remove_collinear_columns.html
 - remove_collinear_columns
+
 - **Link**: http://www.medicine.mcgill.ca/epidemiology/joseph/courses/EPIB-621/logselect.pdf
 Model Selection in Logistic Regression
+
+
+### MLmetrics Package
+- **Link**: https://cran.r-project.org/web/packages/MLmetrics/MLmetrics.pdf
+
+Notes:
+- Package "MLmetrics"
+- R functions RMSPE etc
+
+---------------------------------------------
 
 
 # Notes
