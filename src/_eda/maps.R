@@ -64,17 +64,19 @@ my_map$size_normalized <- (b-a) * ((my_map$size - min_size) / (max_size - min_si
 my_map$alpha_size_normalized <- (0.9-0.5) * ((my_map$size - min_size) / (max_size - min_size)) + 0.5
 
 
-map <- ggplot(
+png(filename="figures/map_popular_vote.png", width=250, height=180, bg="transparent", unit="mm", res=300)
+
+ggplot(
     data = spatial_data
   ) +
   scale_alpha(
     name="",
-    range=c(0.6,0),
+    range=c(0.7,0),
     guide=F
   ) +
   geom_sf(
-    color = "gray",
-    size = 0.1
+    color="gray",
+    size=0.1
   ) + 
   geom_point(
     data=my_map,
@@ -84,12 +86,43 @@ map <- ggplot(
       color=color      
     ), 
     size=my_map$size_normalized,
-    alpha = my_map$alpha_size_normalized
+    alpha=my_map$alpha_size_normalized
   ) +
-  scale_color_manual(values=c("#0e4375", "#c32b0d"))
+  
+  scale_color_manual(
+    values=rev(config$theme$parties_colors),
+    labels=rev(config$theme$parties_labels)
+  ) +
+  ggtitle("Map of Popular Vote by Winning Party") +
+  labs(
+    color="Winning Party"
+  ) + 
+  theme(
+    plot.background = element_rect(
+      fill = "white",
+      color = NA
+    ),
+    # add a subtle grid
+    panel.grid.major = element_line(
+      color = config$theme$border_color, 
+      size = 0.2
+    ),    
+    panel.background = element_rect(
+      fill = "white",
+      color = NA
+    ),    
+    axis.title.x=element_blank(),
+    axis.title.y=element_blank(),
+    legend.position=c(0.05, 0.05),
+    legend.background=element_rect(fill="white"),
+    legend.justification=c("left", "bottom")
+  )
 
+dev.off()
 
-ggdraw() + draw_plot(map, 0, 0, 1, 1)
+#ggdraw() + 
+
+#plot(map, 0, 0, 1, 1)
 
 map <- ggplot(
     data = spatial_data
