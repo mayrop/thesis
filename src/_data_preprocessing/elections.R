@@ -40,6 +40,7 @@ elections <- elections %>%
     state_abbreviation, 
     county,
     
+    votes,
     votes_total, 
     votes_democrat,
     votes_other,
@@ -52,6 +53,8 @@ elections <- elections %>%
     
     prop_democrat,
     prop_republican,
+    
+    party,
     party_frac_lead,
     party_won,
 
@@ -60,7 +63,11 @@ elections <- elections %>%
     response_binary,
     response_factor,
     response_regression
-  ) %>% 
+  )
+
+elections_summary <- elections
+
+elections %<>% 
   group_by(fips) %>%
   filter(row_number() == 1)
   
