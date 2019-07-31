@@ -70,6 +70,14 @@ Notes:
 - Comparison of methods using Brier scores, classification accuracy
 - Nice to check for learning about classification methods
 
+### Accuracy and Errors for Models
+- Type: Blog post
+- **Link**: https://rcompanion.org/handbook/G_14.html
+
+Notes:
+- Accuracy and Errors for Models 
+- Not sure if it's only for regression or also logistic
+
 ### Benchmarking
 - **Link (Code)**: https://topepo.github.io/caret/model-training-and-tuning.html
 - **Link (Code)**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
@@ -110,6 +118,10 @@ Notes:
 
 Notes:
 - **Hypothesis**: Class biases in voter turnout have not substantially increased since the 1960s income is the appropriate measure of economic class bias
+
+### Retrospective Forecasts Of The 2016 U.S. Primary Elections
+- Type: Dissertation
+- **Link**: http://www.scriptiesonline.uba.uva.nl/document/658181
 
 ### Who Voted?: Social Class and Participation in United States Presidential Elections
 - Type: Dissertation
@@ -192,13 +204,6 @@ Notes:
 - K-Fold Cross Validation
 - TODO: Check
 
-### Accuracy and Errors for Models
-- **Link**: https://rcompanion.org/handbook/G_14.html
-
-Notes:
-- Accuracy and Errors for Models 
-- Not sure if it's only for regression or also logistic
-
 Systemization of Logistic Regression Analysis for Pharmacometric Applications
 - Type: Article
 - **Link**: https://www.researchgate.net/publication/292785254_Systemization_of_Logistic_Regression_Analysis_for_Pharmacometric_Applications
@@ -222,8 +227,6 @@ Checking collinearity through tolerance (nothing below 0.1) and VIF
 ```
 ### Collinearity and Forecasting
 - **Link**: https://onlinelibrary.wiley.com/doi/pdf/10.1002/for.3980030206
-
-
 
 ### Classification of gene microarrays by penalized logistic regression
 Type: Article
@@ -283,7 +286,6 @@ https://lib.ugent.be/en/catalog/rug01:000851135
 Notes:
 - Quick comparison between logistic with multicollinear methods
 
-
 ### Robust and sparse estimation methods for high dimensional linear and logistic regression
 - **Link**: https://arxiv.org/pdf/1703.04951.pdf
 
@@ -294,17 +296,6 @@ Notes:
 - Friedman et al. [13] suggested to minimize a penalized negative log-likelihood function
 - Comparison between elastic net, enet-LTS raw and enet-LTS
 
-### Retrospective Forecasts Of The 2016 U.S. Primary Elections
-- **Link**: http://www.scriptiesonline.uba.uva.nl/document/658181
-
-
-### A New Robust Regression Model for Proportions
-- **Link**: https://projecteuclid.org/download/pdfview_1/euclid.ba/1354024464  
-
-Notes: 
-- Beta regression model
-- Check after done with logistic
-
 ### Regularization and variable selection via the elastic net
 - **Link**: https://web.stanford.edu/~hastie/Papers/B67.2%20(2005)%20301-320%20Zou%20&%20Hastie.pdf
 
@@ -313,6 +304,7 @@ Notes:
 - Something to check when implementing, however, seems not to talk much about logistic regression
 
 ### Lecture notes on ridge regression
+- Type: Article/book?
 - **Link**: https://arxiv.org/abs/1509.09169
 
 Notes:
@@ -324,31 +316,39 @@ Notes:
 
 10-variable-selection-in-logistic-regression.pdf
 ### Variable Selection of Correlated Predictors in Logistic Regression: Investigating the Diet-Heart Hypothesis
-Electronic Theses, Treatises and Dissertations The Graduate School
+- Type: Electronic Theses, Treatises and Dissertations The Graduate School
 - Pending to read
 
-11-classificaiton-techniques.pdf
 ### Supervised Machine Learning: A Review of Classification Techniques
+- Type: Article
+- **Link**: https://datajobs.com/data-science-repo/Supervised-Learning-[SB-Kotsiantis].pdf
 - Really nice resource about classification techniques
 - There's a nice table at the end about comparison on classification techniques
 
 ### Logistic Regression: A Brief Primer
+- Type: Article
 - **Link**: https://www.ncbi.nlm.nih.gov/pubmed/21996075
 
 ### The practical value of logistic regression
+- Type: Article
 - **Link**: https://pdfs.semanticscholar.org/2f1a/c6401855dd86aacd47d8eb85b1c6b3f21615.pdf
 - Very old paper
 - Seems to use SAS
 
-14-logistic-example.pdf
-
 ### Comparison between SVM and Logistic Regression: Which One is Better to Discriminate?
+Type: Article
 - **Link**: http://www.kurims.kyoto-u.ac.jp/EMIS/journals/RCE/V35/v35n2a03.pdf
 
 - https://rstudio-pubs-static.s3.amazonaws.com/431668_94857a2237f24827b3fad12d6d9d851c.html
 - http://blog.elliotmarsden.com/us_election_2016.html
 - https://brilliantmaps.com/2016-county-election-map/
 
+### A New Robust Regression Model for Proportions
+- **Link**: https://projecteuclid.org/download/pdfview_1/euclid.ba/1354024464  
+
+Notes: 
+- Beta regression model
+- Check after done with logistic
 
 ---------------------------------------------
 
@@ -358,6 +358,8 @@ Type: Book
 **Link**: https://onlinelibrary-wiley-com.ezproxy.lib.gla.ac.uk/doi/pdf/10.1002/9781118548387
 Applied Logistic Regression
 - Pending to check
+
+14-logistic-example.pdf
 
 --------------------------
 
