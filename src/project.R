@@ -40,20 +40,16 @@ source("_data_preprocessing/elections.R")
 # Here we process facts dataset
 source("_data_preprocessing/facts.R")
 
-## Sanity checks
+# Sanity checks
 source("_data_preprocessing/sanity_checks.R")
 
-## Joins
-source("_data_preprocessing/joins.R")
-
-## Summaries
+# Joins
 source("_data_preprocessing/joins.R")
 
 ############################################
 ############################################
 
 set.seed(config$seed)
-response <- config$predictors$response_variable
 
 indices = createDataPartition(all$response_binary, p = 0.6, list = FALSE)
 train.data = all[indices,]
@@ -61,7 +57,7 @@ test.data = all[-indices,]
 
 rm(indices)
 
-# Double checking proportions
+# Double checking proportions - stratified random sample
 
 prop.table(table(train.data$response_binary))
 table(train.data$response_binary)
