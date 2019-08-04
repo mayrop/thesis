@@ -1,6 +1,29 @@
+# Todo
+- [ ] Talk about summary of the variables.  
+- [ ] Talk about preprocessing of variables. 
+    - [ ] Talk about why only certain amount of variables
+    - [ ] Find a reference that talks about picking variables
+    - [ ] Talk about how this could be a limitation in the future
+- [ ] Talk about collinearity. 
+
+### Conclusions
+- [ ] Talk about limitation in only analyzing outcome as a binary 
+
 # Notes
 
 ## Code Examples
+
+### How to Create State and County Maps Easily in R
+- Type: Blog post
+- **Link**: https://medium.com/@urban_institute/how-to-create-state-and-county-maps-easily-in-r-577d29300bb2
+
+### Glmnet Vignette
+- **Link**: https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
+- Really nice blog post about glmnet and the logistic penalized regression
+
+### 2015-05-30-Setup-Random-Seeds-on-Caret-Package
+http://jaehyeon-kim.github.io/2015/05/Setup-Random-Seeds-on-Caret-Package.html
+- Work with seeds
 
 ### Hierarchical Clustering Essentials - Unsupervised Machine Learning
 http://www.sthda.com/english/wiki/print.php?id=237
@@ -80,7 +103,6 @@ Notes:
 
 ### Benchmarking
 - **Link (Code)**: https://topepo.github.io/caret/model-training-and-tuning.html
-- **Link (Code)**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
 - **Link (Code)**: https://www.rdocumentation.org/packages/bestglm/versions/0.37/topics/bestglm
 - **Link (Code)**: https://www.machinelearningplus.com/machine-learning/caret-package/
 - **Link (Code)**: http://www.kimberlycoffey.com/blog/2016/7/16/compare-multiple-caret-run-machine-learning-models
@@ -95,6 +117,11 @@ Notes:
 ---------------------
 
 ## Literature Review (Context)
+
+
+### Using Demographics in Predicting Election Results with Twitter
+- Type: Conference paper
+- **Link**: https://link.springer.com/chapter/10.1007/978-3-319-47874-6_18
 
 ### Independent Relationship of Changes in Death Rates with Changes in US Presidential Voting
 - Type: Article
@@ -164,17 +191,20 @@ Notes:
 
 ## Literature Review (Stats)
 
+Logistic Regression Analysis
+- Understanding the Basics of QSAR for Applications in Pharmaceutical Sciences and Risk Assessment
+2015, Pages 191-229
+- Type: Academic paper?
+- **Link**: https://www.sciencedirect.com/topics/medicine-and-dentistry/logistic-regression-analysis
+
+### A Survey on Training Algorithms for Support Vector Machine Classifiers 
+- **Link**: https://ieeexplore.ieee.org/ielx5/4623957/4623958/04623990.pdf?tp=&arnumber=4623990&isnumber=4623958&ref=
+
+### A Comparative Study of Classification Techniques in Data Mining Algorithms
+- **Link**: http://www.computerscijournal.org/vol8no1/a-comparative-study-of-classification-techniques-in-data-mining-algorithms/
+
 ### The Design and Analysis of Benchmark Experiments
 - **Link**: https://homepage.boku.ac.at/leisch/papers/Hothorn+Leisch+Zeileis-2005.pdf
-
-### How to Create State and County Maps Easily in R
-- Type: Blog post
-- **Link**: https://medium.com/@urban_institute/how-to-create-state-and-county-maps-easily-in-r-577d29300bb2
-
-### Glmnet Vignette
-- **Link**: https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
-- Really nice blog post about glmnet and the logistic penalized regression
-
 
 ### Chapter 6 Logistic Regression
 - **Link**: https://bookdown.org/roback/bookdown-bysh/ch-logreg.html
@@ -364,6 +394,10 @@ Applied Logistic Regression
 --------------------------
 
 ## Resources
+
+### A Proposed Data Analytics Workflow and Example Using the R Caret Package
+- **Link**: http://matthewalanham.com/Students/2018_MWDSI_R%20caret%20paper.pdf
+
 - **Link**: http://www.chrisbilder.com/categorical/Chapter5/AllGOFTests.R
 - Functions from class
 
@@ -382,7 +416,6 @@ Notes:
 - R functions RMSPE etc
 
 ---------------------------------------------
-
 
 # Notes
 - Two votes for every state because each has two senators and 1 vote for each congress person 
