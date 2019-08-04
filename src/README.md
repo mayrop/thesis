@@ -1,14 +1,3 @@
-# Todo
-- [ ] Talk about summary of the variables.  
-- [ ] Talk about preprocessing of variables. 
-    - [ ] Talk about why only certain amount of variables
-    - [ ] Find a reference that talks about picking variables
-    - [ ] Talk about how this could be a limitation in the future
-- [ ] Talk about collinearity. 
-
-### Conclusions
-- [ ] Talk about limitation in only analyzing outcome as a binary 
-
 # Notes
 
 ## Code Examples
