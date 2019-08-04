@@ -2,6 +2,7 @@
 
 default:
   seed: 2019
+  n_resampling: 10 
   settings:
     data_folder: "data"
     load_fonts: 1
@@ -43,6 +44,9 @@ default:
     font_color: "#4e4d47"
     bg_color: "#f5f5f2"
     border_color: "#e8e8e5"
+    parties_colors: !expr c("#d93334", "#105099")
+    parties_factors: !expr c("yes", "no")
+    parties_labels: !expr c("Donald Trump", "Hillary Clinton")
   maps:
     colors: !expr data.frame(
         "democrat_low" = "#C0CCDD",
