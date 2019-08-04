@@ -24,6 +24,7 @@ facts <- facts %>%
     # population
     pop_14 = PST045214,
     pop_14_level = factor(cut(log(PST045214), length(levels)), labels=levels),
+    pop_14_level2 = factor(cut(log(PST045214), length(levels))),
     
     pop_density_10 = POP060210,
     
