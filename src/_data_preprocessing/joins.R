@@ -1,8 +1,13 @@
 # Main Join for both datasets
-
 all <- full_join(
   elections, facts, by="fips"
 )
+
+color_scale <- as_tibble(
+    config$maps$colors
+  ) %>% 
+  mutate_if(is.factor, as.character) %>% 
+  gather("group", "fill")
 
 # Handling the data for maps
 

@@ -16,18 +16,16 @@
 library(config)
 config <- config::get()
 
-source("_settings/functions.R")
-load_libraries(config$settings$libraries)
-load_sources(config$settings$sources)
-
-datasets <- load_datasets(config$settings$data_folder)
-
 # S E T T I N G S
 
-source("_settings/theme.R")
+# https://github.com/mayrop/hazel
+library("hazel")
 
-############################
-############################
+source("_settings/functions.R")
+load.libraries(config$settings$libraries)
+load.sources(config$settings$sources)
+
+datasets <- load.datasets(config$settings$data_folder)
 
 # D A T A . P R E P R O C E S S I N G
 
@@ -51,13 +49,13 @@ source("_data_preprocessing/joins.R")
 
 set.seed(config$seed)
 
-indices = createDataPartition(all$response_binary, p = 0.6, list = FALSE)
+indices = createDataPartition(all$response_binary, p=0.6, list=FALSE)
 train.data = all[indices,]
 test.data = all[-indices,]
 
 rm(indices)
 
-# Double checking proportions - stratified random sample
+# Double checking proportions - Stratified Random Sample
 
 prop.table(table(train.data$response_binary))
 table(train.data$response_binary)
@@ -80,7 +78,8 @@ source("_eda/correlations.R")
 # source("_eda/plots.R") # TODO check & improve
 # source("_eda/maps.R")
 
-#####################################
+############################################
+############################################
 
 # Data Modelling
 

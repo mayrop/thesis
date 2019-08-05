@@ -5,27 +5,28 @@ default:
   n_resampling: 10 
   settings:
     data_folder: "data"
-    load_fonts: 1
     libraries: !expr c(
         "ggplot2", "GGally", "gridExtra", "dplyr", 
         "moderndive", "skimr", "plotly", "tidyr", "magrittr", 
-        "tidyverse", "reshape2", "corrplot", "caret", "ellipse", "car", "rcompanion", 
+        "tidyverse", "reshape2", "caret", "ellipse", "car", "rcompanion", 
         "e1071", "pROC", "glmnet", 
         "tibble",
-        "dendextend", 
-        "urbnmapr", "sf", "cowplot",  
-        "extrafont",
+        "corrplot", "dendextend", "cowplot",  
+        "sf", 
         "digest",
-        "stringi",
-        "LOGIT",
         "data.table",
+        "LOGIT",
         "doParallel"
+      )
+    github: !expr c(
+        "mayrop/hazel",
+        "UrbanInstitute/urbnmapr"
       )
     sources: !expr c(
         "http://www.sthda.com/upload/rquery_cormat.r"
       )
   predictors:
-    correlation: 0.23
+    correlation: 0.245
     use_all_for_correlations: 1 # TODO - Get better naming convention
     transformations: !expr list(
         "pop_14" = "log(pop_14)",
@@ -36,6 +37,8 @@ default:
         "age_u18_pct_14" = "log(age_u18_pct_14)"
       )
     valid_suffixes: !expr c(
+        "_07$", 
+        "_10$", 
         "_13$", 
         "_14$"
       )
