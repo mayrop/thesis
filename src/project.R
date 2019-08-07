@@ -8,60 +8,37 @@
 # 
 ### 
 
-# D A T A
+# S E T T I N G S
 
 # Setting project directory
 # setwd("~/Github/thesis/Project")
 # setwd("H:/thesis-master/Project")
+print("Loading config")
 library(config)
 config <- config::get()
 
-# S E T T I N G S
+# Getting started...
+source("init.R")
 
-# https://github.com/mayrop/hazel
-library("hazel")
+############################################
+############################################
 
-source("_settings/functions.R")
-load.libraries(config$settings$libraries)
-load.sources(config$settings$sources)
-
-datasets <- load.datasets(config$settings$data_folder)
-
-# D A T A . P R E P R O C E S S I N G
+# D a t a . P r e p r o c e s s i n g
 
 # Here we fix some data inconsistencies
-source("_data_preprocessing/data_fixes.R")
+source("_data/fix.R")
 
 # Here we process elections dataset
-source("_data_preprocessing/elections.R")
+source("_data/elections.R")
 
 # Here we process facts dataset
-source("_data_preprocessing/facts.R")
+source("_data/facts.R")
 
 # Sanity checks
-source("_data_preprocessing/sanity_checks.R")
+source("_data/sanity_checks.R")
 
 # Joins
-source("_data_preprocessing/joins.R")
-
-############################################
-############################################
-
-set.seed(config$seed)
-
-indices = createDataPartition(all$response_binary, p=0.6, list=FALSE)
-train.data = all[indices,]
-test.data = all[-indices,]
-
-rm(indices)
-
-# Double checking proportions - Stratified Random Sample
-
-prop.table(table(train.data$response_binary))
-table(train.data$response_binary)
-
-prop.table(table(test.data$response_binary))
-table(test.data$response_binary)
+source("_data/joins.R")
 
 ############################################
 ############################################
