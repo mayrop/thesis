@@ -1,24 +1,4 @@
-##############################################
-##############################################
 
-# pattern <- paste(config$predictors$valid_suffixes, collapse="|")
-
-# importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], y = pull(all[,response]))
-
-# importants <- importants[order(-importants$yes),]
-# importants <- importants[1:20,]
-# importants_names <- rownames(importants)
-
-# setdiff(importants_names, predictors)
-# setdiff(predictors, importants_names)
-
-# knnFit <- train(as.data.frame(all[,which(grepl(pattern, names(all)))]), pull(all[,response]), "knn")
-# knnImp <- varImp(knnFit)
-# dotPlot(knnImp)
-# }
-
-# featurePlot(x=x[1:12], y=y, plot="density", )
-# 
 
 types <- sapply(all, class)
 cols <- names(types)
@@ -26,11 +6,7 @@ cols <- names(types)
 category_cols <- cols[types=="character" | types=="factor"]
 elections_cols <- cols[grepl("votes_|frac_|party_|prop_", cols)]
 
-continous <- train.data[,-which(colnames(train.data) %in% category_cols)]
-
-if (config$predictors$use_all_for_correlations) {
-  continous <- all[,-which(colnames(all) %in% category_cols)]  
-}
+continous <- all[,-which(colnames(all) %in% category_cols)]  
 
 demographic_corr_tbl <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
   filter(!(column %in% elections_cols) & !(row %in% elections_cols)) %>% 
@@ -57,7 +33,6 @@ predictors <- elections_cor_tbl[
 ]
 predictors <- predictors$var
 
-# 
 regex <- paste(config$predictors$valid_suffixes, collapse="|")
 predictors <- predictors[grepl(regex,predictors)]  
 
@@ -65,7 +40,7 @@ predictors <- predictors[grepl(regex,predictors)]
 # TODO - Check & document why
 predictors <- c(predictors, c("response_regression"))
 
-#################################################################################
-######### Cleanup
+#########################################
+# Cleaning global environment
 rm(regex)
 
