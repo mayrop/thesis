@@ -8,9 +8,9 @@ control <- trainControl(
   allowParallel=FALSE
 )
 
-my_formula <- build_initial_formula(
-  response="response_factor",
-  predictors=predictors,
+my_formula <- formula.build(
+  y="response_factor",
+  x=predictors,
   regex=paste(config$predictors$valid_suffixes, collapse="|"),
   transformations=config$predictors$transformations
 )

@@ -1,4 +1,12 @@
-# Data processing
+###
+#
+# In this file we process all the variables that will 
+# be needed with regards to the elecitons dataset
+#
+# @author Mayra Valdes @mayrop
+# 
+### 
+
 elections <- elections %>%
   dplyr::filter(year == 2016) %>%
   dplyr::select(-year, -version, -office) %>%
@@ -68,6 +76,7 @@ elections %<>%
   group_by(fips) %>%
   filter(row_number() == 1)
 
-# make sure that binary baseline is yes, since we will try to model that
-elections$response_factor <- factor(elections$response_factor, levels=c("yes", "no"), ordered=FALSE)
+# make sure that binary baseline is no
+# this way p = yes, 1-p = no
+elections$response_factor <- factor(elections$response_factor, levels=config$predictors$parties_levels, ordered=FALSE)
 

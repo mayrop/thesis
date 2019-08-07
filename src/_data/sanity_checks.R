@@ -19,15 +19,12 @@ nrow(facts)
 elections_fips <- unique(as.numeric(elections[elections$state_abbreviation!="AK",]$fips))
 facts_fips <- unique(as.numeric(facts[facts$state_facts!="AK",]$fips))
 
-print("Extras in elections")
-elections[elections$fips %in% elections_fips[!(elections_fips %in% facts_fips)] ,]
+# Here we check if there are any fips that are not on either dataset
+elections[elections$fips %in% elections_fips[!(elections_fips %in% facts_fips)], ]
+facts[facts$fips %in% facts_fips[!(facts_fips %in% elections_fips)], ]
 
-print("Extras in facts")
-facts[facts$fips %in% facts_fips[!(facts_fips %in% elections_fips)],]
-
-
-#################################################################################
-######### Cleanup
+#########################################
+# Cleaning global environment
 rm(facts_fips)
 rm(elections_fips)
 

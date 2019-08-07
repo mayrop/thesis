@@ -1,5 +1,5 @@
 to_run=names(my_methods)
-#to_run=c("svmRadial")
+to_run=c("glm", "glm_ltr", "rf")
 
 for (method in to_run) {
   ################################## 
@@ -54,7 +54,7 @@ for (method in to_run) {
     levels = levels(test.data$response_factor)
   )
   post$matrix <- confusionMatrix(
-    data=post$raw, test.data$response_factor
+    data=post$raw, reference=test.data$response_factor, positive="yes"
   )
   
   post$metrics <- c(
