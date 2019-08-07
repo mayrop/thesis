@@ -39,16 +39,17 @@ my_map <- spatial_data %>%
 #png(filename="figures/map_popular_vote.png", width=250, height=180, bg="transparent", unit="mm", res=300)
 
 ggplot(
-  data = spatial_data
-) +
+    data = spatial_data
+  ) +
   scale_alpha(
-    name="",
-    range=c(0.7,0),
-    guide=F
+    name = "",
+    range = c(0.7, 0),
+    guide = FALSE
   ) +
   geom_sf(
-    color="gray",
-    size=0.1
+    color = "gray",
+    fill = "white",
+    size = 0.1
   ) + 
   geom_sf(
     data = states_data,
