@@ -24,6 +24,7 @@ facts <- facts %>%
     # population
     pop_14 = PST045214,
     pop_14_level = factor(cut(log(PST045214), length(levels)), labels=levels),
+    pop_14_level2 = factor(cut(log(PST045214), length(levels))),
     
     pop_density_10 = POP060210,
     
@@ -46,19 +47,20 @@ facts <- facts %>%
     edu_bachelor_pct_13_level = factor(cut(EDU685213, length(levels)), labels=levels),
     
     # race
-    race_white_pct_14 = RHI125214, 
-    race_afroamerican_pct_14 = RHI225214,
-    race_latino_pct_14 = RHI725214,
-    race_white_no_hisp_pct_14 = RHI825214,
-    race_native_pct_14 = RHI325214,
-    race_asian_pct_14 = RHI425214,
-    race_hawaiian_pct_14 = RHI525214,
-    race_two_races_pct_14 = RHI625214,
+    rh_white_pct_14 = RHI125214, 
+    rh_afroamerican_pct_14 = RHI225214,
+    rh_latino_pct_14 = RHI725214,
+    rh_white_no_hisp_pct_14 = RHI825214,
+    rh_native_pct_14 = RHI325214,
+    rh_asian_pct_14 = RHI425214,
+    rh_hawaiian_pct_14 = RHI525214,
+    rh_two_races_pct_14 = RHI625214,
 
     # race - categorical
-    race_white_no_hisp_pct_14_level = factor(cut(RHI825214, length(levels)), labels=levels),
+    rh_white_no_hisp_pct_14_level = factor(cut(RHI825214, length(levels)), labels=levels),
     
     # sex
+    females_pop_14 = PST045214 * SEX255214 / 100,
     females_pct_14 = SEX255214,
     
     # housing & buildings & businesses
@@ -73,25 +75,38 @@ facts <- facts %>%
     nonemployer_establ_rate_13 = NES010213 / PST045214,
     
     # housing
-    housing_units_rate_14 = HSG010214 / PST045214,
-    housing_person_per_household_13 = HSD310213, 
-    housing_units_in_multiunit_13 = HSG096213, 
-    housing_homeownership_rate_13 = HSG445213, 
-    housing_househ_rate_13 = HSD410213 / PST045214, 
-    housing_median_val_housing_units_13 = HSG495213,
+    hsg_units_rate_14 = HSG010214 / PST045214,
+    hsg_units_in_multiunit_13 = HSG096213, 
+    hsg_homeownership_rate_13 = HSG445213, 
+    hsg_median_val_housing_units_13 = HSG495213,
+
+    hsd_persons_per_household_13 = HSD310213, 
+    hsd_household_rate_13 = HSD410213 / PST045214, 
     
     # housing - categorial
-    housing_units_in_multiunit_13_level = factor(cut(HSG096213, length(levels)), labels=levels),
+    hsg_units_in_multiunit_13_level = factor(cut(HSG096213, length(levels)), labels=levels),
     
     # Firms    
     firms_rate_07 = SBO001207 / PST045214,
-    firms_indian_rate_07 = SBO115207 / PST045214,
-    firms_asian_rate_07 = SBO215207 / PST045214,
-    firms_afroamerican_rate_07 = SBO315207 / PST045214,
-    firms_hispanic_rate_07 = SBO415207 / PST045214,
-    firms_hawaiian_rate_07 = SBO515207 / PST045214,
-    firms_women_rate_07 = SBO015207 / PST045214,
     
+    firms_indian_total_07 = SBO115207 * SBO001207 / 100,
+    firms_indian_rate_07 = firms_indian_total_07 / PST045214,
+    
+    firms_asian_total_07 = (SBO215207 * SBO001207 / 100),
+    firms_asian_rate_07 = firms_asian_total_07  / PST045214,
+    
+    firms_afroamerican_total_07 = (SBO315207 * SBO001207 / 100),
+    firms_afroamerican_rate_07 = firms_afroamerican_total_07 / PST045214,
+    
+    firms_hispanic_total_07 = (SBO415207 * SBO001207 / 100),
+    firms_hispanic_rate_07 = firms_hispanic_total_07 / PST045214,
+    
+    firms_hawaiian_total_07 = (SBO515207 * SBO001207 / 100),
+    firms_hawaiian_rate_07 = firms_hawaiian_total_07 / PST045214,
+    
+    firms_females_total_07 = (SBO015207 * SBO001207 / 100),
+    firms_females_rate_07 = firms_females_total_07 / females_pop_14,
+
     # money
     inc_med_househ_income_13 = INC110213,
     inc_pc_past_12_month_13 = INC910213,
@@ -142,6 +157,7 @@ facts <- facts %>%
     
     # sex
     -SEX255214,
+    -females_pop_14,
     
     # non farm
     -BZA010213,
@@ -167,6 +183,13 @@ facts <- facts %>%
     -SBO515207,
     -SBO015207,
     
+    -firms_indian_total_07,
+    -firms_asian_total_07,
+    -firms_afroamerican_total_07,
+    -firms_hispanic_total_07,
+    -firms_hawaiian_total_07,
+    -firms_females_total_07,
+    
     # money
     -INC110213,
     -INC910213,
@@ -184,17 +207,6 @@ facts <- facts %>%
     
     # veterans
     -VET605213
-    
-    # reduntant
-      # reduntant with population_2014 and population_density_2010
-    #-pop_10
-    
-      # reduntant with race_white_no_hispanic_percent_2014
-    #-race_white_percent_2014,
-
-      # reduntant with nonfarm_private_employment_percent_change_2013 
-      # & nonfarm_private_establishments_rate_2014
-    #-nf_priv_emplt_rate_13 
   )
 
 #######

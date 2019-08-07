@@ -1,27 +1,80 @@
 library(RColorBrewer)
 
-pattern <- paste(config$predictors$valid_suffixes, collapse="|")
-importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], y = all$response_factor)
+# pattern <- paste(config$predictors$valid_suffixes, collapse="|")
+# importants <- filterVarImp(x = all[,which(grepl(pattern, names(all)))], y = all$response_factor)
 
-importants <- importants[order(-importants$yes),]
-importants <- importants[1:length(predictors),]
-importants_names <- rownames(importants)
+# importants <- importants[order(-importants$yes),]
+# importants <- importants[1:length(predictors),]
+# importants_names <- rownames(importants)
+
+key.trans <- list(
+  space="bottom", 
+  columns=2,
+  text=list(config$theme$parties_labels),
+  lines=list(col=config$theme$parties_colors),
+  cex.title=1, 
+  cex=.9,
+  title="Winning Party"
+)
+
+png(filename="figures/density_plots.png", width=300, height=200, bg="white", unit="mm", res=300)
 
 featurePlot(
+  # to change the order of plots
+  index.cond=list(c(14:1,NULL)),
   x=as.data.frame(train.data[, which(colnames(all) %in% predictors[predictors != "response_regression"])]), 
   y=pull(train.data[, which(colnames(all) %in% "response_factor")]), 
-  plo ="density",
+  plo="density",
+  # theme settings
+  pch=16, # what's the figure for the density
+  cex=0.2,  # what's the size for the figure
+  col=config$theme$parties_colors,
+  par.settings=list(
+    strip.background=list(col="#f3f3f3")
+  ),
+  strip=strip.custom(par.strip.text=list(cex=.6)),
+  # titles
+  main="Density plots for each covariate and winning party",
+  labels=c(),
+  # scales for each plot axis
   scales=list(x=list(relation="free"), y=list(relation="free")),
-  strip=strip.custom(par.strip.text=list(cex=.7)),
-  auto.key=list(space="top", columns=2, cex.title=1)
+  # legend
+  key=key.trans,
+  layout=c(5, 3)
 )
 
-correlations <- cor(all[,which(colnames(all) %in% predictors)])
+dev.off()
+
+############################
+
+temp_predictors <- predictors
+temp_predictors[temp_predictors=="response_regression"] <- "frac_republican"
+
 # https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
+correlations <- cor(all[,which(colnames(all) %in% temp_predictors)])
+
+png(filename="figures/corrplot.png", width=450, height=260, bg="white", unit="mm", res=300)
 corrplot::corrplot(
-  correlations, order="hclust", 
-  addrect=10, tl.col="black", tl.srt=45, col=brewer.pal(n=10, name="RdYlBu")
+  correlations,
+  order="hclust",
+  hclust.method="complete",
+  # careful with this
+  tl.col=c(
+    rep("black", 2),
+    "#92000a",
+    rep("black", 13)
+  ), 
+  tl.srt=45,
+  #tl.pos="ld",
+  addrect=11,
+  col=brewer.pal(n=10, name="RdYlBu"),
+  win.asp=.5
 )
+
+title("Correlation Matrix between frac_republican and covariates", line=2, font=24)
+dev.off()
+
+# heatmap(x = correlations,  symm = TRUE)
 
 ### Cluster of variables
 regex <- paste(config$predictors$valid_suffixes, collapse="|")

@@ -5,7 +5,7 @@ get_tune_grid <- function(model, type) {
     ))
   }
   
-  if (type == "rf") {
+  if (type == "rf" | type == "svm") {
     return(expand.grid(
       as.list(model$bestTune)
     ))
@@ -13,6 +13,21 @@ get_tune_grid <- function(model, type) {
   
   warning(paste("No valid function for type: ", type))
 }
+
+
+# Based on http://jaehyeon-kim.github.io/2015/05/Setup-Random-Seeds-on-Caret-Package.html
+get_seeds <- function(method="cv", n_resampling=10, n_repeats=1, n_tunes=0, seed=2019) {
+  set.seed(seed)
+  length=n_resampling * n_repeats
+  seeds <- vector(mode="list", length=length)
+  seeds <- lapply(seeds, function(x) {
+    sample.int(n=10000, size=length + n_tunes)
+  })
+  seeds[[length(seeds) + 1]] <- sample.int(n=10000, size = 1)
+  
+  return(seeds)
+}
+
 
 get_my_model <- function(method, data, control, family="binomial", metric="ROC", preProc=c("center", "scale")) {
   # ifelse is vectorized, so use `if`

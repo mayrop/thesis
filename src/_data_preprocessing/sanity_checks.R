@@ -1,9 +1,4 @@
-#nrow(elections_orig[elections_orig$year==2016 & !is.na(elections_orig$state_po), ]) / 3
-#elections_fips <- unique(elections_orig[elections_orig$year==2016 & !is.na(elections_orig$state_po), "FIPS"])
-
 ####################
-elections_uni <- datasets[["elections_uni"]]
-
 sum(elections$votes_other) / sum(elections$votes_total)
 # [1] 0.05620822
 sum(elections$votes_republican) / sum(elections$votes_total)
@@ -19,29 +14,6 @@ sum(complete.cases(elections))
 sum(complete.cases(facts))
 nrow(facts)
 
-# Number of rows
-nrow(elections_uni)
-nrow(elections)
-
-# Number of counties won by candidate
-sum(elections_uni$partywonR)
-dim(elections[elections$party_won=="republican",])
-
-# 4 counties difference
-elections_uni_donald <- as.numeric(elections_uni[elections_uni$partywonR==1,]$FIPS)
-elections_other_donald <- as.numeric(elections[elections$party_won=="republican",]$fips)
-missing <- elections_other_donald[!(elections_other_donald %in% elections_uni_donald)]
-
-elections[as.numeric(elections$fips) %in% missing,]
-elections_uni[as.numeric(elections_uni$FIPS) %in% missing,]
-# 4 missing
-# NE missing, reported & fixed
-# 3 incorrect from AZ, reported & fixed
-
-# Total of votes per candidate
-sum(elections$votes_republican) - sum(elections_uni$candidatevotesR)
-# Difference (460) is in NE (the new county that was added)
-
 ############################
 
 elections_fips <- unique(as.numeric(elections[elections$state_abbreviation!="AK",]$fips))
@@ -56,11 +28,6 @@ facts[facts$fips %in% facts_fips[!(facts_fips %in% elections_fips)],]
 
 #################################################################################
 ######### Cleanup
-rm(levels)
 rm(facts_fips)
 rm(elections_fips)
-rm(elections_other_donald)
-rm(elections_uni_donald)
-rm(missing)
-rm(elections_uni)
 

@@ -14,8 +14,7 @@ elections <- elections %>%
   mutate(
     party_frac_lead = frac_votes[1] - frac_votes[2],
     party_won = party[1],
-    map_color = get_map_color(party[1], frac_votes[1] - frac_votes[2]),
-    
+
     response_binary = ifelse(party[1] == "republican", 1, 0),
     response_factor = ifelse(party[1] == "republican", "yes", "no")
   ) %>%
@@ -40,6 +39,7 @@ elections <- elections %>%
     state_abbreviation, 
     county,
     
+    votes,
     votes_total, 
     votes_democrat,
     votes_other,
@@ -52,19 +52,22 @@ elections <- elections %>%
     
     prop_democrat,
     prop_republican,
+    
+    party,
     party_frac_lead,
     party_won,
-
-    map_color,
     
     response_binary,
     response_factor,
     response_regression
-  ) %>% 
+  )
+
+elections_summary <- elections
+
+elections %<>% 
   group_by(fips) %>%
   filter(row_number() == 1)
-  
-elections$map_color <- factor(elections$map_color)
+
 # make sure that binary baseline is yes, since we will try to model that
 elections$response_factor <- factor(elections$response_factor, levels=c("yes", "no"), ordered=FALSE)
 

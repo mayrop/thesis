@@ -32,13 +32,13 @@ if (config$predictors$use_all_for_correlations) {
   continous <- all[,-which(colnames(all) %in% category_cols)]  
 }
 
-demographic_correlations_table <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
+demographic_corr_tbl <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
   filter(!(column %in% elections_cols) & !(row %in% elections_cols)) %>% 
   # Only interested in the cols correlated to prop_republican
   mutate(cor_abs = abs(cor)) %>% 
   arrange(desc(cor_abs))
 
-elections_correlation_table <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
+elections_cor_tbl <- rquery.cormat(continous, type="flatten", graph=FALSE)$r %>% 
   # Only interested in the cols correlated to prop_republican
   filter(column=="response_regression" | row=="response_regression") %>% 
   filter(
@@ -52,13 +52,14 @@ elections_correlation_table <- rquery.cormat(continous, type="flatten", graph=FA
   dplyr::select(var, cor, p, cor_abs)
 
 # Filtering out variables that are not highly correlated
-predictors <- elections_correlation_table[elections_correlation_table$cor_abs >= config$predictors$correlation,]
+predictors <- elections_cor_tbl[
+  elections_cor_tbl$cor_abs >= config$predictors$correlation,
+]
 predictors <- predictors$var
 
 # 
 regex <- paste(config$predictors$valid_suffixes, collapse="|")
 predictors <- predictors[grepl(regex,predictors)]  
-
 
 # Adding the regression variable to the predictos vector
 # TODO - Check & document why

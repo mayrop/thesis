@@ -1,5 +1,7 @@
+to_run=names(my_methods)
+#to_run=c("svmRadial")
 
-for (method in names(my_methods)) {
+for (method in to_run) {
   ################################## 
   control$allowParallel <- `if`(!is.null(my_methods[[method]]$allowParallel), my_methods[[method]]$allowParallel, FALSE)
   
@@ -10,9 +12,13 @@ for (method in names(my_methods)) {
   my_methods[[method]]$form = `if`(!is.null(my_methods[[method]]$form), my_methods[[method]]$form, my_formula)
   my_methods[[method]]$data = `if`(!is.null(my_methods[[method]]$data), my_methods[[method]]$data, train.data)
   
-  my_models[[method]] = get_my_model(method, my_methods[[method]], control=control)
+  tunes = `if`(!is.null(my_methods[[method]]$tunes), my_methods[[method]]$tunes, 0)
   
-  my_models[[method]]$benchmarks = list(
+  control$seeds <- get_seeds(n_tunes=tunes)
+  
+  my_models[[method]] <- get_my_model(method, my_methods[[method]], control=control)
+  
+  my_models[[method]]$benchmarks <- list(
     start=start_time,
     end=Sys.time()
   )
