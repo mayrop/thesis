@@ -60,6 +60,9 @@ source("_eda/correlations.R")
 
 # Data Modelling
 
+# Splitting data
+source("_models/split.R")
+
 # Loads custom functions for models
 source("_models/functions.R")
 
@@ -68,6 +71,3 @@ source("_models/methods.R")
 
 # Builds all the models.. (be patient)
 source("_models/build.R")
-
-# https://stackoverflow.com/questions/48079660/extract-the-coefficients-for-the-best-tuning-parameters-in-caret
-# coef(models[["glmnet"]]$finalModel, models[["glmnet"]]$finalModel$lambdaOpt)

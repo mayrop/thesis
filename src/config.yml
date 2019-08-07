@@ -27,8 +27,8 @@ default:
         "http://www.sthda.com/upload/rquery_cormat.r"
       )
   predictors:
-    correlation: 0.245
-    use_all_for_correlations: 1 # TODO - Get better naming convention
+    correlation: 0.35
+    parties_levels: !expr c("no", "yes")
     transformations: !expr list(
         "pop_14" = "log(pop_14)",
         "pop_10" = "log(pop_10)",
