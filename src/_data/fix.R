@@ -1,6 +1,4 @@
-# Changes per:
-# https://www.cdc.gov/nchs/nvss/bridged_race/county_geography-_changes2015.pdf
-
+# Loading main datasets 
 elections <- datasets[["counties_orig"]]
 facts <- datasets[["facts_orig"]]
 
@@ -18,8 +16,9 @@ elections$party <- factor(elections$party)
 # It last appeared in the bridged-race Vintage 2014 population files. 
 # Shannon County continues to appear on NCHS birth and mortality files. 
 #
-elections[elections$FIPS==46113 & !is.na(elections$FIPS),]$FIPS <- 46102
-facts[facts$fips==46113 &  !is.na(facts$fips),]$fips <- 46102
+# https://www.cdc.gov/nchs/nvss/bridged_race/county_geography-_changes2015.pdf
+elections[elections$FIPS==46113 & !is.na(elections$FIPS), ]$FIPS <- 46102
+facts[facts$fips==46113 &  !is.na(facts$fips), ]$fips <- 46102
 #
 #########################################
 
@@ -27,22 +26,20 @@ facts[facts$fips==46113 &  !is.na(facts$fips),]$fips <- 46102
 # Bedford City, Virginia (FIPS code = 51515). Effective July 1, 2013, Bedford city, 
 # Virginia (51515), formerly an independent city,  was added to Bedford County (51019)
 #
-elections[(elections$year==2016 & elections$FIPS==51515 & !is.na(elections$FIPS)),] <- NA
-facts[facts$fips==51515 &  !is.na(facts$fips),] <- NA
+elections[(elections$year==2016 & elections$FIPS==51515 & !is.na(elections$FIPS)), ] <- NA
+facts[facts$fips==51515 &  !is.na(facts$fips), ] <- NA
 #
 #########################################
 
 #########################################
 # Removing incomplete rows (only the one we just removed)
-#
-facts <- facts[complete.cases(facts),]
-#
+facts <- facts[complete.cases(facts), ]
 #########################################
 
 #########################################
 # Looks like a few invalid rows exist for "counties" without FIPS
 # They are not valid counties, so we filter them out
-elections <- elections[!is.na(elections$FIPS),]
+elections <- elections[!is.na(elections$FIPS), ]
 #########################################
 
 # Joining Kansas City & Jackson County
@@ -55,20 +52,20 @@ e36000 <- elections[cond2, c("party", "candidatevotes")]
 elections_fix <- inner_join(e29095, e36000, by="party")
 elections_fix$candidatevotes <- elections_fix$candidatevotes.x + elections_fix$candidatevotes.y
 
-for (party in elections[cond1,]$party) {
+for (party in elections[cond1, ]$party) {
   cond <- cond1 & elections$party == party
-  elections[cond,]$candidatevotes <- elections_fix[elections_fix$party == party,]$candidatevotes
+  elections[cond, ]$candidatevotes <- elections_fix[elections_fix$party == party, ]$candidatevotes
 }
 
-elections[cond1,]$totalvotes <- sum(elections[cond1,]$candidatevotes)
-elections[cond2,] <- NA
+elections[cond1, ]$totalvotes <- sum(elections[cond1, ]$candidatevotes)
+elections[cond2, ] <- NA
 
 ###### Remove this one again
-elections <- elections[!is.na(elections$FIPS),]
+elections <- elections[!is.na(elections$FIPS), ]
 
 
-#################################################################################
-######### Cleanup
+#########################################
+# Cleaning global environment
 rm(e29095)
 rm(e36000)
 rm(cond)

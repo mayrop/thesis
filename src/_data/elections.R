@@ -1,4 +1,12 @@
-# Data processing
+###
+#
+# In this file we process all the variables that will 
+# be needed with regards to the elecitons dataset
+#
+# @author Mayra Valdes @mayrop
+# 
+### 
+
 elections <- elections %>%
   dplyr::filter(year == 2016) %>%
   dplyr::select(-year, -version, -office) %>%
