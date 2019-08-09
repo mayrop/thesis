@@ -9,12 +9,6 @@ facts <- facts %>%
     -state_abbreviation
   )
 
-
-# Double checking
-facts %>% 
-  dplyr::select(-fips, -area_name, -state_facts) %>% 
-  skim()
-
 # This is for categorizing certain variables
 levels <- c("low", "med", "high")
 
@@ -24,8 +18,7 @@ facts <- facts %>%
     # population
     pop_14 = PST045214,
     pop_14_level = factor(cut(log(PST045214), length(levels)), labels=levels),
-    pop_14_level2 = factor(cut(log(PST045214), length(levels))),
-    
+
     pop_density_10 = POP060210,
     
     pop_10 = POP010210,
@@ -210,12 +203,6 @@ facts <- facts %>%
   )
 
 #######
-
-
-# Analysis
-facts %>% 
-  dplyr::select(-fips, -area_name, -state_facts) %>% 
-  skim()
 
 # separating
 facts_states <- facts %>%

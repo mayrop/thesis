@@ -6,29 +6,21 @@ default:
   settings:
     data_folder: "data"
     libraries: !expr c(
-        "ggplot2", "GGally", "gridExtra", "dplyr", 
-        "RColorBrewer",
-        "moderndive", "skimr", "plotly", "tidyr", "magrittr", 
-        "tidyverse", "reshape2", "caret", "ellipse", "car", "rcompanion", 
-        "e1071", "pROC", "glmnet", 
-        "tibble",
-        "corrplot", "dendextend", "cowplot",  
-        "sf", 
-        "digest",
-        "data.table",
-        "LOGIT",
+        "tidyverse",
+        "caret",
+        "sf",
+        "pROC"
         "doParallel"
       )
     github: !expr c(
-        "mayrop/hazel",
         "UrbanInstitute/urbnmapr"
       )
     sources: !expr c(
         "http://www.sthda.com/upload/rquery_cormat.r"
       )
   predictors:
-    correlation: 0.35
-    parties_levels: !expr c("no", "yes")
+    correlation: 0.25
+    parties_levels: !expr c("yes", "no")
     transformations: !expr list(
         "pop_14" = "log(pop_14)",
         "pop_10" = "log(pop_10)",
@@ -38,7 +30,6 @@ default:
         "age_u18_pct_14" = "log(age_u18_pct_14)"
       )
     valid_suffixes: !expr c(
-        "_07$", 
         "_10$", 
         "_13$", 
         "_14$"
@@ -51,6 +42,13 @@ default:
     parties_colors: !expr c("#d93334", "#105099")
     parties_factors: !expr c("yes", "no")
     parties_labels: !expr c("Donald Trump", "Hillary Clinton")
+    # library(RColorBrewer)
+    # brewer.pal(n=10, name="RdYlBu")
+    # caching...
+    correlations: !expr c(
+        "#A50026", 
+        "#D73027", "#F46D43", "#FDAE61", "#FEE090", "#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695"
+      )
   maps:
     colors: !expr data.frame(
         "democrat_low" = "#C0CCDD",

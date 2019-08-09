@@ -8,7 +8,7 @@ control <- trainControl(
   allowParallel=FALSE
 )
 
-my_formula <- formula.build(
+my_formula <- form.build(
   y="response_factor",
   x=predictors,
   regex=paste(config$predictors$valid_suffixes, collapse="|"),
@@ -23,14 +23,14 @@ my_methods <- list(
     name="Logistic Regression",
     preProc=c()    
   ),
-  "glm_ltr" = list(
-    name="LR Backward Elimination (LTR)",
-    form=formula(
-      step(glm(my_formula, data=train.data, family=binomial()), test="LRT", trace=0)
-    ),    
-    method="glm",
-    preProc=c()
-  ),
+  #"glm_ltr" = list(
+  #  name="LR Backward Elimination (LTR)",
+  #  form=formula(
+  #    step(glm(my_formula, data=train.data, family=binomial()), test="LRT", trace=0)
+  #  ),    
+  #  method="glm",
+  #  preProc=c()
+  #),
   #"glm_aic" = list(
   #  method="glmStepAIC",
   #  name="LR Backward Elimination (AIC)"
@@ -40,16 +40,16 @@ my_methods <- list(
   #  name="LR Backward Elimination (BIC)"
   #),
   # https://stats.stackexchange.com/questions/48360/is-standardization-needed-before-fitting-logistic-regression
-  "glmnet" = list(
-    name="Penalized Logistic Regression",
-    tuneGrid=expand.grid(
-      # For Penalized logistic regression: # alpha = 1 -> lasso, 0 -> ridge
-      alpha=seq(0.05, 0.95, by=0.05),
-      lambda=seq(0.001, 0.01, by=0.001)
-    ), 
-    optimizeGrid="glmnet",
-    tunes=9
-  ),
+  #"glmnet" = list(
+  #  name="Penalized Logistic Regression",
+  #  tuneGrid=expand.grid(
+  #    # For Penalized logistic regression: # alpha = 1 -> lasso, 0 -> ridge
+  #    alpha=seq(0.05, 0.95, by=0.05),
+  #    lambda=seq(0.001, 0.01, by=0.001)
+  #  ), 
+  #  optimizeGrid="glmnet",
+  #  tunes=9
+  #),
   "rf" = list(
     name="Random Forest",
     tuneGrid=expand.grid(.mtry=c(1:10)),

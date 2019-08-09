@@ -5,9 +5,10 @@
 # packageurl <- "http://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.0.0.tar.gz"
 # install.packages(packageurl, repos=NULL, type="source")
 
-spatial_data %>% 
-  ggplot() + 
+ggplot() + 
+  # Adding counties for the binary colors
   geom_sf(
+    data = spatial_data %>% filter(state != "Alaska"),
     aes(
       fill = party_won
     ), 
@@ -15,10 +16,11 @@ spatial_data %>%
     size = 0.1
   ) + 
   labs(
-    fill="Winning Party"
-  ) +  
+    fill="Winning Candidate"
+  ) +
+  # Adding states for the borders
   geom_sf(
-    data = states_data,
+    data = states_data %>% filter(state_name != "Alaska"),
     aes(), 
     fill = "transparent",
     color = "white", 
@@ -33,23 +35,12 @@ spatial_data %>%
     values = rev(config$theme$parties_colors), 
     labels = rev(config$theme$parties_labels)
   ) +  
+  theme_bw() + 
   theme(
-    plot.background = element_rect(
-      fill = "white",
-      color = NA
-    ),
-    # add a subtle grid
-    panel.grid.major = element_line(
-      color = config$theme$border_color, 
-      size = 0.2
-    ),    
-    panel.background = element_rect(
-      fill = "white",
-      color = NA
-    ),
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
     legend.position = c(0.05, 0.05),
-    legend.background = element_rect(fill = "white"),
     legend.justification = c("left", "bottom")
   )
+
+sink("output/sessionInfo.txt", append=FALSE, split=TRUE)
+
+sink()

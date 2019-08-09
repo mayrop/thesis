@@ -11,12 +11,13 @@ elections_summary %>%
   mutate(
     votes_pct=votes/sum(votes) * 100,
     counties_pct=counties/sum(counties) * 100
-  ) %>% 
-  rownames_to_column %>% 
-  gather(var, value, -rowname) %>% 
-  spread(rowname, value) %>% 
-  kable("latex", caption = '\\label{tab:summary1a} BLABLA', booktabs = T) %>% 
-  kable_styling(font_size = 10, latex_options = c("hold_position"))
+  ) 
+  #%>% 
+  #rownames_to_column %>% 
+  #gather(var, value, -rowname) %>% 
+  #spread(rowname, value) %>% 
+  #kable("latex", caption = '\\label{tab:summary1a} BLABLA', booktabs = T) %>% 
+  #kable_styling(font_size = 10, latex_options = c("hold_position"))
 
 all %>%
   group_by(party_won) %>%

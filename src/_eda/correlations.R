@@ -59,7 +59,7 @@ corrplot::corrplot(
   tl.srt=45,
   #tl.pos="ld",
   addrect=11,
-  col=brewer.pal(n=10, name="RdYlBu"),
+  col=config$theme$correlations,
   win.asp=.5
 )
 
@@ -67,34 +67,34 @@ title("Correlation Matrix between frac_republican and covariates", line=2, font=
 # dev.off()
 
 ### Cluster of variables
-regex <- paste(config$predictors$valid_suffixes, collapse="|")
+#regex <- paste(config$predictors$valid_suffixes, collapse="|")
 
-continous <- all[,-which(colnames(all) %in% category_cols)]
-continous <- continous[,-which(names(continous) %in% elections_cols)]
-continous <- continous[,which(grepl(regex, names(continous)))]
+#continous <- all[,-which(colnames(all) %in% category_cols)]
+#continous <- continous[,-which(names(continous) %in% elections_cols)]
+#continous <- continous[,which(grepl(regex, names(continous)))]
 
-correlation <- cor(continous, use="complete.obs", method="pearson")
-correlation[correlation < 0.55] = 0
+#correlation <- cor(continous, use="complete.obs", method="pearson")
+#correlation[correlation < 0.55] = 0
 
-dissimilarity <- 1 - correlation
-dissimilarity <- as.data.frame(dissimilarity) %>%
-  rownames_to_column('mycol') %>%
-  filter(!(rowSums(dissimilarity) == nrow(dissimilarity) - 1)) %>%
-  column_to_rownames('mycol') %>%
-  dplyr::select(rownames((dissimilarity[!(rowSums(dissimilarity) == nrow(dissimilarity) - 1),])))
+#dissimilarity <- 1 - correlation
+#dissimilarity <- as.data.frame(dissimilarity) %>%
+#  rownames_to_column('mycol') %>%
+#  filter(!(rowSums(dissimilarity) == nrow(dissimilarity) - 1)) %>%
+#  column_to_rownames('mycol') %>%
+#  dplyr::select(rownames((dissimilarity[!(rowSums(dissimilarity) == nrow(dissimilarity) - 1),])))
 
-distance = as.dist(dissimilarity)
-cluster = hclust(distance, method="complete")
-plot(cluster, cex=0.7)
+#distance = as.dist(dissimilarity)
+#cluster = hclust(distance, method="complete")
+#plot(cluster, cex=0.7)
 
-rect.hclust(cluster, k = 15, border = 2:5)
+#rect.hclust(cluster, k = 15, border = 2:5)
 
 # using dendrogram objects
-hcd = as.dendrogram(cluster, hang=0.05) %>% 
-  dendextend::set("branches_k_color", k=10)
+#hcd = as.dendrogram(cluster, hang=0.05) %>% 
+#  dendextend::set("branches_k_color", k=10)
 
 # alternative way to get a dendrogram
-plot(hcd, horiz=T, xlim=c(1, -0.5))
+#plot(hcd, horiz=T, xlim=c(1, -0.5))
 
 ##############################################
 ##############################################
