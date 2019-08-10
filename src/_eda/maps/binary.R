@@ -40,7 +40,3 @@ ggplot() +
     legend.position = c(0.05, 0.05),
     legend.justification = c("left", "bottom")
   )
-
-sink("output/sessionInfo.txt", append=FALSE, split=TRUE)
-
-sink()

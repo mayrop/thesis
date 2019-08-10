@@ -9,7 +9,7 @@
 max_size <- max(sqrt(spatial_data$votes_democrat), sqrt(spatial_data$votes_republican))
 min_size <- min(sqrt(spatial_data$votes_democrat), sqrt(spatial_data$votes_republican))
 
-b <- 10
+b <- 15
 a <- 0.001
 
 alpha_b <- 0.9
@@ -23,7 +23,7 @@ my_map <- spatial_data %>%
     # Here we try to normalize the size by a skewed density of votes by party
     # The reason is to emphasize the difference in votes
     size_normalized = (b-a) * ((size - min_size) / (max_size - min_size)) + a,
-    alpha_size_normalized = (alpha_b-alpha_a) * ((my_map$size - min_size) / (max_size - min_size)) + alpha_a,
+    alpha_size_normalized = (alpha_b-alpha_a) * ((size - min_size) / (max_size - min_size)) + alpha_a,
     color = party_won
   ) %>%
   ungroup() %>%
@@ -36,23 +36,22 @@ my_map <- spatial_data %>%
     color
   )
 
-#png(filename="figures/map_popular_vote.png", width=250, height=180, bg="transparent", unit="mm", res=300)
-
-ggplot(
-    data = spatial_data
-  ) +
+ggplot() +
   scale_alpha(
     name = "",
     range = c(0.7, 0),
     guide = FALSE
   ) +
+  # Adding counties
   geom_sf(
+    data = spatial_data %>% filter(state != "Alaska"),
     color = "gray",
     fill = "white",
     size = 0.1
   ) + 
+  # Adding states for the borders
   geom_sf(
-    data = states_data,
+    data = states_data %>% filter(state_name != "Alaska"),
     aes(), 
     fill = "transparent",
     color = "gray", 
@@ -73,27 +72,12 @@ ggplot(
     labels = rev(config$theme$parties_labels)
   ) +
   labs(
-    color = "Winning Party"
+    x = "",
+    y = "",
+    color = "Winning Candidate"
   ) + 
+  theme_bw() + 
   theme(
-    plot.background = element_rect(
-      fill = "white",
-      color = NA
-    ),
-    # add a subtle grid
-    panel.grid.major = element_line(
-      color = config$theme$border_color, 
-      size = 0.2
-    ),    
-    panel.background = element_rect(
-      fill = "white",
-      color = NA
-    ),    
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
     legend.position = c(0.05, 0.05),
-    legend.background = element_rect(fill="white"),
     legend.justification = c("left", "bottom")
   )
-
-#dev.off()

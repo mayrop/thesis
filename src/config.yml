@@ -3,14 +3,17 @@
 default:
   seed: 2019
   n_resampling: 10 
+  print: TRUE
   settings:
     data_folder: "data"
+    images_folder: "figures/"
     libraries: !expr c(
         "tidyverse",
         "caret",
         "sf",
-        "pROC"
+        "pROC",
         "doParallel"
+        "randomForest"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
@@ -23,11 +26,7 @@ default:
     parties_levels: !expr c("yes", "no")
     transformations: !expr list(
         "pop_14" = "log(pop_14)",
-        "pop_10" = "log(pop_10)",
-        "pop_density_10" = "log(pop_density_10)",
-        "age_o65_pct_14" = "log(age_o65_pct_14)",
-        "age_u5_pct_14" = "log(age_u5_pct_14)",
-        "age_u18_pct_14" = "log(age_u18_pct_14)"
+        "pop_10" = "log(pop_10)"
       )
     valid_suffixes: !expr c(
         "_10$", 
@@ -46,8 +45,11 @@ default:
     # brewer.pal(n=10, name="RdYlBu")
     # caching...
     correlations: !expr c(
-        "#A50026", 
-        "#D73027", "#F46D43", "#FDAE61", "#FEE090", "#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695"
+        "#A50026", "#D73027", 
+        "#F46D43", "#FDAE61", 
+        "#FEE090", "#E0F3F8", 
+        "#ABD9E9", "#74ADD1", 
+        "#4575B4", "#313695"
       )
   maps:
     colors: !expr data.frame(

@@ -112,7 +112,6 @@ facts <- facts %>%
     o_accom_food_sales_rate_07 = AFN120207 / PST045214,
     o_merchant_sales_rate_07 = WTN220207 / PST045214,
     o_manufacters_shipt_sales_rate_07 = MAN450207 / PST045214,
-    # random_retail_sales_2007 = RTN130207,
     o_retail_sales_rate_07 = RTN130207 / PST045214,
     o_retail_sales_pc_07 = RTN131207,
     

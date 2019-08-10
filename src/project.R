@@ -68,7 +68,44 @@ source("_eda/predictors.R")
 length(predictors)
 predictors
 
+
+############################################
+# Function for saving
+execute_and_plot <- function(file, save=FALSE, prefix="", ext=".png", bg="white", unit="mm", res=300, ...) {
+  filename <- gsub("/", "_", file)
+  filename <- gsub("^_", "", filename)
+  filename <- gsub("\\.\\w+$", "", filename)  
+  filename <- paste(prefix, filename, ext, sep="")
+  
+  save & png(filename=filename, bg=bg, unit=unit, res=res, ...)
+  source(file, print.eval=save)
+  save & dev.off()
+}
+
+# C o r r e l a t i o n P l o t s
+
+execute_and_plot("_eda/plots/density.R", 
+  save=config$print, width=250, height=180, prefix=config$settings$images_folder
+)
+
+execute_and_plot("_eda/plots/corrplot.R", 
+  save=config$print, width=250, height=180, prefix=config$settings$images_folder
+)
+
+
+# png(filename="figures/corrplot.png", width=450, height=260, bg="white", unit="mm", res=300)
 source("_eda/correlations.R")
+dev.off()
+
+# M a p s 
+
+config$print & png(filename="figures/map_binary.png", width=250, height=180, bg="transparent", unit="mm", res=300)
+source("_eda/maps/binary.R", print.eval=config$print)
+config$print & dev.off()
+
+config$print & png(filename="figures/map_votes.png", width=250, height=180, bg="transparent", unit="mm", res=300)
+source("_eda/maps/votes.R", print.eval=config$print)
+config$print & dev.off()
 
 # source("_eda/plots.R") # TODO check & improve
 # source("_eda/maps.R")
@@ -89,3 +126,8 @@ source("_models/methods.R")
 
 # Builds all the models.. (be patient)
 source("_models/build.R")
+
+
+sink("output/sessionInfo.txt", append=FALSE, split=TRUE)
+sessionInfo()
+sink()

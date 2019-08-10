@@ -5,14 +5,15 @@ control <- trainControl(
   number=config$n_resampling, 
   classProbs=TRUE, 
   summaryFunction=twoClassSummary, 
-  allowParallel=FALSE
+  allowParallel=FALSE,
+  sampling = "up"
 )
 
 my_formula <- form.build(
   y="response_factor",
   x=predictors,
-  regex=paste(config$predictors$valid_suffixes, collapse="|"),
-  transformations=config$predictors$transformations
+  regex=paste(config$predictors$valid_suffixes, collapse="|")
+#  transformations=config$predictors$transformations
 )
 
 my_models <- list()
@@ -21,37 +22,12 @@ my_metrics <- list()
 my_methods <- list(
   "glm" = list(
     name="Logistic Regression",
+    family="binomial",
     preProc=c()    
   ),
-  #"glm_ltr" = list(
-  #  name="LR Backward Elimination (LTR)",
-  #  form=formula(
-  #    step(glm(my_formula, data=train.data, family=binomial()), test="LRT", trace=0)
-  #  ),    
-  #  method="glm",
-  #  preProc=c()
-  #),
-  #"glm_aic" = list(
-  #  method="glmStepAIC",
-  #  name="LR Backward Elimination (AIC)"
-  #),
-  #"glm_bic" = list(
-  #  method="glmStepAIC",
-  #  name="LR Backward Elimination (BIC)"
-  #),
-  # https://stats.stackexchange.com/questions/48360/is-standardization-needed-before-fitting-logistic-regression
-  #"glmnet" = list(
-  #  name="Penalized Logistic Regression",
-  #  tuneGrid=expand.grid(
-  #    # For Penalized logistic regression: # alpha = 1 -> lasso, 0 -> ridge
-  #    alpha=seq(0.05, 0.95, by=0.05),
-  #    lambda=seq(0.001, 0.01, by=0.001)
-  #  ), 
-  #  optimizeGrid="glmnet",
-  #  tunes=9
-  #),
   "rf" = list(
     name="Random Forest",
+    family="binomial",
     tuneGrid=expand.grid(.mtry=c(1:10)),
     params=list(
       ntree=100,
@@ -62,6 +38,7 @@ my_methods <- list(
   ),
   "svmLinear"=list(
     name="SVM (svmLinear)",
+    family="binomial",
     tuneGrid=expand.grid(
       C=c(.25, .5, 1, 10, 100)
     ),
@@ -69,6 +46,7 @@ my_methods <- list(
   ),
   "svmPoly"=list(
     name="SVM (svmPoly)",
+    family="binomial",
     params=list(
       tuneLength=4
     ),
@@ -82,6 +60,7 @@ my_methods <- list(
   ),
   "svmRadial"=list(
     name="SVM (svmRadial)",
+    family="binomial",
     tuneGrid=expand.grid(
       C=c(.25, .5, 1),
       sigma=sort(c(2^c(-15,-10, -5, 0), 0.05))

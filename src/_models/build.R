@@ -1,5 +1,5 @@
 to_run=names(my_methods)
-to_run=c("glm", "glm_ltr", "rf")
+to_run=c("glm")
 
 for (method in to_run) {
   ################################## 
@@ -42,7 +42,7 @@ for (method in to_run) {
   }
   
   ##################################
-  # Getting the values for the test data
+  # Evaluating on test data
   
   post <- list()
   

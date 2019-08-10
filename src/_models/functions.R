@@ -43,8 +43,8 @@ get_my_model <- function(method, data, control, family="binomial", metric="ROC",
     tuneGrid=`if`(!is.null(data$tuneGrid), data$tuneGrid, c())
   )
   
-  params=`if`(is.list(data$params), data$params, list())  
-  
+  params=`if`(is.list(data$params), data$params, list())
+
   set.seed(config$seed)
   
   # multithreading....
