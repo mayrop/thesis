@@ -14,23 +14,12 @@
 #doParallel
 #"UrbanInstitute/urbnmapr"
 
- "GGally", "gridExtra", 
-"moderndive", "skimr", "plotly",  "magrittr", 
-"tidyverse", "reshape2", "caret", "ellipse", "car", "rcompanion", 
-"e1071", "pROC", "glmnet", 
-"corrplot", "dendextend", "cowplot",  
-"sf", 
-"digest",
-"data.table",
-"LOGIT",
-"doParallel"
 ### 
 
 # S E T T I N G S
 
 # Setting project directory
-# setwd("~/Github/thesis/Project")
-# setwd("H:/thesis-master/Project")
+# setwd("~/Github/thesis/src")
 print("Loading config")
 library(config)
 config <- config::get()
@@ -61,7 +50,7 @@ source("_data/joins.R")
 ############################################
 ############################################
 
-# Exploratory Data Analysis
+# E x p l o r a t o r y . D a t a . A n a l y s i s 
 
 ## Joins
 source("_eda/predictors.R")
@@ -82,7 +71,7 @@ execute_and_plot <- function(file, save=FALSE, prefix="", ext=".png", bg="white"
   save & dev.off()
 }
 
-# C o r r e l a t i o n P l o t s
+# C o r r e l a t i o n . P l o t s
 
 execute_and_plot("_eda/plots/density.R", 
   save=config$print, width=250, height=180, prefix=config$settings$images_folder
@@ -92,28 +81,64 @@ execute_and_plot("_eda/plots/corrplot.R",
   save=config$print, width=250, height=180, prefix=config$settings$images_folder
 )
 
-
-# png(filename="figures/corrplot.png", width=450, height=260, bg="white", unit="mm", res=300)
-source("_eda/correlations.R")
-dev.off()
-
 # M a p s 
 
-config$print & png(filename="figures/map_binary.png", width=250, height=180, bg="transparent", unit="mm", res=300)
-source("_eda/maps/binary.R", print.eval=config$print)
-config$print & dev.off()
+execute_and_plot(
+  "_eda/maps/binary.R",
+  save=config$print, width=250, height=180, prefix=config$settings$images_folder
+)
 
-config$print & png(filename="figures/map_votes.png", width=250, height=180, bg="transparent", unit="mm", res=300)
-source("_eda/maps/votes.R", print.eval=config$print)
-config$print & dev.off()
-
-# source("_eda/plots.R") # TODO check & improve
-# source("_eda/maps.R")
+execute_and_plot(
+  "_eda/maps/votes.R",
+  save=config$print, width=250, height=180, prefix=config$settings$images_folder
+)
 
 ############################################
 ############################################
 
-# Data Modelling
+# D a t a . M o d e l l i n g
+
+#--------------------------------------------------------#
+# Start parallelization...
+# https://www.rdocumentation.org/packages/parallel/versions/3.6.1/topics/makeCluster
+cores <- parallel::detectCores()
+if (cores > 3) {
+  # makePSOCKcluster enhanced version of makeCluster
+  # leave enough cores for other tasks
+  clusters <- makePSOCKcluster(cores - 2)
+  registerDoParallel(clusters)
+}
+#--------------------------------------------------------#
+
+# Define our base control for caret
+# This is just for the base so the models can extend ti
+base_control <- trainControl(
+  method = "cv",
+  number = 5, 
+  summaryFunction = function(...) { 
+    # this is an overwrite of twoClassSummary from caret
+    # this is to prevent sens & spec to be switched
+    two_class_summary(...)
+  }, 
+  classProbs = TRUE, 
+  sampling = "up",
+  allowParallel = FALSE
+)
+
+# This is just to build our main formula for building the diff models
+my_formula <- as.formula(paste(
+  "response_factor ~",
+  paste(predictors[predictors != "response_regression"], collapse = " + ")
+))
+
+# Global variables that will 
+my_models <- list()
+my_resamples <- list()
+my_metrics <- list()
+my_methods <- list()
+
+# this is for ROC
+my_levels <- rev(levels(test.data$response_factor))
 
 # Splitting data
 source("_models/split.R")
@@ -121,11 +146,25 @@ source("_models/split.R")
 # Loads custom functions for models
 source("_models/functions.R")
 
-# Loads all the setup for the methods to compare
-source("_models/methods.R")
+# Training...
+source("_models/glm.R")
+source("_models/rf.R")
+source("_models/svmLinear.R")
+source("_models/svmPoly.R")
+source("_models/svmRadial.R")
 
-# Builds all the models.. (be patient)
-source("_models/build.R")
+
+
+
+
+
+#--------------------------------------------------------#
+# Stop paralellization
+stopCluster(cl)
+registerDoSEQ()
+rm(cl)
+#--------------------------------------------------------#
+
 
 
 sink("output/sessionInfo.txt", append=FALSE, split=TRUE)

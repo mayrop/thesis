@@ -7,34 +7,7 @@ good.fit <- HLTest(obj=my_models[["glm_ltr"]]$finalModel, g=6)
 cbind(good.fit$observed, round(good.fit$expect, digits = 1))
 good.fit
 
-#http://www.kimberlycoffey.com/blog/2016/7/16/compare-multiple-caret-run-machine-learning-models
 
-importance(my_models$rf0$finalModel)
-
-plot(my_models$rf0, metric = "Sens")
-#monotonic
-#SAS Certification Prep Guide: Statistical Business Analysis Using SAS9
-plot.data <- as.data.frame(plot(my_models$rf$finalModel))
-colnames(plot.data) <- c("Error")
-plot.data$trees <- as.numeric(rownames(plot.data))
-#http://www.kimberlycoffey.com/blog/2016/3/19/random-forest
-# https://www.r-bloggers.com/using-rpart-to-figure-out-who-voted-for-trump/
-
-library(rpart.plot)
-fancyRpartPlot(my_models$rf$finalModel)
-
-rpart.plot(my_models$rf$finalModel, main = "Winner candidate in county",
-           extra = 104, split.suffix = "%?", branch = 1,
-           fallen.leaves = FALSE, box.palette = "BuRd",
-           branch.lty = 3, split.cex = 1.2,
-           shadow.col = "gray", shadow.offset = 0.2)
-
-rf.plot <- ggplot(plot.data, aes(x=plot.data$trees, y=plot.data$Error)) + geom_line(colour="#000099")
-rf.plot <- rf.plot + xlab("Number of Decision Trees")
-rf.plot <- rf.plot + ylab("Mean Squared Error")
-rf.plot <- rf.plot + ggtitle("Mean Squared Error by Number of Decision Trees")
-rf.plot
-remove(rf.plot, plot.data)
 
 emplogit <- function(df, var="x", response="y", bins=100) {
   labels <- (bins-1):0
