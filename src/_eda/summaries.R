@@ -1,5 +1,3 @@
-
-
 # First summarize the votes
 summary_votes <- elections_summary %>%
   group_by(party) %>%
@@ -22,7 +20,7 @@ summary <- summary_votes %>%
   left_join(summary_counties, by="party") %>%
   mutate(
     votes_pct = votes / sum(votes) * 100,
-    counties_pct = counties/sum(counties) * 100
+    counties_pct = counties / sum(counties) * 100
   ) %>%
   mutate_if(
     is.numeric, round, digits = 10
@@ -54,10 +52,7 @@ summary %>%
     symbol = c("Numbers exclude the state of Alaska.")
   ) 
 
-skim_with_defaults()
-skim_with(numeric = list(mean = mean, sd = sd), append = FALSE)
-skim_with(integer = list(mean = mean, sd = sd), append = FALSE)
-
+# Now let's summarize the facts...
 facts_summary <- all %>%
   ungroup() %>%
   mutate(
@@ -82,38 +77,59 @@ facts_summary <- all %>%
     hsg_val_units_13,
     hsg_homeowner_rate_13,
     nf_priv_emplt_rate_13,
-    inc_pc_past_12_month_13,
+    inc_pc_12_month_13,
     age_o65_pct_14
   ) %>% 
   mutate (
     pop_10 = pop_10 / 1e3,
     pop_14 = pop_14 / 1e3,
     hsg_val_units_13 = hsg_val_units_13 / 1e3
-  ) %>%
-  skim_to_list() %>%
-  rbindlist(.) %>% 
-  mutate_if(
-    is.character, trimws
-  ) %>%
-  unite(., "stats", c("mean", "sd")) %>%
-  spread(party, stats) %>%
-  select(
-    variable,
-    republican,
-    democratic
-  ) %>%
-  separate(democratic, c("democratic_mean", "democratic_sd"), sep="_") %>% 
-  separate(republican, c("republican_mean", "republican_sd"), sep="_") %>%  
-  mutate_at(
-    vars(2:5), as.numeric
   ) %>% 
+  group_by(party) %>%
+  # this can be approached by skim_to_list (skimr package)
+  # but we try to minimize the third party packages
+  summarise_all(
+    list(mean = mean, sd = sd, median = median)
+  ) %>%
+  gather(
+    "var", "val", -party
+  ) %>%
+  mutate(
+    stat = gsub("^[a-z0-9_]+_([a-z]+)$", "\\1", var),
+    var = gsub("^([a-z0-9_]+)_[a-z]+$", "\\1", var)
+  ) %>%
+  group_by(
+    party, var
+  ) %>% 
+  spread(
+    stat, val
+  ) %>% 
+  group_by(var) %>%
+  unite(temp, mean, sd, median) %>%
+  spread(party, temp) %>%
+  separate(
+    democratic, 
+    into = paste("dem", c("mean", "median", "sd"), sep="_"), 
+    sep = "_"
+  ) %>%
+  separate(
+    republican, 
+    into = paste("rep", c("mean", "median", "sd"), sep="_"), 
+    sep = "_"
+  ) %>%
+  mutate_at(
+    vars(-1), as.numeric
+  ) %>% 
+  ungroup() %>%
   mutate_if(
-    is.numeric, round, digits = 1
-  ) %>%
-  kable(
-    caption = 'My caption here', 
-    booktabs = TRUE, 
-    format = "latex"
-  ) %>%
-  kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
-  add_header_above(c(" ", "Republican" = 2, "Democratic" = 2))
+    is.numeric, plyr::round_any, accuracy = .001, f = floor
+  )
+
+#print <- kable %>%
+#  kable(
+#    caption = 'My caption here', 
+#    booktabs = TRUE, 
+#    format = "latex"
+#  ) %>%
+#  kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
+#  add_header_above(c(" ", "Republican" = 2, "Democratic" = 2))
