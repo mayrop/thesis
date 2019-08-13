@@ -15,7 +15,7 @@ my_models[["svm_tuning"]] <- train(
   data = train.data,
   method = "svmRadial",  
   family = "binomial",
-  metric = "ROC",
+  metric = "AUC",
   preProcess = c("center","scale"),
   trControl = control,
   tuneGrid = expand.grid(
@@ -24,6 +24,7 @@ my_models[["svm_tuning"]] <- train(
   )
 )
 
+# Now training with the tuned hyper parameters
 my_models[["svm"]] <- train(
   form = my_formula,
   data = train.data,

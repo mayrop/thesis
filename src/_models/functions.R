@@ -38,7 +38,7 @@ two_class_summary <- function (data, lev = NULL, model = NULL, positive = "yes",
   )
 
   # changing name from ROC to AUC
-  names(out) <- c("AUC", "Sens", "Spec")
+  names(out) <- c("AUC", "Sensitivity", "Specificity")
   out
 }
 

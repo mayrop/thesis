@@ -14,28 +14,32 @@ stats <- rbindlist(my_metrics)
 resamps <- resamples(my_resamples)
 
 
-
 # The ideas and methods here are based on Hothorn et al. (2005) and Eugster et al. (2008).
 bwplot(resamps, layout=c(3, 1), main="Metric comparison between different methods (CV train set)")
-dotplot(resamps, metric = "ROC", main="Confidence Intervals for the different methods (Specificity) (CV train set)")
-dotplot(resamps, metric = "Sens", main="Confidence Intervals for the different methods (Sens) (CV train set)")
+dotplot(resamps, metric = "AUC", main="Confidence Intervals for the different methods (Specificity)")
+dotplot(resamps, metric = "Sens", main="Confidence Intervals for the different methods (Sens)")
 dotplot(resamps, metric = "Spec", main="Confidence Intervals for the different methods (Specificity) (CV train set)")
 
-difValues <- diff(resamps, metric="ROC")
+difValues <- diff(resamps, metric="AUC")
 summary(difValues)
 bwplot(difValues)
 dotplot(difValues)
-dotplot(resamps, metric = "ROC")
-densityplot(resamps, pch = "|", metric= "Sens", col=config$theme$plots)
-densityplot(my_models[["glm"]], pch = "|", metric= "Sens", col=config$theme$plots)
-densityplot(my_models[["rf"]], pch = "|", metric= "Sens", col=config$theme$plots)
-densityplot(my_models[["svmRadial"]], pch = "|", metric= "Sens", col=config$theme$plots)
 
-difValues <- diff(resamps, metric="Spec")
+dotplot(resamps, metric = "AUC")
+
+densityplot(resamps, pch="|", metric="AUC", col=config$theme$plots, lty=1:3)
+densityplot(resamps, pch="|", metric="Sens", col=config$theme$plots, lty=1:3)
+densityplot(resamps, pch="|", metric="Spec", col=config$theme$plots, lty=1:3)
+
+densityplot(my_models[["glm"]], pch = "|", metric= "AUC", col=config$theme$plots)
+densityplot(my_models[["svm"]], pch = "|", metric= "AUC", col=config$theme$plots)
+densityplot(my_models[["rf"]], pch = "|", metric= "AUC", col=config$theme$plots)
+
+difValues <- diff(resamps, metric="Specificity")
 summary(difValues)
 dotplot(difValues)
 
-difValues <- diff(resamps, metric="Sens")
+difValues <- diff(resamps, metric="Sensitivity")
 summary(difValues)
 dotplot(difValues)
 

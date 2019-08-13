@@ -165,9 +165,7 @@ source("_models/functions.R")
 # Training...
 source("_models/glm.R")
 source("_models/rf.R")
-#source("_models/svmLinear.R")
-#source("_models/svmPoly.R")
-source("_models/svmRadial.R")
+source("_models/svm.R")
 
 #--------------------------------------------------------#
 # Stop paralellization

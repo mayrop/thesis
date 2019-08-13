@@ -52,7 +52,10 @@ my_models[["rf"]]$evaluation <- model_evaluate(
   levels = my_levels
 )
 
-################################## 
+#########################################
+# Cleaning global environment
+rm(control)
+rm(start_time)
 
 
 
