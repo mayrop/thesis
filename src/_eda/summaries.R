@@ -89,7 +89,7 @@ facts_summary <- all %>%
   # this can be approached by skim_to_list (skimr package)
   # but we try to minimize the third party packages
   summarise_all(
-    list(mean = mean, sd = sd, median = median)
+    list(mean = mean, median = median, sd = sd)
   ) %>%
   gather(
     "var", "val", -party
@@ -105,7 +105,7 @@ facts_summary <- all %>%
     stat, val
   ) %>% 
   group_by(var) %>%
-  unite(temp, mean, sd, median) %>%
+  unite(temp, mean, median, sd) %>%
   spread(party, temp) %>%
   separate(
     democratic, 
