@@ -17,7 +17,9 @@ facts <- facts %>%
   mutate(
     # population
     pop_14 = PST045214,
-    pop_14_level = factor(cut(log(PST045214), length(levels)), labels=levels),
+    pop_14_level = factor(
+      cut(log(PST045214), length(levels)), labels=levels
+    ),
 
     pop_density_10 = POP060210,
     
@@ -25,7 +27,7 @@ facts <- facts %>%
     pop_pct_change = PST120214,
     pop_same_house_pct_13 = POP715213, 
     pop_foreign_pct_13 = POP645213, 
-    pop_other_lang_pct_13 = POP815213,
+    pop_o_lang_pct_13 = POP815213,
     
     # age
     age_u5_pct_14 = (AGE135214 * 100) / PST045214,
@@ -34,23 +36,27 @@ facts <- facts %>%
     
     # education
     edu_hs_pct_13 = EDU635213,
-    edu_bachelor_pct_13 = EDU685213,
+    edu_bach_pct_13 = EDU685213,
 
     # education - categorical
-    edu_bachelor_pct_13_level = factor(cut(EDU685213, length(levels)), labels=levels),
+    edu_bach_pct_13_level = factor(
+      cut(EDU685213, length(levels)), labels=levels
+    ),
     
     # race
     rh_white_pct_14 = RHI125214, 
     rh_afroamerican_pct_14 = RHI225214,
     rh_latino_pct_14 = RHI725214,
-    rh_white_no_hisp_pct_14 = RHI825214,
+    rh_white_nohisp_pct_14 = RHI825214,
     rh_native_pct_14 = RHI325214,
     rh_asian_pct_14 = RHI425214,
     rh_hawaiian_pct_14 = RHI525214,
     rh_two_races_pct_14 = RHI625214,
 
     # race - categorical
-    rh_white_no_hisp_pct_14_level = factor(cut(RHI825214, length(levels)), labels=levels),
+    rh_white_no_hisp_pct_14_level = factor(
+      cut(RHI825214, length(levels)), labels=levels
+    ),
     
     # sex
     females_pop_14 = PST045214 * SEX255214 / 100,
@@ -62,22 +68,26 @@ facts <- facts %>%
     # non farm
     nf_priv_establ_rate_13 = BZA010213 / PST045214,
     nf_priv_emplt_rate_13 = BZA110213 / PST045214,
-    nf_priv_emplt_pct_chg_13 = BZA115213, # private nonfarm employment
+    
+    # private nonfarm employment
+    nf_priv_emplt_pct_chg_13 = BZA115213, 
     
     # non employer
     nonemployer_establ_rate_13 = NES010213 / PST045214,
     
     # housing
     hsg_units_rate_14 = HSG010214 / PST045214,
-    hsg_units_in_multiunit_13 = HSG096213, 
-    hsg_homeownership_rate_13 = HSG445213, 
-    hsg_median_val_housing_units_13 = HSG495213,
+    hsg_multiunit_pct_13 = HSG096213, 
+    hsg_homeowner_rate_13 = HSG445213, 
+    hsg_val_units_13 = HSG495213,
 
     hsd_persons_per_household_13 = HSD310213, 
     hsd_household_rate_13 = HSD410213 / PST045214, 
     
     # housing - categorial
-    hsg_units_in_multiunit_13_level = factor(cut(HSG096213, length(levels)), labels=levels),
+    hsg_units_in_multiunit_13_level = factor(
+      cut(HSG096213, length(levels)), labels=levels
+    ),
     
     # Firms    
     firms_rate_07 = SBO001207 / PST045214,
@@ -102,7 +112,7 @@ facts <- facts %>%
 
     # money
     inc_med_househ_income_13 = INC110213,
-    inc_pc_past_12_month_13 = INC910213,
+    inc_pc_12_month_13 = INC910213,
     inc_pers_blw_povt_pct_13 = PVY020213,
     
     # random
@@ -154,7 +164,9 @@ facts <- facts %>%
     # non farm
     -BZA010213,
     -BZA110213,
-    -BZA115213, # private nonfarm employment
+    
+    # private nonfarm employment
+    -BZA115213, 
     
     -NES010213,
     

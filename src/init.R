@@ -1,11 +1,3 @@
-###
-#
-# In this file we initalize all the libraries and datasts
-#
-# @author Mayra Valdes @mayrop
-# 
-### 
-
 ##############################################
 # L o a d i n g . h a z e l . p a c k a g e...
 #
@@ -38,3 +30,29 @@ print("Loading datasets")
 datasets <- load.datasets(config$settings$data_folder)
 
 ###################################
+
+############################################
+# Functions that will later be used...
+
+print("Defining functions...")
+
+execute_and_plot <- function(file, 
+                             save = FALSE, 
+                             prefix = "", 
+                             suffix = "",
+                             ext = ".png", 
+                             bg = "white", 
+                             unit = "mm", 
+                             res = 300, ...) {
+  filename <- gsub("/", "_", file)
+  filename <- gsub("^_", "", filename)
+  filename <- gsub("\\.\\w+$", "", filename)  
+  filename <- paste(prefix, filename, suffix, ext, sep="")
+  
+  # Only saving as PNG when we asked for it
+  save & png(filename=filename, bg=bg, unit=unit, res=res, ...)
+  source(file, print.eval=save)
+  
+  # Only turnning off dev environment if we asked for it
+  save & dev.off()
+}

@@ -13,7 +13,7 @@ default:
         "sf",
         "pROC",
         "doParallel",
-        "randomForest"
+        "data.table"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
@@ -22,14 +22,9 @@ default:
         "http://www.sthda.com/upload/rquery_cormat.r"
       )
   predictors:
-    correlation: 0.30
+    correlation: 0.23
     parties_levels: !expr c("no", "yes")
-    transformations: !expr list(
-        "pop_14" = "log(pop_14)",
-        "pop_10" = "log(pop_10)"
-      )
     valid_suffixes: !expr c(
-        "_07$", 
         "_10$", 
         "_13$", 
         "_14$"
@@ -39,9 +34,11 @@ default:
     font_color: "#4e4d47"
     bg_color: "#f5f5f2"
     border_color: "#e8e8e5"
-    parties_colors: !expr c("#d93334", "#105099")
+    # https://davidmathlogic.com/colorblind/
+    plots: !expr c("#D81B1B", "#1E88E5", "#FFC107", "#025446")
+    parties_colors: !expr c("#105099", "#d93334")
     parties_factors: !expr c("no", "yes")
-    parties_labels: !expr c("Donald Trump", "Hillary Clinton")
+    parties_labels: !expr c("Hillary Clinton", "Donald Trump")
     # library(RColorBrewer)
     # brewer.pal(n=10, name="RdYlBu")
     # caching...
@@ -67,7 +64,7 @@ default:
       )
     mapping: !expr list(
         "population" = "pop_14_level",
-        "education" = "edu_bachelor_pct_13_level",
+        "education" = "edu_bach_pct_13_level",
         "race_white" = "rh_white_no_hisp_pct_14_level",
         "housing_units" = "hsg_units_in_multiunit_13_level"
       )

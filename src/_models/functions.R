@@ -1,20 +1,3 @@
-get_tune_grid <- function(model, type) {
-  if (type == "glmnet") {
-    return(expand.grid(
-      as.list(model$finalModel$tuneValue)
-    ))
-  }
-  
-  if (type == "rf" | type == "svm") {
-    return(expand.grid(
-      as.list(model$bestTune)
-    ))
-  }
-  
-  warning(paste("No valid function for type: ", type))
-}
-
-
 # Based on http://jaehyeon-kim.github.io/2015/05/Setup-Random-Seeds-on-Caret-Package.html
 get_seeds <- function(method="cv", n_resampling=10, n_tunes=0, seed=2019) {
   set.seed(seed)
@@ -49,12 +32,13 @@ two_class_summary <- function (data, lev = NULL, model = NULL, positive = "yes",
 
   # Redefine the metrics
   out <- c(
-    rocAUC, 
+    rocAUC,
     sensitivity(data[, "pred"], data[, "obs"], positive = positive), 
     specificity(data[, "pred"], data[, "obs"], negative = negative)
   )
 
-  names(out) <- c("ROC", "Sens", "Spec")
+  # changing name from ROC to AUC
+  names(out) <- c("AUC", "Sens", "Spec")
   out
 }
 

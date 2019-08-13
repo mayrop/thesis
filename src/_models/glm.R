@@ -16,7 +16,7 @@ my_models[["glm"]] <- train(
   data = train.data,
   method = "glm",  
   family = "binomial",
-  metric = "ROC",
+  metric = "AUC",
   trControl = control
 )
 

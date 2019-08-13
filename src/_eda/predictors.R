@@ -1,4 +1,4 @@
-
+# Getting the predictors we are going to use...
 
 types <- sapply(all, class)
 cols <- names(types)
@@ -35,10 +35,8 @@ predictors <- predictors$var
 
 regex <- paste(config$predictors$valid_suffixes, collapse="|")
 predictors <- predictors[grepl(regex,predictors)]  
-
-# Adding the regression variable to the predictos vector
-# TODO - Check & document why
-predictors <- c(predictors, c("response_regression"))
+length(predictors)
+predictors
 
 #########################################
 # Cleaning global environment

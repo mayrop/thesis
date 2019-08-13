@@ -10,7 +10,7 @@ start_time <- Sys.time()
 # Resseting seed...
 set.seed(config$seed)
 
-my_models[["svmRadial"]] <- train(
+my_models[["svm_tuning"]] <- train(
   form = my_formula,
   data = train.data,
   method = "svmRadial",  
@@ -19,18 +19,31 @@ my_models[["svmRadial"]] <- train(
   preProcess = c("center","scale"),
   trControl = control,
   tuneGrid = expand.grid(
-    C = c(.25, .5, 1, 10),
-    sigma = sort(c(2^c(-15,-10, -5, 0), 0.05))
+    C = c(0.1, .5, 1, 10),
+    sigma = sort(c(2^c(-15,-10, -5, -3), 0.05))
   )
 )
 
-my_models[["svmRadial"]]$benchmarks <- list(
+my_models[["svm"]] <- train(
+  form = my_formula,
+  data = train.data,
+  method = "svmRadial",  
+  family = "binomial",
+  metric = "AUC",
+  preProcess = c("center","scale"),
+  trControl = control,
+  tuneGrid = expand.grid(
+    my_models[["svm_tuning"]]$bestTune
+  )
+)
+
+my_models[["svm"]]$benchmarks <- list(
   start = start_time,
   end = Sys.time()
 )
 
-my_models[["svmRadial"]]$evaluation <- model_evaluate(
-  model = my_models[["svmRadial"]], 
+my_models[["svm"]]$evaluation <- model_evaluate(
+  model = my_models[["svm"]], 
   data = test.data, 
   response = "response_factor",
   levels = my_levels
