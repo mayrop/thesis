@@ -5,6 +5,7 @@ print("Running Random Forest...")
 
 control <- base_control
 control$seeds <- get_seeds(seed=config$seed, n_tunes=15)
+control$allowParallel <- TRUE
 start_time <- Sys.time()
 
 # Resseting seed...
@@ -24,8 +25,17 @@ my_models[["rf_tuning"]] <- train(
   importance=TRUE
 )
 
+my_models[["rf_tuning"]]$benchmarks <- list(
+  start = start_time,
+  end = Sys.time()
+)
+
 # training with the best tune...
 print("Now training with the best tune...")
+start_time <- Sys.time()
+# Resseting seed...
+set.seed(config$seed)
+
 my_models[["rf"]] <- train(
   form = my_formula,
   data = train.data,

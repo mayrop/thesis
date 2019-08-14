@@ -16,8 +16,6 @@ featurePlot(
     strip.background = list(col = "#f3f3f3")
   ),
   strip = strip.custom(par.strip.text = list(cex = .6)),
-  # titles
-  labels = c(),
   # scales for each plot axis
   scales = list(
     x = list(relation="free"), 
@@ -37,7 +35,8 @@ featurePlot(
     cex = .9,
     title = "Winning Candidate"
   ),
-  layout = plot_layout
+  layout = plot_layout,
+  labels = c("", "Density")
 )
 
 #########################################

@@ -68,8 +68,8 @@ ggplot() +
     alpha = my_map$alpha_size_normalized
   ) +
   scale_color_manual(
-    values = rev(config$theme$parties_colors),
-    labels = rev(config$theme$parties_labels)
+    values = config$theme$parties_colors,
+    labels = config$theme$parties_labels
   ) +
   labs(
     x = "",

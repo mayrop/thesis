@@ -33,13 +33,15 @@ summary <- dcast(
   melt(as.data.frame(summary), id.vars = "party"), variable ~ party
 )
 
-summary %>% 
+my_summaries[["elections"]] <- summary %>% 
   select(
     variable,
     republican,
     democrat,
     other
-  ) %>%
+  )
+
+my_summaries[["elections"]] %>%
   kable(
     caption = '2016 United States presidential election summary', 
     booktabs = TRUE, 
@@ -53,7 +55,7 @@ summary %>%
   ) 
 
 # Now let's summarize the facts...
-facts_summary <- all %>%
+my_summaries[["facts"]] <- all %>%
   dplyr::ungroup() %>%
   dplyr::mutate(
     party = ifelse(response_factor == "yes", "republican", "democratic")
@@ -94,6 +96,7 @@ facts_summary <- all %>%
   tidyr::gather(
     "var", "val", -party
   ) %>%
+  # this is where magic happens...
   dplyr::mutate(
     stat = gsub("^[a-z0-9_]+_([a-z]+)$", "\\1", var),
     var = gsub("^([a-z0-9_]+)_[a-z]+$", "\\1", var)
@@ -109,12 +112,12 @@ facts_summary <- all %>%
   tidyr::spread(party, temp) %>%
   tidyr::separate(
     democratic, 
-    into = paste("dem", c("mean", "median", "sd"), sep="_"), 
+    into = paste("dem", c("mean", "median", "sd"), sep = "_"), 
     sep = "_"
   ) %>%
   tidyr::separate(
     republican, 
-    into = paste("rep", c("mean", "median", "sd"), sep="_"), 
+    into = paste("rep", c("mean", "median", "sd"), sep = "_"), 
     sep = "_"
   ) %>%
   dplyr::mutate_at(

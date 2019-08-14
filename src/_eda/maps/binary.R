@@ -32,8 +32,8 @@ ggplot() +
     guide = FALSE
   ) +  
   scale_fill_manual(
-    values = rev(config$theme$parties_colors), 
-    labels = rev(config$theme$parties_labels)
+    values = config$theme$parties_colors, 
+    labels = config$theme$parties_labels
   ) +  
   theme_bw() + 
   theme(

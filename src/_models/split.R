@@ -22,6 +22,9 @@ colnames(proportions) <- c("Counts Train", "Counts Test", "Prop Train", "Prop Te
 
 print(proportions)
 
+# this is for ROC
+my_levels <- rev(levels(test.data$response_factor))
+
 #########################################
 # Cleaning global environment
 rm(proportions)

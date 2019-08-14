@@ -5,6 +5,7 @@ print("Running SVM Radial Kernel...")
 
 control <- base_control
 control$seeds <- get_seeds(seed = config$seed, n_tunes = 38)
+control$allowParallel <- TRUE
 start_time <- Sys.time()
 
 # Resseting seed...
@@ -23,6 +24,17 @@ my_models[["svm_tuning"]] <- train(
     sigma = sort(c(2^c(-15,-10, -5, -3), 0.05))
   )
 )
+
+my_models[["svm_tuning"]]$benchmarks <- list(
+  start = start_time,
+  end = Sys.time()
+)
+
+# training with the best tune...
+print("Now training with the best tune...")
+start_time <- Sys.time()
+# Resseting seed...
+set.seed(config$seed)
 
 # Now training with the tuned hyper parameters
 my_models[["svm"]] <- train(

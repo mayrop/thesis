@@ -45,7 +45,7 @@ legend("right",
   col = config$theme$plots, 
   lty = c(1:3), 
   lwd = 2,
-  cex = 0.8
+  cex = 0.7
 )
 
 #########################################
