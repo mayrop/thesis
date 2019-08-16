@@ -34,12 +34,12 @@ plot(
     data = as.data.frame(cbind(x = my_x, y = my_y)),
     type = c("o"),
     cex = 3,
-    col = "black",
+    col = config$theme$plots[1],
     panel = function(x, y, ...) {
       panel.xyplot(x, y, ...)
       ltext(
         x = x, y = y, pos = 4, offset = 2, cex = 0.8,
-        labels = "ROC is at its maximum when C=1"
+        labels = paste("AUC is at its maximum (", round(my_y, digits=2), ") when C=", 1, " and sigma=", round(my_x, digits=3), sep="")
       )
     }
   )

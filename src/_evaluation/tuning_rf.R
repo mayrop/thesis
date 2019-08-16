@@ -30,6 +30,5 @@ plot(
 
 #########################################
 # Cleaning global environment
-rm(costs)
 rm(my_x)
 rm(my_y)
