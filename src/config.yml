@@ -13,7 +13,8 @@ default:
         "sf",
         "pROC",
         "doParallel",
-        "data.table"
+        "data.table",
+        "latticeExtra"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
