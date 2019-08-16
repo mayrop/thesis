@@ -20,6 +20,13 @@ print("Loading config...")
 library(config)
 config <- config::get()
 
+# Global variables that will help us throughtout the project
+my_models <- list()
+my_resamples <- list()
+my_metrics <- list()
+my_methods <- list()
+my_summaries <- list()
+
 # Getting started...
 source("init.R")
 
@@ -147,17 +154,8 @@ my_formula <- as.formula(paste(
   paste(predictors, collapse = " + ")
 ))
 
-# Global variables that will 
-my_models <- list()
-my_resamples <- list()
-my_metrics <- list()
-my_methods <- list()
-
 # Splitting data
 source("_models/split.R")
-
-# this is for ROC
-my_levels <- rev(levels(test.data$response_factor))
 
 # Loads custom functions for models
 source("_models/functions.R")
@@ -182,6 +180,23 @@ if (cores > 3) {
 
 execute_and_plot(
   "_evaluation/roc.R",
+  save = config$print, 
+  width = 120, 
+  height = 120, 
+  prefix = config$settings$images_folder
+)
+
+
+execute_and_plot(
+  "_evaluation/tuning_rf.R",
+  save = config$print, 
+  width = 200, 
+  height = 200, 
+  prefix = config$settings$images_folder
+)
+
+execute_and_plot(
+  "_evaluation/tuning_svm.R",
   save = config$print, 
   width = 200, 
   height = 200, 
