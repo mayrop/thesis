@@ -4,7 +4,7 @@
 print("Running Random Forest...")
 
 control <- base_control
-control$seeds <- get_seeds(seed=config$seed, n_tunes=13)
+control$seeds <- get_seeds(seed=config$seed, n_tunes = length(predictors))
 control$allowParallel <- TRUE
 start_time <- Sys.time()
 
@@ -19,9 +19,9 @@ my_models[["rf_tuning"]] <- train(
   metric = "AUC",
   trControl = control,
   tuneGrid = expand.grid(
-    .mtry = c(1:13)
+    .mtry = c(1:length(predictors))
   ),
-  ntree=100,
+  ntree = 100,
   importance=TRUE
 )
 
@@ -46,8 +46,8 @@ my_models[["rf"]] <- train(
   tuneGrid = expand.grid(as.list(
     my_models[["rf_tuning"]]$bestTune
   )),
-  ntree=100,
-  importance=TRUE
+  ntree = 100,
+  importance = TRUE
 )
 
 my_models[["rf"]]$benchmarks <- list(

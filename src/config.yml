@@ -14,7 +14,9 @@ default:
         "pROC",
         "doParallel",
         "data.table",
-        "latticeExtra"
+        "latticeExtra",
+        "cowplot",
+        "sjPlot"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
@@ -25,7 +27,7 @@ default:
     list: !expr list(
         "pop_14" = list(
           "name" = "Population estimates (2014)",
-          "orig" = "Population estimates"
+          "orig" = "Population estimates",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
@@ -33,7 +35,7 @@ default:
         ),
         "pop_foreign_pct_13" = list(
           "name" = "% of foreign born persons",
-          "orig" = "Foreign born persons, percent"
+          "orig" = "Foreign born persons, percent",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
@@ -41,7 +43,7 @@ default:
         ),
         "age_o65_pct_14" = list(
           "name" = "% of persons 65 years and over",
-          "orig" = "Persons 65 years and over, percent"
+          "orig" = "Persons 65 years and over, percent",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
@@ -49,7 +51,7 @@ default:
         ),
         "edu_bach_pct_13" = list(
           "name" = "% of persons age 25 years+ with bachelor's degree or higher",
-          "orig" = "Bachelor's degree or higher, percent of persons age 25 years+"
+          "orig" = "Bachelor's degree or higher, percent of persons age 25 years+",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
@@ -64,7 +66,7 @@ default:
         ),
         "hsg_multiunit_pct_13" = list(
           "name" = "% of housing units in multi-unit structures",
-          "orig" = "Housing units in multi-unit structures, percent"
+          "orig" = "Housing units in multi-unit structures, percent",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
@@ -77,14 +79,6 @@ default:
             "density" = c(0.2, 0.85)
           ),
           "group" = "Housing"
-        ),
-        "rh_white_pct_14" = list(
-          "name" = "% of White alone",
-          "orig" = "White alone, percent",
-          "plots" = list(
-            "density" = c(0.2, 0.85)
-          ),
-          "group" = "Race and Hispanic Origin"
         ),
         "rh_white_nohisp_pct_14" = list(
           "name" = "% of White alone, not Hispanic or Latino",

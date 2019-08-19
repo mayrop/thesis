@@ -50,8 +50,8 @@ execute_and_plot <- function(file,
   filename <- paste(prefix, filename, suffix, ext, sep="")
   
   # Only saving as PNG when we asked for it
-  save & png(filename=filename, bg=bg, unit=unit, res=res, ...)
-  source(file, print.eval=save)
+  save & png(filename = filename, bg = bg, unit = unit, res = res, ...)
+  source(file, print.eval = save)
   
   # Only turnning off dev environment if we asked for it
   save & dev.off()

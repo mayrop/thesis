@@ -16,14 +16,26 @@ resamps <- resamples(my_resamples)
 
 # The ideas and methods here are based on Hothorn et al. (2005) and Eugster et al. (2008).
 bwplot(resamps, layout=c(3, 1), main="Metric comparison between different methods (CV train set)")
+bwplot(resamps, metric = "AUC", main="Confidence Intervals for the different methods (Specificity)")
 dotplot(resamps, metric = "AUC", main="Confidence Intervals for the different methods (Specificity)")
-dotplot(resamps, metric = "Sens", main="Confidence Intervals for the different methods (Sens)")
-dotplot(resamps, metric = "Spec", main="Confidence Intervals for the different methods (Specificity) (CV train set)")
+dotplot(resamps, metric = "Sensitivity", main="Confidence Intervals for the different methods (Sens)")
+dotplot(resamps, metric = "Specificity", main="Confidence Intervals for the different methods (Specificity)")
 
 difValues <- diff(resamps, metric="AUC")
 summary(difValues)
 bwplot(difValues)
 dotplot(difValues)
+
+difValues <- diff(resamps, metric="Sensitivity")
+summary(difValues)
+bwplot(difValues)
+dotplot(difValues)
+
+difValues <- diff(resamps, metric="Specificity")
+summary(difValues)
+bwplot(difValues)
+dotplot(difValues)
+
 
 dotplot(resamps, metric = "AUC")
 

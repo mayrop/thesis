@@ -77,7 +77,6 @@ execute_and_plot(
 
 # D e n s i t y . P l o t s
 
-# Here we plot the density predictors
 for (predictor in names(config$predictors$list)) {
   execute_and_plot(
     "_eda/plots/density.R", 
@@ -92,7 +91,7 @@ for (predictor in names(config$predictors$list)) {
   rm(predictor)
 }
 
-# C o r r e l a t i o n . P l o t s
+# C o r r e l a t i o n . P l o t
 
 execute_and_plot("_eda/plots/corrplot.R", 
   save = config$print, 
@@ -138,6 +137,7 @@ my_formula <- as.formula(paste(
   paste(predictors, collapse = " + ")
 ))
 
+
 # Splitting data
 source("_models/split.R")
 
@@ -160,6 +160,45 @@ if (cores > 3) {
 
 ############################################
 
+# L o g i s t i c . P l o t s
+execute_and_plot(
+  "_evaluation/lr_odds.R",
+  save = config$print, 
+  width = 200, 
+  height = 120, 
+  prefix = config$settings$images_folder
+)
+
+# Coefficients
+execute_and_plot(
+  "_evaluation/lr_hoeff_matrix.R",
+  save = config$print, 
+  width = 200, 
+  height = 120, 
+  prefix = config$settings$images_folder
+)
+
+# Empirical plots
+for (predictor in names(config$predictors$list)) {
+  for (binned in c(TRUE, FALSE)) {
+    suffix <- `if`(binned, "binned", "")
+    
+    execute_and_plot(
+      "_evaluation/lr_empirical_plots.R", 
+      save = config$print, 
+      width = 150, 
+      height = 140, 
+      prefix = config$settings$images_folder,
+      suffix = paste("_", predictor, "_", suffix, sep="")
+    ) 
+  }
+  
+  # cleaning...
+  rm(predictor)
+  rm(binned)
+  rm(suffix)
+}
+
 # E v a l u a t i o n
 
 execute_and_plot(
@@ -169,7 +208,6 @@ execute_and_plot(
   height = 120, 
   prefix = config$settings$images_folder
 )
-
 
 execute_and_plot(
   "_evaluation/tuning_rf.R",

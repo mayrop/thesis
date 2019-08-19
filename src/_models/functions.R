@@ -77,3 +77,31 @@ model_evaluate <- function(model, data, response, levels, positive = "yes") {
 
   return(evaluation)
 }
+
+
+#
+# Gives bin for empirical logit plots
+#
+emplogit <- function(df, var = "x", response = "y", bins = 100) {
+  labels <- (bins-1):0
+  
+  df$rank <- rank(-pull(df[,var]))
+  df$bin <- labels[as.numeric(cut(df$rank, breaks = bins, labels = 0:(bins-1)))]
+  
+  return(
+    df %>% 
+      group_by(bin) %>% 
+      summarise(
+        freq = n(),
+        successes = sum(!!rlang::sym(response)),
+        var := mean(!!rlang::sym(var))
+      ) %>% 
+      mutate(
+        elogit = log((successes + 0.5) / (freq - successes + 0.5))
+      ) %>% 
+      arrange(
+        bin
+      )
+  )
+}
+
