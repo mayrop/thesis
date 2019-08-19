@@ -1,5 +1,5 @@
 # install.packages("https://cran.r-project.org/src/contrib/Archive/LOGIT/LOGIT_1.3.tar.gz", repos=NULL, type="source")
-
+# hoeffding correlation coefficient SAS monotonic
 default:
   seed: 2019
   n_resampling: 10 
@@ -19,16 +19,112 @@ default:
     github: !expr c(
         "UrbanInstitute/urbnmapr"
       )
-    sources: !expr c(
-        "http://www.sthda.com/upload/rquery_cormat.r"
-      )
+    sources: !expr c()
   predictors:
-    correlation: 0.23
     parties_levels: !expr c("no", "yes")
-    valid_suffixes: !expr c(
-        "_10$", 
-        "_13$", 
-        "_14$"
+    list: !expr list(
+        "pop_14" = list(
+          "name" = "Population estimates (2014)",
+          "orig" = "Population estimates"
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Population"
+        ),
+        "pop_foreign_pct_13" = list(
+          "name" = "% of foreign born persons",
+          "orig" = "Foreign born persons, percent"
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Population Characteristics"
+        ),
+        "age_o65_pct_14" = list(
+          "name" = "% of persons 65 years and over",
+          "orig" = "Persons 65 years and over, percent"
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Age"
+        ),
+        "edu_bach_pct_13" = list(
+          "name" = "% of persons age 25 years+ with bachelor's degree or higher",
+          "orig" = "Bachelor's degree or higher, percent of persons age 25 years+"
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Education"
+        ),
+        "hsg_val_units_13" = list(
+          "name" = "Housing val",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Housing"
+        ),
+        "hsg_multiunit_pct_13" = list(
+          "name" = "% of housing units in multi-unit structures",
+          "orig" = "Housing units in multi-unit structures, percent"
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Housing"
+        ),
+        "hsg_homeowner_rate_13" = list(
+          "name" = "Owner-occupied unit rate",
+          "orig" = "Owner-occupied unit rate",
+          "plots" = list(
+            "density" = c(0.2, 0.85)
+          ),
+          "group" = "Housing"
+        ),
+        "rh_white_pct_14" = list(
+          "name" = "% of White alone",
+          "orig" = "White alone, percent",
+          "plots" = list(
+            "density" = c(0.2, 0.85)
+          ),
+          "group" = "Race and Hispanic Origin"
+        ),
+        "rh_white_nohisp_pct_14" = list(
+          "name" = "% of White alone, not Hispanic or Latino",
+          "orig" = "White alone, not Hispanic or Latino, percent",
+          "plots" = list(
+            "density" = c(0.2, 0.85)
+          ),
+          "group" = "Race and Hispanic Origin"
+        ),
+        "rh_latino_pct_14" = list(
+          "name" = "% of Hispanic or Latino",
+          "orig" = "Hispanic or Latino, percent",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Race and Hispanic Origin"
+        ),
+        "rh_asian_pct_14" = list(
+          "name" = "% of Asian alone",
+          "orig" = "Asian alone, percent",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Race and Hispanic Origin"
+        ),
+        "rh_afroamerican_pct_14" = list(
+          "name" = "% of Black or African American alone",
+          "orig" = "Black or African American alone, percent",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Race and Hispanic Origin"
+        ),
+        "inc_pc_12_month_13" = list(
+          "name" = "Income per capita past 12 months",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Income"
+        )
       )
   theme:
     font_family: "Arial"
@@ -49,24 +145,5 @@ default:
         "#FEE090", "#E0F3F8", 
         "#ABD9E9", "#74ADD1", 
         "#4575B4", "#313695"
-      )
-  maps:
-    colors: !expr data.frame(
-        "democrat_low" = "#C0CCDD",
-        "democrat_med_low" = "#a9bbd3",
-        "democrat_med" = "#819ABB",
-        "democrat_med_high" = "#26659b",
-        "democrat_high" = "#0e4375",
-        "republican_low" = "#ddbdbd",
-        "republican_med_low" = "#db8f7f",
-        "republican_med" = "#cf6a55",
-        "republican_med_high" = "#c95d47",  
-        "republican_high" = "#c32b0d"
-      )
-    mapping: !expr list(
-        "population" = "pop_14_level",
-        "education" = "edu_bach_pct_13_level",
-        "race_white" = "rh_white_no_hisp_pct_14_level",
-        "housing_units" = "hsg_units_in_multiunit_13_level"
       )
 

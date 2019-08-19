@@ -17,7 +17,7 @@ my_models[["svm_tuning"]] <- train(
   method = "svmRadial",  
   family = "binomial",
   metric = "AUC",
-  preProcess = c("center","scale"),
+  preProcess = c("center", "scale"),
   trControl = control,
   tuneGrid = expand.grid(
     C = c(0.1, .5, 1, 10),

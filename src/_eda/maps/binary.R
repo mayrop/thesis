@@ -38,5 +38,11 @@ ggplot() +
   theme_bw() + 
   theme(
     legend.position = c(0.05, 0.05),
-    legend.justification = c("left", "bottom")
+    legend.justification = c("left", "bottom"),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank()
   )

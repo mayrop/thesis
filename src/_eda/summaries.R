@@ -64,28 +64,7 @@ my_summaries[["facts"]] <- all %>%
     party
   ) %>%
   dplyr::select(
-    party,
-    pop_14,
-    pop_10,
-    pop_density_10,
-    pop_foreign_pct_13,
-    pop_o_lang_pct_13,
-    edu_bach_pct_13,
-    rh_white_pct_14,
-    rh_white_nohisp_pct_14,
-    rh_asian_pct_14,
-    rh_afroamerican_pct_14,
-    hsg_multiunit_pct_13,
-    hsg_val_units_13,
-    hsg_homeowner_rate_13,
-    nf_priv_emplt_rate_13,
-    inc_pc_12_month_13,
-    age_o65_pct_14
-  ) %>% 
-  dplyr::mutate(
-    pop_10 = pop_10 / 1e3,
-    pop_14 = pop_14 / 1e3,
-    hsg_val_units_13 = hsg_val_units_13 / 1e3
+    c("party", predictors)
   ) %>% 
   dplyr::group_by(party) %>%
   # this can be approached by skim_to_list (skimr package)
@@ -111,28 +90,40 @@ my_summaries[["facts"]] <- all %>%
   tidyr::unite(temp, mean, median, sd) %>%
   tidyr::spread(party, temp) %>%
   tidyr::separate(
-    democratic, 
-    into = paste("dem", c("mean", "median", "sd"), sep = "_"), 
-    sep = "_"
-  ) %>%
-  tidyr::separate(
     republican, 
     into = paste("rep", c("mean", "median", "sd"), sep = "_"), 
     sep = "_"
   ) %>%
+  tidyr::separate(
+    democratic, 
+    into = paste("dem", c("mean", "median", "sd"), sep = "_"), 
+    sep = "_"
+  ) %>%  
   dplyr::mutate_at(
     vars(-1), as.numeric
   ) %>% 
   dplyr::ungroup() %>%
   dplyr::mutate_if(
-    is.numeric, plyr::round_any, accuracy = .001, f = floor
+    is.numeric, plyr::round_any, accuracy = .01, f = floor
+  ) %>%
+  select(
+    var,
+    rep_mean, 
+    rep_median, 
+    rep_sd,
+    dem_mean,
+    dem_median,
+    dem_sd
   )
 
-#print <- kable %>%
-#  kable(
-#    caption = 'My caption here', 
-#    booktabs = TRUE, 
-#    format = "latex"
-#  ) %>%
-#  kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
-#  add_header_above(c(" ", "Republican" = 2, "Democratic" = 2))
+if (config$rmarkdown) {
+  my_summaries[["facts"]] %>%
+    kable(
+      caption = 'Summary statistics for political parties.',
+      booktabs = TRUE, 
+      format = "latex"
+    ) %>%
+    kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
+    add_header_above(c(" ", "Republican" = 3, "Democratic" = 3)) %>%
+    pack_rows("Group 1", 1, 14)
+}

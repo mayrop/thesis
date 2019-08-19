@@ -48,7 +48,6 @@ two_class_summary <- function (data, lev = NULL, model = NULL, positive = "yes",
 # Gives all the metrics ready to be summarized
 #
 model_evaluate <- function(model, data, response, levels, positive = "yes") {
-  
   evaluation <- list()
   evaluation$probs <- predict(model, newdata = data, type = "prob")
   evaluation$raw <- predict(model, newdata = data, type = "raw")
@@ -61,7 +60,7 @@ model_evaluate <- function(model, data, response, levels, positive = "yes") {
 
   evaluation$matrix <- confusionMatrix(
     data = evaluation$raw, 
-    reference = test.data$response_factor,
+    reference = data$response_factor,
     positive = positive
   )
 

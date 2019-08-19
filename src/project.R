@@ -50,7 +50,8 @@ source("_data/sanity_checks.R")
 source("_data/joins.R")
 
 # Picking variables for the analysis...
-source("_eda/predictors.R")
+# source("_eda/predictors.R")
+predictors <- names(config$predictors$list)
 
 ############################################
 
@@ -76,37 +77,20 @@ execute_and_plot(
 
 # D e n s i t y . P l o t s
 
-# Here we plot interesting predictors
-plot_layout <- c(5, 1)
-plot_vars <- c(
-  "hsg_multiunit_pct_13", "rh_white_pct_14", "rh_white_nohisp_pct_14", 
-  "edu_bach_pct_13", "hsg_val_units_13"
-)
-execute_and_plot(
-  "_eda/plots/density.R", 
-  save = config$print, 
-  width = 300, 
-  height = 75, 
-  prefix = config$settings$images_folder
-)
-
-# Here we plot all the predictors (appendix)
-plot_layout <- c(4, 4)
-plot_vars <- c(
-  "pop_14", "pop_10", "pop_density_10", "pop_foreign_pct_13",
-  "pop_o_lang_pct_13", "age_o65_pct_14", "edu_bach_pct_13", "inc_pc_12_month_13", 
-  "rh_white_pct_14", "rh_white_nohisp_pct_14", "rh_asian_pct_14", "rh_afroamerican_pct_14", 
-  "hsg_multiunit_pct_13", "hsg_val_units_13", "hsg_homeowner_rate_13", "nf_priv_emplt_rate_13"
-)
-execute_and_plot(
-  "_eda/plots/density.R", 
-  save = config$print, 
-  width = 250, 
-  height = 250, 
-  prefix = config$settings$images_folder,
-  suffix = "_all"
-)
-
+# Here we plot the density predictors
+for (predictor in names(config$predictors$list)) {
+  execute_and_plot(
+    "_eda/plots/density.R", 
+    save = config$print, 
+    width = 150, 
+    height = 140, 
+    prefix = config$settings$images_folder,
+    suffix = paste("_", predictor, sep="")
+  )
+  
+  # cleaning...
+  rm(predictor)
+}
 
 # C o r r e l a t i o n . P l o t s
 

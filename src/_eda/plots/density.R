@@ -1,47 +1,85 @@
-# Here we plot the complete density plots
+# Here we plot the density plots
+plot1 <- ggplot(all, aes_string(
+    x = predictor, 
+    fill = "party_won", 
+    colour = "party_won")
+  ) + 
+  geom_hline(
+    yintercept = 0,
+    color = "gray",
+    size = 0.2
+  ) +  
+  # Changing label & colors for fill
+  scale_fill_manual(
+    values = config$theme$parties_colors,
+    labels = config$theme$parties_labels
+  ) +
+  # Changing label & colors for line...
+  scale_colour_manual(
+    values = config$theme$parties_colors,
+    labels = config$theme$parties_labels
+  ) +  
+  labs(
+    y = "Density",
+    fill = "Winning Candidate", 
+    colour = "Winning Candidate"
+  ) +
+  geom_density(
+    alpha = .035
+  ) + 
+  theme_classic() +
+  theme(
+    legend.position = config$predictors$list[[predictor]]$plots$density,
+    plot.title = element_text(face = "bold", size = 13),
+    axis.ticks.x = element_blank(),
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    plot.margin = unit(c(0,0,0,0), "cm")
+  )
 
-featurePlot(
-  # to change the order of plots
-  as.table = TRUE,
-  # setting x & y
-  x = as.data.frame(all %>% ungroup() %>% select(plot_vars)), 
-  y = pull(all[, which(colnames(all) %in% "response_factor")]), 
-  plo = "density",
-  # theme settings
-  pch = 16, # what's the figure for the density
-  cex = 0.02,  # what's the size for the figure
-  col = config$theme$parties_colors,
-  lty = c(4, 1),
-  par.settings = list(
-    strip.background = list(col = "#f3f3f3")
-  ),
-  strip = strip.custom(par.strip.text = list(cex = .6)),
-  # scales for each plot axis
-  scales = list(
-    x = list(relation="free"), 
-    y = list(relation="free")
-  ),
-  main = "Density Plots for Predictors",
-  # legend
-  key = list(
-    space = "bottom", 
-    columns = 2,
-    text = list(rev(config$theme$parties_labels)),
-    lines = list(
-      col = rev(config$theme$parties_colors),
-      lty = c(1, 4)
-    ),
-    cex.title = 1, 
-    cex = .9,
-    title = "Winning Candidate"
-  ),
-  layout = plot_layout,
-  labels = c("", "Density")
-)
+# Horizontal boxplots
+plot2 <- all %>%
+  ungroup() %>%
+  select(
+    predictor,
+    party_won
+  ) %>%
+  ggplot(
+    aes_string(
+      x = "party_won", 
+      y = predictor
+    )
+  ) +
+  geom_boxplot(
+    fill = config$theme$parties_colors,
+    colour = config$theme$parties_colors,
+    alpha = 0.4
+  ) +
+  xlab("") +
+  coord_flip() +
+  labs(
+    y = config$predictors$list[[predictor]]$name
+  ) +  
+  # Changing label & colors for fill
+  scale_x_discrete(
+    labels = config$theme$parties_labels
+  ) +  
+  theme_classic() +
+  theme(
+    axis.ticks.y = element_blank(),
+    plot.margin = unit(c(0,0,0,0), "cm")
+  )
+
+# Getting both plots together...
+cowplot::plot_grid(
+  plot1, plot2, 
+  ncol = 1, 
+  rel_heights = c(2, 1.5),
+  align = 'v',
+  axis = 'lr'
+)  
 
 #########################################
 # Cleaning global environment
-rm(plot_vars)
-rm(plot_layout)
-
-
+rm(plot1)
+rm(plot2)
