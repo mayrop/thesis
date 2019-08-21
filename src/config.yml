@@ -58,7 +58,8 @@ default:
           "group" = "Education"
         ),
         "hsg_val_units_13" = list(
-          "name" = "Housing val",
+          "name" = "Median value of owner-occupied housing units, ($1,000)",
+          "orig" = "Median value of owner-occupied housing units",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
@@ -73,8 +74,8 @@ default:
           "group" = "Housing"
         ),
         "hsg_homeowner_rate_13" = list(
-          "name" = "Owner-occupied unit rate",
-          "orig" = "Owner-occupied unit rate",
+          "name" = "Owner-occupied housing unit rate",
+          "orig" = "Owner-occupied housing unit rate",
           "plots" = list(
             "density" = c(0.2, 0.85)
           ),
@@ -113,7 +114,8 @@ default:
           "group" = "Race and Hispanic Origin"
         ),
         "inc_pc_12_month_13" = list(
-          "name" = "Income per capita past 12 months",
+          "name" = "Per capita income in past 12 months",
+          "orig" = "Per capita income in past 12 months",
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
