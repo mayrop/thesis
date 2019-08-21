@@ -97,7 +97,7 @@ emplogit <- function(df, var = "x", response = "y", bins = 100) {
         var := mean(!!rlang::sym(var))
       ) %>% 
       mutate(
-        elogit = log((successes + 0.5) / (freq - successes + 0.5))
+        elogit = log((successes + (sqrt(freq) / 2)) / (freq - successes + (sqrt(freq) / 2)))
       ) %>% 
       arrange(
         bin
