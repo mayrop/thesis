@@ -3,15 +3,31 @@
 
 print("Running Random Forest...")
 
-control <- base_control
-control$seeds <- get_seeds(seed=config$seed, n_tunes = length(predictors))
-control$allowParallel <- TRUE
+control <- trainControl(
+  method = "cv",
+  number = 10, 
+  summaryFunction = function(...) { 
+    # this is an overwrite of twoClassSummary from caret
+    # this is to prevent sens & spec to be switched
+    two_class_summary(...)
+  }, 
+  classProbs = TRUE, 
+  seeds = get_seeds(seed=config$seed, n_tunes = length(predictors))
+)
+
+if (sampling != "") {
+  control$sampling <- sampling
+}
+
 start_time <- Sys.time()
 
 # Resseting seed...
 set.seed(config$seed)
+
+index <- paste("rf_tuning_", sampling, sep = "")
+
 #https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-25
-my_models[["rf_tuning"]] <- train(
+my_models[[index]] <- train(
   form = my_formula,
   data = train.data,
   method = "rf",  
@@ -25,7 +41,7 @@ my_models[["rf_tuning"]] <- train(
   importance=TRUE
 )
 
-my_models[["rf_tuning"]]$benchmarks <- list(
+my_models[[index]]$benchmarks <- list(
   start = start_time,
   end = Sys.time()
 )
@@ -36,7 +52,10 @@ start_time <- Sys.time()
 # Resseting seed...
 set.seed(config$seed)
 
-my_models[["rf"]] <- train(
+best_tune = my_models[[index]]$bestTune
+index <- paste("rf_", sampling, sep = "")
+
+my_models[[index]] <- train(
   form = my_formula,
   data = train.data,
   method = "rf",  
@@ -44,19 +63,19 @@ my_models[["rf"]] <- train(
   metric = "AUC",
   trControl = control,
   tuneGrid = expand.grid(as.list(
-    my_models[["rf_tuning"]]$bestTune
+    best_tune
   )),
   ntree = 100,
   importance = TRUE
 )
 
-my_models[["rf"]]$benchmarks <- list(
+my_models[[index]]$benchmarks <- list(
   start = start_time,
   end = Sys.time()
 )
 
-my_models[["rf"]]$evaluation <- model_evaluate(
-  model = my_models[["rf"]], 
+my_models[[index]]$evaluation <- model_evaluate(
+  model = my_models[[index]], 
   data = test.data, 
   response = "response_factor",
   levels = my_levels

@@ -47,7 +47,7 @@ default:
           "plots" = list(
             "density" = c(0.8, 0.85)
           ),
-          "group" = "Age"
+          "group" = "Age and Sex"
         ),
         "edu_bach_pct_13" = list(
           "name" = "% of persons age 25 years+ with bachelor's degree or higher",
@@ -120,6 +120,30 @@ default:
             "density" = c(0.8, 0.85)
           ),
           "group" = "Income"
+        ),
+        "firms_rate_07" = list(
+          "name" = "Firms rate",
+          "orig" = "Firms",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Businesses"
+        ),
+        "veterans_pct_13" = list(
+          "name" = "% of veterans",
+          "orig" = "Veterans, percent",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Population Characteristics"
+        ),
+        "females_pct_14" = list(
+          "name" = "% of female persons",
+          "orig" = "Female persons, percent",
+          "plots" = list(
+            "density" = c(0.8, 0.85)
+          ),
+          "group" = "Age and Sex"
         )
       )
   theme:

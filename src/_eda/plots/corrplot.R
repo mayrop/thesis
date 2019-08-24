@@ -10,8 +10,7 @@ corrplot::corrplot(
   win.asp = .5,
   tl.col = "black",
   tl.pos = "lt",
-  mar = c(0,0,1,0),
-  main = "Correlation Matrix"
+  mar = c(0,0,1,0)
 )
 
 ##############################################

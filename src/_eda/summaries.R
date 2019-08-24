@@ -127,3 +127,5 @@ if (config$rmarkdown) {
     add_header_above(c(" ", "Republican" = 3, "Democratic" = 3)) %>%
     pack_rows("Group 1", 1, 14)
 }
+
+

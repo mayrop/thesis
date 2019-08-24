@@ -1,6 +1,5 @@
 # Creating plot for RF hyperparameters cost
 
-# https://github.com/topepo/caret/blob/master/pkg/caret/R/plot.train.R#L165
 my_x <- my_models[["rf_tuning"]]$bestTune$mtry
 my_y <- max(my_models[["rf_tuning"]]$results$AUC)
 
@@ -10,7 +9,8 @@ plot(
   plotType = "scatter",
   pch = 19,
   cex = 0.35,
-  xlab = list(label="mtry (# Randomly Selected Predictors)")
+  xlab = list(label="mtry (# Randomly Selected Predictors)"),
+  main = "Hyperparameter tuning"
 ) + as.layer(
   xyplot(
     y ~ x, 
@@ -22,7 +22,7 @@ plot(
       panel.xyplot(x, y, ...)
       ltext(
         x = x, y = y, pos = 4, offset = 2, cex = 0.8,
-        labels = paste("AUC reaches its maximum when mtry=", my_x, sep="")
+        labels = paste("AUC maximised")
       )
     }
   )

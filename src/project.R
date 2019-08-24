@@ -50,8 +50,10 @@ source("_data/sanity_checks.R")
 source("_data/joins.R")
 
 # Picking variables for the analysis...
-# source("_eda/predictors.R")
 predictors <- names(config$predictors$list)
+#predictors <- colnames(facts)[!(colnames(facts) %in% c(
+#  "fips", "area_name", "state_facts", "pop_pct_change", "pop_10", "pop_density_10"
+#))]
 
 ############################################
 
@@ -91,90 +93,14 @@ for (predictor in names(config$predictors$list)) {
   rm(predictor)
 }
 
-# C o r r e l a t i o n . P l o t
-
-execute_and_plot("_eda/plots/corrplot.R", 
-  save = config$print, 
-  width = 400, 
-  height = 200, 
-  prefix = config$settings$images_folder
-)
-
-
-############################################
-
-#--------------------------------------------------------#
-# Start parallelization...
-cores <- parallel::detectCores()
-if (cores > 3) {
-  # makePSOCKcluster enhanced version of makeCluster
-  # leave enough cores for other tasks
-  clusters <- makePSOCKcluster(cores - 2)
-  registerDoParallel(clusters)
-}
-#--------------------------------------------------------#
-
-# D a t a . M o d e l l i n g
-
-# Define our base control for caret
-# This is just for the base so the models can extend ti
-base_control <- trainControl(
-  method = "cv",
-  number = 5, 
-  summaryFunction = function(...) { 
-    # this is an overwrite of twoClassSummary from caret
-    # this is to prevent sens & spec to be switched
-    two_class_summary(...)
-  }, 
-  classProbs = TRUE, 
-  sampling = "up",
-  allowParallel = FALSE
-)
-
-# This is just to build our main formula for building the diff models
-my_formula <- as.formula(paste(
-  "response_factor ~",
-  paste(predictors, collapse = " + ")
-))
-
-
-# Splitting data
-source("_models/split.R")
-
-# Loads custom functions for models
-source("_models/functions.R")
-
-# Training...
-source("_models/glm.R")
-source("_models/rf.R")
-source("_models/svm.R")
-
-#--------------------------------------------------------#
-# Stop paralellization
-if (cores > 3) {
-  stopCluster(clusters)
-  registerDoSEQ()
-  rm(clusters)
-}
-#--------------------------------------------------------#
-
-############################################
-
-# L o g i s t i c . P l o t s
-execute_and_plot(
-  "_evaluation/lr_odds.R",
-  save = config$print, 
-  width = 200, 
-  height = 120, 
-  prefix = config$settings$images_folder
-)
+# L i n e a r i t y . A s s u m p t i o n
 
 # Coefficients
 execute_and_plot(
-  "_evaluation/lr_hoeff_matrix.R",
+  "_eda/plots/hoeff_matrix.R",
   save = config$print, 
   width = 200, 
-  height = 120, 
+  height = 140, 
   prefix = config$settings$images_folder
 )
 
@@ -184,7 +110,7 @@ for (predictor in names(config$predictors$list)) {
     suffix <- `if`(binned, "binned", "")
     
     execute_and_plot(
-      "_evaluation/lr_empirical_plots.R", 
+      "_eda/plots/empirical_plots.R", 
       save = config$print, 
       width = 150, 
       height = 140, 
@@ -199,29 +125,71 @@ for (predictor in names(config$predictors$list)) {
   rm(suffix)
 }
 
+# C o r r e l a t i o n . P l o t
+
+execute_and_plot("_eda/plots/corrplot.R", 
+  save = config$print, 
+  width = 400, 
+  height = 200, 
+  prefix = config$settings$images_folder
+)
+
+#--------------------------------------------------------#
+
+# D a t a . M o d e l l i n g
+
+# This is just to build our main formula for building the diff models
+
+# Splitting data
+source("_models/split.R")
+
+# Training...
+for (sampling in c("up", "down", "")) {
+  #source("_models/glm.R")
+  source("_models/rf.R")
+  #source("_models/svm.R")
+}
+
+#--------------------------------------------------------#
+
 # E v a l u a t i o n
+execute_and_plot(
+  "_evaluation/lr_odds.R",
+  save = config$print, 
+  width = 200, 
+  height = 130, 
+  prefix = config$settings$images_folder
+)
 
 execute_and_plot(
   "_evaluation/roc.R",
   save = config$print, 
-  width = 120, 
-  height = 120, 
+  width = 105, 
+  height = 105, 
   prefix = config$settings$images_folder
 )
 
 execute_and_plot(
   "_evaluation/tuning_rf.R",
   save = config$print, 
-  width = 200, 
-  height = 200, 
+  width = 110, 
+  height = 110, 
   prefix = config$settings$images_folder
 )
 
 execute_and_plot(
   "_evaluation/tuning_svm.R",
   save = config$print, 
-  width = 200, 
-  height = 200, 
+  width = 90, 
+  height = 90, 
+  prefix = config$settings$images_folder
+)
+
+execute_and_plot(
+  "_evaluation/rf_errors.R",
+  save = config$print, 
+  width = 110, 
+  height = 110, 
   prefix = config$settings$images_folder
 )
 

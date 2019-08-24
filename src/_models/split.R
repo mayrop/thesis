@@ -7,7 +7,7 @@
 ### 
 set.seed(config$seed)
 
-indices = createDataPartition(all$response_binary, p = 0.8, list = FALSE)
+indices = createDataPartition(all$response_binary, p = 2/3, list = FALSE)
 train.data = all[indices, ]
 test.data = all[-indices, ]
 

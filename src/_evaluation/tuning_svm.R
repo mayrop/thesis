@@ -13,7 +13,8 @@ plot(
   plotType = "scatter",
   pch = 19,
   cex = 0.35,
-  #ylab = list(label="AUC (Cross-Validation)"),
+  xlab = list(label=expression(sigma)),
+  main = "SVM hyperparameter tuning",
   key = list(
     corner = c(1, 0), 
     x = 0.95, 
@@ -37,10 +38,10 @@ plot(
     col = config$theme$plots[1],
     panel = function(x, y, ...) {
       panel.xyplot(x, y, ...)
-      ltext(
-        x = x, y = y, pos = 4, offset = 2, cex = 0.8,
-        labels = paste("AUC is at its maximum (", round(my_y, digits=2), ") when C=", 1, " and sigma=", round(my_x, digits=3), sep="")
-      )
+      #ltext(
+        #x = x, y = y, pos = 4, offset = 2, cex = 0.8
+        #labels = paste("AUC is at its maximum (", round(my_y, digits=2), ") when C=", 1, " and sigma=", round(my_x, digits=3), sep="")
+      #)
     }
   )
 )

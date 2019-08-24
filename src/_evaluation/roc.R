@@ -12,6 +12,7 @@ plot(
   lty = 1, 
   legacy.axes = 1,
   lwd = 1.2,
+  panel.first = grid(),
   main="ROC Curve"
 )
 
@@ -40,7 +41,7 @@ plot(
 abline(lwd=0.5, lty=2, v=1, h=1, col="gray")
 
 # Adding legend
-legend("right", 
+legend("bottomright", 
   legend = c(
     paste("Logistic Regression: ", "(AUC=", lr_auc, ")", sep=""), 
     paste("Support Vector Machines: ", "(AUC=", svm_auc, ")", sep=""), 
