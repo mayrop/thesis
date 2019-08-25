@@ -22,6 +22,11 @@ default:
         "UrbanInstitute/urbnmapr"
       )
     sources: !expr c()
+  algorithms: !expr list(
+      "glm" = "Logistic Regression",
+      "svm" = "SVM",
+      "rf" = "Random Forests"
+    )
   predictors:
     parties_levels: !expr c("no", "yes")
     list: !expr list(

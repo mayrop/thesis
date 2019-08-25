@@ -25,6 +25,7 @@ start_time <- Sys.time()
 set.seed(config$seed)
 
 index <- paste("rf_tuning_", sampling, sep = "")
+index <- gsub("_$", "", index)
 
 #https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-25
 my_models[[index]] <- train(
@@ -53,7 +54,8 @@ start_time <- Sys.time()
 set.seed(config$seed)
 
 best_tune = my_models[[index]]$bestTune
-index <- paste("rf_", sampling, sep = "")
+index <- paste("rf", sampling, sep = "_")
+index <- gsub("_$", "", index)
 
 my_models[[index]] <- train(
   form = my_formula,

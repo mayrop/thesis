@@ -31,6 +31,7 @@ my_formula <- as.formula(paste(
 ))
 
 index <- paste("svm_tuning_", sampling, sep = "")
+index <- gsub("_$", "", index)
 
 my_models[[index]] <- train(
   form = my_formula,
@@ -58,7 +59,9 @@ start_time <- Sys.time()
 set.seed(config$seed)
 
 best_tune <- my_models[[index]]$bestTune
-index <- paste("svm_", sampling, sep = "")
+
+index <- paste("svm", sampling, sep = "_")
+index <- gsub("_$", "", index)
 
 my_models[[index]] <- train(
   form = my_formula,

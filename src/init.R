@@ -77,29 +77,42 @@ get_seeds <- function(method="cv", n_resampling=10, n_tunes=0, seed=2019) {
 #
 two_class_summary <- function (data, lev = NULL, model = NULL, positive = "yes", negative = "no") {
   lvls <- levels(data$obs)
-  if (length(lvls) > 2) {
-    stop(paste("Your outcome has", length(lvls), "levels. The twoClassSummary() function isn't appropriate."))
-  }
-  
+
   # add the namespace for caret
   caret:::requireNamespaceQuietStop("ModelMetrics")
   
-  if (!all(levels(data[, "pred"]) == lvls)) {
-    stop("levels of observed and predicted data do not match")
-  }
+  # True positives
+  tp <- sum(data[, "obs"] == positive & data[, "pred"] == positive)
   
-  rocAUC <- ModelMetrics::auc(ifelse(data$obs == lev[1], 0, 1), data[, lvls[2]])
+  # True negatives
+  tn <- sum(data[, "obs"] == negative & data[, "pred"] == negative)
+  
+  # False positives
+  fp <- sum(data[, "obs"] == negative & data[, "pred"] == positive)
+  
+  # False negatives
+  fn <- sum(data[, "obs"] == positive & data[, "pred"] == negative)
   
   # Redefine the metrics
-  out <- c(
-    rocAUC,
-    sensitivity(data[, "pred"], data[, "obs"], positive = positive), 
-    specificity(data[, "pred"], data[, "obs"], negative = negative)
+  out = c(
+    (tp + tn) / (tp + fp + tn + fn),
+    tp / (tp + fn),
+    tn / (tn + fp),
+    tp / (tp + fp),
+    tn / (tn + fn),
+    ModelMetrics::auc(ifelse(data$obs == lev[1], 0, 1), data[, lvls[2]])
   )
   
-  # changing name from ROC to AUC
-  names(out) <- c("AUC", "Sensitivity", "Specificity")
-  out
+  names(out) <- c("Accuracy", "Sensitivity", "Specificity", "PPV", "NPV", "AUC")
+
+  return(out)
+
+  # Removing caret functions
+  # posPredValue(data[, "pred"], data[, "obs"], positive = positive)
+  # negPredValue(data[, "pred"], data[, "obs"], negative = negative)
+  # sensitivity(data[, "pred"], data[, "obs"], positive = positive), 
+  # specificity(data[, "pred"], data[, "obs"], negative = negative),
+  # as.numeric(unlist(e1071::classAgreement(table(data[, "obs"], data[, "pred"])))[c("kappa")])
 }
 
 
@@ -163,5 +176,46 @@ emplogit <- function(df, var = "x", response = "y", bins = 100) {
         bin
       )
   )
+}
+
+get_contigency_table <- function(response, 
+                                 model1, 
+                                 model2, 
+                                 names = c("Model 1", "Model 2"), 
+                                 headings = c("Correct", "Incorrect")) {
+
+  vals <- list(
+    # both correct
+    a = sum(response == model1 & response == model2),
+    
+    # only model 1 correct
+    b = sum(response == model1 & response != model2),
+    
+    # only model 2 correct
+    c = sum(response != model1 & response == model2),
+    
+    # both incorrect
+    d = sum(response != model1 & response != model2)
+  )
+
+  my_dimnames <- list()
+  my_dimnames[[names[2]]] = headings
+  my_dimnames[[names[1]]] = headings
+    
+  contigency_table <- matrix(
+    c(vals$a, vals$b, vals$c, vals$d),
+    nrow = 2,
+    dimnames = my_dimnames
+  )
+  
+  return(
+    append(
+      vals,
+      list(
+        "contigency.table" = contigency_table,
+        "mcnemar" = mcnemar.test(contigency_table)
+      )
+    )
+  )  
 }
 

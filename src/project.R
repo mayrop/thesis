@@ -23,9 +23,13 @@ config <- config::get()
 # Global variables that will help us throughtout the project
 my_models <- list()
 my_resamples <- list()
-my_metrics <- list()
 my_methods <- list()
-my_summaries <- list()
+my_results <- list(
+  "train" <- list(),
+  "test" <- list(),
+  "contigencies" = list()
+)
+
 
 # Getting started...
 source("init.R")
@@ -144,10 +148,10 @@ execute_and_plot("_eda/plots/corrplot.R",
 source("_models/split.R")
 
 # Training...
-for (sampling in c("up", "down", "")) {
-  #source("_models/glm.R")
+for (sampling in c("up", "")) {
+  source("_models/glm.R")
   source("_models/rf.R")
-  #source("_models/svm.R")
+  source("_models/svm.R")
 }
 
 #--------------------------------------------------------#

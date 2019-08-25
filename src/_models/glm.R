@@ -30,7 +30,8 @@ my_formula <- as.formula(paste(
   paste(predictors, collapse = " + ")
 ))
 
-index <- paste("glm_", sampling, sep = "")
+index <- paste("glm", sampling, sep = "_")
+index <- gsub("_$", "", index)
 
 my_models[[index]] <- train(
   form = my_formula,

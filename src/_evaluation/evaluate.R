@@ -1,56 +1,129 @@
+# Goodness of fit test
+library(LOGIT)
+HLTest(my_models[["glm"]]$finalModel, g = 8)
+HLTest(my_models[["glm_up"]]$finalModel, g = 8)
+
 my_resamples <- list(
-  `Logistic Regression` = my_models[["glm_"]],
-  `SVM` = my_models[["svm_"]],
+  `Logistic Regression` = my_models[["glm"]],
+  `SVM` = my_models[["svm_tuning"]],
   `Random Forests` = my_models[["rf"]]
 )
 
-my_metrics <- list(
-  "glm" <- c(name = "Logistic Regression", my_models[["glm_"]]$evaluation$metrics),
-  "svm" <- c(name = "SVM", my_models[["svm_"]]$evaluation$metrics),
-  "rf" <- c(name = "RF", my_models[["rf"]]$evaluation$metrics),
-  "glm_up" <- c(name = "Logistic Regression (Oversampling)", my_models[["glm_up"]]$evaluation$metrics),
-  "svm_up" <- c(name = "SVM Oversampling", my_models[["svm_up"]]$evaluation$metrics),
-  "rf_up" <- c(name = "RF Oversampling", my_models[["rf_up"]]$evaluation$metrics),
-  "glm_down" <- c(name = "Logistic Regression Undersampling", my_models[["glm_down"]]$evaluation$metrics),
-  "svm_down" <- c(name = "SVM Undersampling", my_models[["svm_down"]]$evaluation$metrics),
-  "rf_down" <- c(name = "RF Undersampling", my_models[["rf_down"]]$evaluation$metrics)
-  #"rf" <- c(name = "Random Forests", my_models[["rf"]]$evaluation$metrics)
-)
+for (algorithm in c("glm", "svm", "rf")) {
+  algorithm_up <- paste(algorithm, "_up", sep = "")
+  
+  my_results[["contigencies"]][[algorithm]] <- get_contigency_table(
+    test.data$response_factor,
+    model1 = my_models[[algorithm]]$evaluation$raw,
+    model2 = my_models[[algorithm_up]]$evaluation$raw,
+    names = c("Default", "Oversampling")
+  )
 
-predictions <- cbind(
-  test.data$response_factor,
-  my_models[["rf"]]$evaluation$raw,
-  my_models[["rf_up"]]$evaluation$raw
-)
+  # train data
+  my_results[["train"]][[algorithm]] <- c(
+    name = config$algorithms[[algorithm]], 
+    my_models[[algorithm]]$results
+  )
+  my_results[["train"]][[algorithm_up]] <- c(
+    name = paste(config$algorithms[[algorithm]], " (Oversampling)"),
+    my_models[[algorithm_up]]$results
+  )
+  
+  # test data
+  my_results[["test"]][[algorithm]] <- c(
+    name = config$algorithms[[algorithm]], 
+    my_models[[algorithm]]$evaluation$metrics
+  )
+  my_results[["test"]][[algorithm_up]] <- c(
+    name = paste(config$algorithms[[algorithm]], " (Oversampling)"),
+    my_models[[algorithm_up]]$evaluation$metrics
+  )
+  
+  rm(algorithm_up)
+}
 
-colnames(predictions) <- c("good", "none", "oversampling")
-
-# both correct
-a0 <- sum(predictions[, 1] == predictions[, 2] & predictions[, 1] == predictions[, 3])
-
-# no stratification correct
-a1 <- sum(predictions[, 1] == predictions[, 2] & predictions[, 1] != predictions[, 3])
-
-# oversampling correct
-a2 <- sum(predictions[, 1] != predictions[, 2] & predictions[, 1] == predictions[, 3])
-
-# both incorrect
-a3 <- sum(predictions[, 1] != predictions[, 2] & predictions[, 1] != predictions[, 3])
-
-stats <- rbindlist(my_metrics)
-
-stats %>% 
+# printing the metrics for train data
+rbindlist(my_results[["train"]], fill = TRUE) %>% 
   dplyr::mutate_if(
     is.numeric, plyr::round_any, accuracy = .001, f = floor
   ) %>%
-  select(name, Accuracy, Sensitivity, Specificity, PosPredValue, NegPredValue, AUC) %>%
-  kable(
+  select(
+    -parameter, - sigma, -C, -mtry
+  ) %>%
+  mutate(
+    AccuracyText = paste(Accuracy, " (", AccuracySD, ")", sep=""),
+    SensitivityText = paste(Sensitivity, " (", SensitivitySD, ")", sep=""),
+    SpecificityText = paste(Specificity, " (", SpecificitySD, ")", sep=""),
+    PPVText = paste(PPV, " (", PPVSD, ")", sep=""),
+    NPVText = paste(NPV, " (", NPVSD, ")", sep=""),
+    AUCText = paste(AUC, " (", AUCSD, ")", sep="")
+  ) %>%
+  select(
+    name,
+    AccuracyText,
+    SensitivityText,
+    SpecificityText,
+    PPVText,
+    NPVText,
+    AUCText
+  ) %>% kable(
     caption = 'Evaluation metrics.',
     booktabs = TRUE, 
     format = "latex"
   ) %>%
   kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
-  pack_rows("Group 1", 1, 3)
+  pack_rows("Logistic Regression", 1, 2) %>%
+  pack_rows("SVM", 3, 4) %>%
+  pack_rows("Random Forest", 5, 6)
+
+# printing the metrics for train data
+rbindlist(my_results[["train"]], fill = TRUE) %>% 
+  dplyr::mutate_if(
+    is.numeric, plyr::round_any, accuracy = .001, f = floor
+  ) %>%
+  select(
+    -parameter, - sigma, -C, -mtry
+  ) %>%
+  select(
+    name,
+    Accuracy,
+    Sensitivity,
+    Specificity,
+    PPV,
+    NPV,
+    AUC
+  ) %>% kable(
+    caption = 'Evaluation metrics.',
+    booktabs = TRUE, 
+    format = "latex"
+  ) %>%
+  kable_styling(font_size = 12, latex_options = "HOLD_position")
+
+rbindlist(my_results[["test"]], fill = TRUE) %>% 
+  dplyr::mutate_if(
+    is.numeric, plyr::round_any, accuracy = .001, f = floor
+  ) %>%
+  select(
+    name,
+    Accuracy,
+    Sensitivity,
+    Specificity,
+    PosPredValue,
+    NegPredValue,
+    AUC
+  ) %>% kable(
+    caption = 'Evaluation metrics.',
+    booktabs = TRUE, 
+    format = "latex"
+  ) %>%
+  kable_styling(font_size = 12, latex_options = "HOLD_position")
+
+# printing the metrics for test data
+rbindlist(my_metrics[["test"]]) %>% 
+  dplyr::mutate_if(
+    is.numeric, plyr::round_any, accuracy = .001, f = floor
+  )
+
 
 
 
@@ -82,17 +155,12 @@ correct <- apply(predictions[,], 1, function(row) {
 
 C <- ncol(predictions) - 1
 Q <- (C-1) * (C * sum(G**2) - sum(G)**2) / (C*sum(G) - sum(q$correct**2))
+Q2 <- (C-1) * (C * sum((G - mean(G))**2)) / (C*sum(G) - sum(q$correct**2))
 
 
+my_results[["contigencies"]]$glm
 
-resamps <- resamples(my_resamples)
 
-Performance <- matrix(c(a0, a1, a2, a3),
-         nrow = 2,
-         dimnames = list("Oversampling" = c("Correct", "Incorrect"),
-                         "No sampling" = c("Correct", "Incorrect")))
-Performance
-mcnemar.test(Performance)
 
 # The ideas and methods here are based on Hothorn et al. (2005) and Eugster et al. (2008).
 bwplot(resamps, layout=c(3, 1), main="Metric comparison between different methods (CV train set)")
