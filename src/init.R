@@ -178,11 +178,11 @@ emplogit <- function(df, var = "x", response = "y", bins = 100) {
   )
 }
 
-get_contigency_table <- function(response, 
-                                 model1, 
-                                 model2, 
-                                 names = c("Model 1", "Model 2"), 
-                                 headings = c("Correct", "Incorrect")) {
+eval.mcnemar <- function(response, 
+                         model1, 
+                         model2, 
+                         names = c("Model 1", "Model 2"), 
+                         headings = c("Correct", "Incorrect")) {
 
   vals <- list(
     # both correct
@@ -199,11 +199,11 @@ get_contigency_table <- function(response,
   )
 
   my_dimnames <- list()
-  my_dimnames[[names[2]]] = headings
   my_dimnames[[names[1]]] = headings
+  my_dimnames[[names[2]]] = headings
     
-  contigency_table <- matrix(
-    c(vals$a, vals$b, vals$c, vals$d),
+  mcnemar_table <- matrix(
+    rbind(c(vals$a, vals$b), c(vals$c, vals$d)),
     nrow = 2,
     dimnames = my_dimnames
   )
@@ -212,10 +212,41 @@ get_contigency_table <- function(response,
     append(
       vals,
       list(
-        "contigency.table" = contigency_table,
-        "mcnemar" = mcnemar.test(contigency_table)
+        "mcnemar.table" = mcnemar_table,
+        "mcnemar.test" = mcnemar.test(mcnemar_table)
       )
     )
   )  
 }
 
+eval.cochrans_q <- function(target, predictions) {
+  # k will be the number of classifiers
+  k <- ncol(predictions)
+  
+  # changing colnames for convenience
+  colnames(predictions) <- 1:k
+  
+  # calculate G
+  G <- rep(0, length.out = k)
+  
+  for (i in 1:k) {
+    G[i] <- sum(response == predictions[, i])
+  }
+  
+  predictions$target <- response
+  
+  correct <- apply(predictions[,], 1, function(row) {
+    # here we count how many classifiers equal the true class
+    count_if(row[length(row)], row[-length(row)])
+  })
+  
+  #Q <- (k-1) * (k * sum(G**2) - sum(G)**2) / (k*sum(G) - sum(correct**2))
+  Q <- (k-1) * (k * sum((G - mean(G))**2)) / (k*sum(G) - sum(correct**2))
+  
+  return(
+    list(
+      "Q" = Q,
+      "p" = pchisq(Q, df = (k-1), lower.tail = FALSE)
+    )
+  )
+}

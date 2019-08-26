@@ -16,7 +16,8 @@ default:
         "data.table",
         "latticeExtra",
         "cowplot",
-        "sjPlot"
+        "sjPlot",
+        "LOGIT"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
