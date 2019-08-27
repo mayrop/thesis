@@ -182,7 +182,8 @@ eval.mcnemar <- function(response,
                          model1, 
                          model2, 
                          names = c("Model 1", "Model 2"), 
-                         headings = c("Correct", "Incorrect")) {
+                         headings = c("Correct", "Incorrect"),
+                         correct = TRUE) {
 
   vals <- list(
     # both correct
@@ -209,44 +210,55 @@ eval.mcnemar <- function(response,
   )
   
   return(
-    append(
-      vals,
-      list(
-        "mcnemar.table" = mcnemar_table,
-        "mcnemar.test" = mcnemar.test(mcnemar_table)
-      )
+    list(
+      # redundant with mcnemar.table, but useful
+      "classifications" = as.data.frame(vals),
+      "mcnemar.table" = mcnemar_table,
+      "mcnemar.test" = mcnemar.test(mcnemar_table, correct = correct)
     )
   )  
 }
 
-eval.cochrans_q <- function(target, predictions) {
+eval.cochrans_q <- function(y_target, x) {
   # k will be the number of classifiers
-  k <- ncol(predictions)
+  k <- ncol(x)
   
   # changing colnames for convenience
-  colnames(predictions) <- 1:k
+  colnames(x) <- 1:k
   
   # calculate G
   G <- rep(0, length.out = k)
   
   for (i in 1:k) {
-    G[i] <- sum(response == predictions[, i])
+    G[i] <- sum(y_target == x[, i])
   }
   
-  predictions$target <- response
+  x$y_target <- y_target
   
-  correct <- apply(predictions[,], 1, function(row) {
+  correct <- apply(x[,], 1, function(row) {
     # here we count how many classifiers equal the true class
     count_if(row[length(row)], row[-length(row)])
   })
   
   #Q <- (k-1) * (k * sum(G**2) - sum(G)**2) / (k*sum(G) - sum(correct**2))
-  Q <- (k-1) * (k * sum((G - mean(G))**2)) / (k*sum(G) - sum(correct**2))
+  method <- "Cochran's Q test for comparing the performance of multiple classifiers"
+  parameter <- k-1
+  statistic <- (k-1) * (k * sum((G - mean(G))**2)) / (k*sum(G) - sum(correct**2))
+  p <- pchisq(statistic, df = parameter, lower.tail = FALSE)
   
-  return(
-    list(
-      "Q" = Q,
-      "p" = pchisq(Q, df = (k-1), lower.tail = FALSE)
-    )
+  names(statistic) <- "Cochran's Q chi-squared"
+  names(parameter) <- "df"
+  
+  rval <- list(
+    statistic = statistic, 
+    parameter = parameter, 
+    p.value = p, 
+    method = method, 
+    data.name = "data",
+    alternate = ""
   )
+  
+  class(rval) <- "htest"
+  return(rval)
 }
+

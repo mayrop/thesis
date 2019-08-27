@@ -34,7 +34,7 @@ summary <- dcast(
 )
 
 my_summaries[["elections"]] <- summary %>% 
-  select(
+  dplyr::select(
     variable,
     republican,
     democrat,

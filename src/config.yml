@@ -12,12 +12,12 @@ default:
         "caret",
         "sf",
         "pROC",
-        "doParallel",
         "data.table",
         "latticeExtra",
         "cowplot",
         "sjPlot",
-        "LOGIT"
+        "LOGIT",
+        "expss"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
@@ -26,7 +26,7 @@ default:
   algorithms: !expr list(
       "glm" = "Logistic Regression",
       "svm" = "SVM",
-      "rf" = "Random Forests"
+      "rf" = "Random Forest"
     )
   predictors:
     parties_levels: !expr c("no", "yes")
