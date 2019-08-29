@@ -27,9 +27,9 @@ my_methods <- list()
 my_results <- list(
   "train" <- list(),
   "test" <- list(),
-  "contigencies" = list()
+  "contigencies" = list(),
+  "differences" = list()
 )
-
 
 # Getting started...
 source("init.R")
@@ -55,9 +55,6 @@ source("_data/joins.R")
 
 # Picking variables for the analysis...
 predictors <- names(config$predictors$list)
-#predictors <- colnames(facts)[!(colnames(facts) %in% c(
-#  "fips", "area_name", "state_facts", "pop_pct_change", "pop_10", "pop_density_10"
-#))]
 
 ############################################
 
@@ -87,7 +84,7 @@ for (predictor in names(config$predictors$list)) {
   execute_and_plot(
     "_eda/plots/density.R", 
     save = config$print, 
-    width = 150, 
+    width = 200, 
     height = 140, 
     prefix = config$settings$images_folder,
     suffix = paste("_", predictor, sep="")
@@ -116,8 +113,8 @@ for (predictor in names(config$predictors$list)) {
     execute_and_plot(
       "_eda/plots/empirical_plots.R", 
       save = config$print, 
-      width = 150, 
-      height = 140, 
+      width = 160, 
+      height = 150, 
       prefix = config$settings$images_folder,
       suffix = paste("_", predictor, "_", suffix, sep="")
     ) 
@@ -148,7 +145,8 @@ execute_and_plot("_eda/plots/corrplot.R",
 source("_models/split.R")
 
 # Training...
-for (sampling in c("up", "")) {
+# "smote", "up", 
+for (sampling in c("")) {
   source("_models/glm.R")
   source("_models/rf.R")
   source("_models/svm.R")
@@ -157,42 +155,65 @@ for (sampling in c("up", "")) {
 #--------------------------------------------------------#
 
 # E v a l u a t i o n
+
+# Summaries...
+
+source("_evaluation/evaluation.R")
+
 execute_and_plot(
-  "_evaluation/lr_odds.R",
+  "_evaluation/tests.R",
   save = config$print, 
-  width = 200, 
-  height = 130, 
+  width = 350, 
+  height = 120, 
   prefix = config$settings$images_folder
 )
 
 execute_and_plot(
   "_evaluation/roc.R",
   save = config$print, 
-  width = 105, 
-  height = 105, 
+  width = 170, 
+  height = 110, 
   prefix = config$settings$images_folder
 )
 
+# Logistic regression...
+
+# Goodness of fit test
+HLTest(my_models[["glm"]]$finalModel, g = 8)
+
+# Log odds...
 execute_and_plot(
-  "_evaluation/tuning_rf.R",
+  "_evaluation/lr_odds.R",
   save = config$print, 
-  width = 110, 
+  width = 170, 
+  height = 70, 
+  prefix = config$settings$images_folder
+)
+
+# SVM
+
+execute_and_plot(
+  "_evaluation/svm_tuning.R",
+  save = config$print, 
+  width = 170, 
+  height = 120, 
+  prefix = config$settings$images_folder
+)
+
+# Random forests
+
+execute_and_plot(
+  "_evaluation/rf_errors.R",
+  save = config$print, 
+  width = 170, 
   height = 110, 
   prefix = config$settings$images_folder
 )
 
 execute_and_plot(
-  "_evaluation/tuning_svm.R",
+  "_evaluation/rf_importance.R",
   save = config$print, 
-  width = 90, 
-  height = 90, 
-  prefix = config$settings$images_folder
-)
-
-execute_and_plot(
-  "_evaluation/rf_errors.R",
-  save = config$print, 
-  width = 110, 
+  width = 170, 
   height = 110, 
   prefix = config$settings$images_folder
 )
@@ -206,3 +227,4 @@ sink()
 # write.bib(c(config$settings$libraries, c("config", "urbnmapr", "hazel")), file="r")
 
           
+
