@@ -55,7 +55,7 @@ ggplot() +
     aes(), 
     fill = "transparent",
     color = "gray", 
-    size = 0.25
+    size = 0.35
   ) +   
   geom_point(
     data = my_map,
@@ -69,7 +69,8 @@ ggplot() +
   ) +
   scale_color_manual(
     values = config$theme$parties_colors,
-    labels = config$theme$parties_labels
+    labels = config$theme$parties_labels,
+    guide = "legend"
   ) +
   labs(
     x = "",
@@ -78,14 +79,21 @@ ggplot() +
   ) + 
   theme_bw() + 
   theme(
-    legend.position = c(0.05, 0.05),
+    legend.position = c(0.01, 0.01),
     legend.justification = c("left", "bottom"),
+    legend.text = element_text(size = 18),   
+    legend.title = element_text(size = 20),  
+    #legend.key.size = unit(5,"cm"),
     axis.ticks.y = element_blank(),
     axis.title.y = element_blank(),
     axis.text.y = element_blank(),
     axis.ticks.x = element_blank(),
     axis.title.x = element_blank(),
     axis.text.x = element_blank()    
+  ) +
+  # changes the size of the points in legend
+  guides(color = guide_legend(
+    override.aes = list(size=5))
   )
 
 #########################################

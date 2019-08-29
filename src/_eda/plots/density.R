@@ -30,10 +30,14 @@ plot1 <- ggplot(all, aes_string(
   theme_classic() +
   theme(
     legend.position = config$predictors$list[[predictor]]$plots$density,
+    legend.text = element_text(size = 16),   
+    legend.title = element_text(size = 18),  
     plot.title = element_text(face = "bold", size = 13),
     axis.ticks.x = element_blank(),
-    axis.title.x=element_blank(),
-    axis.text.x=element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.title.y = element_text(size = 14),
+    axis.text.y = element_text(size = 12),
     plot.margin = unit(c(0,0,0,0), "cm")
   )
 
@@ -67,6 +71,9 @@ plot2 <- all %>%
   theme_classic() +
   theme(
     axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 11),
+    axis.title.x = element_text(size = 16),
+    axis.text.y = element_text(size = 12),
     plot.margin = unit(c(0,0,0,0), "cm")
   )
 

@@ -116,16 +116,15 @@ my_summaries[["facts"]] <- all %>%
     dem_sd
   )
 
-if (config$rmarkdown) {
-  my_summaries[["facts"]] %>%
-    kable(
-      caption = 'Summary statistics for political parties.',
-      booktabs = TRUE, 
-      format = "latex"
-    ) %>%
-    kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
-    add_header_above(c(" ", "Republican" = 3, "Democratic" = 3)) %>%
-    pack_rows("Group 1", 1, 14)
-}
+#  my_summaries[["facts"]] %>%
+#    kable(
+#      caption = 'Summary statistics for political parties.',
+#      booktabs = TRUE, 
+#      format = "latex"
+#    ) %>%
+#    kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
+#    add_header_above(c(" ", "Republican" = 3, "Democratic" = 3)) %>%
+#    pack_rows("Group 1", 1, 14)
+
 
 
