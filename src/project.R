@@ -145,12 +145,9 @@ execute_and_plot("_eda/plots/corrplot.R",
 source("_models/split.R")
 
 # Training...
-# "smote", "up", 
-for (sampling in c("")) {
-  source("_models/glm.R")
-  source("_models/rf.R")
-  source("_models/svm.R")
-}
+source("_models/glm.R")
+source("_models/rf.R")
+source("_models/svm.R")
 
 #--------------------------------------------------------#
 

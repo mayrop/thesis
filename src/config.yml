@@ -16,8 +16,7 @@ default:
         "latticeExtra",
         "cowplot",
         "sjPlot",
-        "LOGIT",
-        "expss"
+        "LOGIT"
       )
     github: !expr c(
         "UrbanInstitute/urbnmapr"
@@ -159,6 +158,8 @@ default:
     border_color: "#e8e8e5"
     # https://davidmathlogic.com/colorblind/
     plots: !expr c("#D81B1B", "#1E88E5", "#FFC107", "#025446")
+    # display.brewer.pal(n = 8, name = 'Set1')
+    plots_2: !expr c("#D81B1B", "#1E88E5", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33")
     parties_colors: !expr c("#105099", "#d93334")
     parties_factors: !expr c("no", "yes")
     parties_labels: !expr c("Hillary Clinton", "Donald Trump")

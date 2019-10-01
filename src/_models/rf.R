@@ -84,9 +84,33 @@ my_models[[index]]$evaluation <- model_evaluate(
 )
 
 #########################################
+# Saving... 
+# This could replace the CV above since 
+# we need a cache of all the models
+
+for (i in 1:length(predictors)) {
+  index <- paste("rf_", i, sep = "_")
+
+  my_models[[index]] <- train(
+    form = my_formula,
+    data = train.data,
+    method = "rf",  
+    family = "binomial",  
+    metric = "AUC",
+    trControl = control,
+    tuneGrid = expand.grid(list(
+      .mtry = i
+    )),
+    ntree = 100,
+    importance = TRUE
+  )
+}
+
+#########################################
 # Cleaning global environment
 rm(control)
 rm(start_time)
+rm(i)
 
 
 
