@@ -24,7 +24,7 @@ ggplot() +
     aes(), 
     fill = "transparent",
     color = "white", 
-    size = 0.25
+    size = 0.35
   ) +  
   scale_alpha(
     name = "",
@@ -32,11 +32,21 @@ ggplot() +
     guide = FALSE
   ) +  
   scale_fill_manual(
-    values = rev(config$theme$parties_colors), 
-    labels = rev(config$theme$parties_labels)
+    values = config$theme$parties_colors, 
+    labels = config$theme$parties_labels
   ) +  
   theme_bw() + 
   theme(
-    legend.position = c(0.05, 0.05),
-    legend.justification = c("left", "bottom")
+    legend.position = c(0.01, 0.01),
+    legend.justification = c("left", "bottom"),
+    legend.text = element_text(size = 18),    
+    legend.title = element_text(size = 20),    
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank()
   )
+
+

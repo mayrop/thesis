@@ -1,0 +1,197 @@
+---
+title: "project"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+print("Loading config")
+library(config)
+config <- config::get()
+source("init.R")
+library(kableExtra)
+library(gridExtra)
+library(skimr)
+```
+```{r}
+
+# First summarize the votes
+summary_votes <- elections_summary %>%
+  group_by(party) %>%
+  summarize(
+    votes = sum(votes) / 1e6
+  )
+
+# Then summarize counties (excluding Alaska)
+summary_counties <- elections_summary %>%
+  group_by(party) %>%
+  filter(
+    state_abbreviation != "AK"
+  ) %>%
+  summarize(
+    counties = sum(party_won == party)
+  )
+
+# Then join both summaries
+summary <- summary_votes %>%
+  left_join(summary_counties, by="party") %>%
+  mutate(
+    votes_pct = votes / sum(votes) * 100,
+    counties_pct = counties/sum(counties) * 100
+  ) %>%
+  mutate_if(
+    is.numeric, round, digits = 2
+  ) %>%
+  unite(., "Popular Vote, (millions)", c("votes", "votes_pct")) %>%
+  unite(., "Counties Won[note]", c("counties", "counties_pct"))
+
+# transpose the data frame
+summary <- dcast(
+  melt(as.data.frame(summary), id.vars = "party"), variable ~ party
+)
+
+summary %>% 
+  select(
+    variable,
+    republican,
+    democrat,
+    other
+  ) %>%
+  separate(democrat, c("democratic_count", "democratic_pct"), sep="_") %>% 
+  separate(other, c("other_count", "other_pct"), sep="_") %>% 
+  separate(republican, c("republican_count", "republican_pct"), sep="_") %>%
+  kable(
+    col.names = c("", "Total", "%", "Total", "%", "Total", "%"),
+    caption = 'My caption here', 
+    booktabs = TRUE, 
+    format = "latex"
+  ) %>%
+  kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
+  add_header_above(c(" ", "Republican" = 2, "Democratic" = 2, "Other" = 2)) %>%
+  footnote(
+    fixed_small_size = TRUE,
+    symbol_title = "Note:",
+    symbol = c("Numbers exclude the state of Alaska.")
+  ) 
+
+all %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(
+    party = ifelse(response_factor == "yes", "republican", "democratic")
+  ) %>%
+  dplyr::group_by(
+    party
+  ) %>%
+  dplyr::select(
+    c("party", predictors)
+  ) %>% 
+  dplyr::mutate(
+    pop_14 = pop_14 / 1e3,
+    hsg_val_units_13 = hsg_val_units_13 / 1e3,
+    inc_pc_12_month_13 = inc_pc_12_month_13 / 1e3
+  ) %>% 
+  dplyr::group_by(party) %>%
+  # this can be approached by skim_to_list (skimr package)
+  # but we try to minimize the third party packages
+  dplyr::summarise_all(
+    list(mean = mean, median = median, sd = sd)
+  ) %>%
+  tidyr::gather(
+    "var", "val", -party
+  ) %>%
+  # this is where magic happens...
+  dplyr::mutate(
+    stat = gsub("^[a-z0-9_]+_([a-z]+)$", "\\1", var),
+    var = gsub("^([a-z0-9_]+)_[a-z]+$", "\\1", var)
+  ) %>%
+  dplyr::group_by(
+    party, var
+  ) %>% 
+  tidyr::spread(
+    stat, val
+  ) %>% 
+  dplyr::group_by(var) %>%
+  tidyr::unite(temp, mean, median, sd) %>%
+  tidyr::spread(party, temp) %>%
+  tidyr::separate(
+    democratic, 
+    into = paste("dem", c("mean", "median", "sd"), sep = "_"), 
+    sep = "_"
+  ) %>%
+  tidyr::separate(
+    republican, 
+    into = paste("rep", c("mean", "median", "sd"), sep = "_"), 
+    sep = "_"
+  ) %>%
+  dplyr::mutate_at(
+    vars(-1), as.numeric
+  ) %>% 
+  dplyr::ungroup() %>%
+  dplyr::mutate_if(
+    is.numeric, plyr::round_any, accuracy = .001, f = floor
+  ) %>%
+  kable(
+    caption = 'My caption here', 
+    booktabs = TRUE, 
+    format = "latex"
+  )
+
+%>%
+  kable_styling(font_size = 12, latex_options = "HOLD_position") %>%
+  add_header_above(c(" ", "Democratic" = 3, "Republican" = 3))
+```
+
+```{r}
+
+
+movies <- read.csv("Group_9.csv", sep = "\t")
+# subset data removing 2008 (so we have less than 500 obs)
+movies <- movies %>% 
+            filter(Year != 2008) %>% 
+              dplyr::select(-c(Year, Movie))
+```
+
+```{r}
+movies %>% 
+  skim_to_list() %>%
+  rbindlist(.) %>% 
+  select(variable, n, missing, mean, sd, p0, p25, p50, p75, p100) %>%
+  kable(
+    col.names = c("Variable", "n", "Missing", "Mean", "St.Dev", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
+    booktabs = TRUE, 
+    format = "latex"
+  ) %>%
+  kable_styling(font_size = 12, latex_options = "HOLD_position")
+```
+
+```{r}
+kable(movies, 
+      caption = "\\label{tab:summary3} TEST",
+      col.names = c("Model variables","Adjusted R-Squared","BIC"),
+      booktabs = TRUE, 
+      format = "latex", 
+      digits = 2, linesep=c('')) %>%
+  kable_styling(font_size = 10, latex_options = c("HOLD_position", "stripe"))
+```
+## R Markdown
+
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

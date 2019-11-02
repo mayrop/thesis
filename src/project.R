@@ -1,44 +1,39 @@
 ###
 #
 # University of Glasgow
-# Assessing the impact of socio-economic factors on Presidential Primary Election voting in the USA in 2016
+# Thesis for MSc in Data Analytics Degree
+# August, 2019
 #
-# Datasets:
-# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
-# 
-#We make use of the following R packages: `tidyverse`, for data manipulation and visualization,
-#corrplot, for creating correlation plots, caret, for our modelling framework including data-splitting, 
-#model tuning and evaluation, pROC for ROC curve visualization, doParallel, for parallalizatin in our traning models
-#sf, a package that standardizes a way to encode spatial vector data
-#pROC
-#doParallel
-#"UrbanInstitute/urbnmapr"
-
- "GGally", "gridExtra", 
-"moderndive", "skimr", "plotly",  "magrittr", 
-"tidyverse", "reshape2", "caret", "ellipse", "car", "rcompanion", 
-"e1071", "pROC", "glmnet", 
-"corrplot", "dendextend", "cowplot",  
-"sf", 
-"digest",
-"data.table",
-"LOGIT",
-"doParallel"
+# Title: 
+#   Assessing the impact of socio-economic factors on 
+#   Presidential Primary Election voting in the USA in 2016
+#
+# Author: Mayra A. Valdes I @mayrop
+#
 ### 
 
-# S E T T I N G S
+# S e t t i n g s
 
 # Setting project directory
-# setwd("~/Github/thesis/Project")
-# setwd("H:/thesis-master/Project")
-print("Loading config")
+# setwd("~/Github/thesis/src")
+print("Loading config...")
 library(config)
 config <- config::get()
+
+# Global variables that will help us throughtout the project
+my_models <- list()
+my_resamples <- list()
+my_methods <- list()
+my_results <- list(
+  "train" <- list(),
+  "test" <- list(),
+  "contigencies" = list(),
+  "differences" = list()
+)
 
 # Getting started...
 source("init.R")
 
-############################################
 ############################################
 
 # D a t a . P r e p r o c e s s i n g
@@ -55,79 +50,178 @@ source("_data/facts.R")
 # Sanity checks
 source("_data/sanity_checks.R")
 
-# Joins
+# Merging both datasets
 source("_data/joins.R")
 
-############################################
-############################################
-
-# Exploratory Data Analysis
-
-## Joins
-source("_eda/predictors.R")
-length(predictors)
-predictors
-
+# Picking variables for the analysis...
+predictors <- names(config$predictors$list)
 
 ############################################
-# Function for saving
-execute_and_plot <- function(file, save=FALSE, prefix="", ext=".png", bg="white", unit="mm", res=300, ...) {
-  filename <- gsub("/", "_", file)
-  filename <- gsub("^_", "", filename)
-  filename <- gsub("\\.\\w+$", "", filename)  
-  filename <- paste(prefix, filename, ext, sep="")
-  
-  save & png(filename=filename, bg=bg, unit=unit, res=res, ...)
-  source(file, print.eval=save)
-  save & dev.off()
-}
 
-# C o r r e l a t i o n P l o t s
-
-execute_and_plot("_eda/plots/density.R", 
-  save=config$print, width=250, height=180, prefix=config$settings$images_folder
-)
-
-execute_and_plot("_eda/plots/corrplot.R", 
-  save=config$print, width=250, height=180, prefix=config$settings$images_folder
-)
-
-
-# png(filename="figures/corrplot.png", width=450, height=260, bg="white", unit="mm", res=300)
-source("_eda/correlations.R")
-dev.off()
+# E x p l o r a t o r y . D a t a . A n a l y s i s 
 
 # M a p s 
 
-config$print & png(filename="figures/map_binary.png", width=250, height=180, bg="transparent", unit="mm", res=300)
-source("_eda/maps/binary.R", print.eval=config$print)
-config$print & dev.off()
+execute_and_plot(
+  "_eda/maps/binary.R",
+  save = config$print, 
+  width = 250, 
+  height = 180, 
+  prefix = config$settings$images_folder
+)
 
-config$print & png(filename="figures/map_votes.png", width=250, height=180, bg="transparent", unit="mm", res=300)
-source("_eda/maps/votes.R", print.eval=config$print)
-config$print & dev.off()
+execute_and_plot(
+  "_eda/maps/votes.R",
+  save = config$print, 
+  width = 250, 
+  height = 180, 
+  prefix = config$settings$images_folder
+)
 
-# source("_eda/plots.R") # TODO check & improve
-# source("_eda/maps.R")
+# D e n s i t y . P l o t s
 
-############################################
-############################################
+for (predictor in names(config$predictors$list)) {
+  execute_and_plot(
+    "_eda/plots/density.R", 
+    save = config$print, 
+    width = 200, 
+    height = 140, 
+    prefix = config$settings$images_folder,
+    suffix = paste("_", predictor, sep="")
+  )
+  
+  # cleaning...
+  rm(predictor)
+}
 
-# Data Modelling
+# L i n e a r i t y . A s s u m p t i o n
+
+# Coefficients
+execute_and_plot(
+  "_eda/plots/hoeff_matrix.R",
+  save = config$print, 
+  width = 200, 
+  height = 140, 
+  prefix = config$settings$images_folder
+)
+
+# Empirical plots
+for (predictor in names(config$predictors$list)) {
+  for (binned in c(TRUE, FALSE)) {
+    suffix <- `if`(binned, "binned", "")
+    
+    execute_and_plot(
+      "_eda/plots/empirical_plots.R", 
+      save = config$print, 
+      width = 160, 
+      height = 150, 
+      prefix = config$settings$images_folder,
+      suffix = paste("_", predictor, "_", suffix, sep="")
+    ) 
+  }
+  
+  # cleaning...
+  rm(predictor)
+  rm(binned)
+  rm(suffix)
+}
+
+# C o r r e l a t i o n . P l o t
+
+execute_and_plot("_eda/plots/corrplot.R", 
+  save = config$print, 
+  width = 400, 
+  height = 200, 
+  prefix = config$settings$images_folder
+)
+
+#--------------------------------------------------------#
+
+# D a t a . M o d e l l i n g
+
+# This is just to build our main formula for building the diff models
 
 # Splitting data
 source("_models/split.R")
 
-# Loads custom functions for models
-source("_models/functions.R")
+# Training...
+source("_models/glm.R")
+source("_models/rf.R")
+source("_models/svm.R")
 
-# Loads all the setup for the methods to compare
-source("_models/methods.R")
+#--------------------------------------------------------#
 
-# Builds all the models.. (be patient)
-source("_models/build.R")
+# E v a l u a t i o n
 
+# Summaries...
 
+source("_evaluation/evaluation.R")
+
+execute_and_plot(
+  "_evaluation/tests.R",
+  save = config$print, 
+  width = 350, 
+  height = 120, 
+  prefix = config$settings$images_folder
+)
+
+execute_and_plot(
+  "_evaluation/roc.R",
+  save = config$print, 
+  width = 170, 
+  height = 110, 
+  prefix = config$settings$images_folder
+)
+
+# Logistic regression...
+
+# Goodness of fit test
+HLTest(my_models[["glm"]]$finalModel, g = 8)
+
+# Log odds...
+execute_and_plot(
+  "_evaluation/lr_odds.R",
+  save = config$print, 
+  width = 170, 
+  height = 70, 
+  prefix = config$settings$images_folder
+)
+
+# SVM
+
+execute_and_plot(
+  "_evaluation/svm_tuning.R",
+  save = config$print, 
+  width = 170, 
+  height = 120, 
+  prefix = config$settings$images_folder
+)
+
+# Random forests
+
+execute_and_plot(
+  "_evaluation/rf_errors.R",
+  save = config$print, 
+  width = 170, 
+  height = 110, 
+  prefix = config$settings$images_folder
+)
+
+execute_and_plot(
+  "_evaluation/rf_importance.R",
+  save = config$print, 
+  width = 170, 
+  height = 110, 
+  prefix = config$settings$images_folder
+)
+
+# Writing session info...
 sink("output/sessionInfo.txt", append=FALSE, split=TRUE)
 sessionInfo()
 sink()
+
+# Writing packages bibliography...
+# write.bib(c(config$settings$libraries, c("config", "urbnmapr", "hazel")), file="r")
+
+          
+

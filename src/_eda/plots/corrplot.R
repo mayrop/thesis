@@ -1,27 +1,17 @@
-############################
-
-# https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
-
-temp_predictors <- predictors
-temp_predictors[temp_predictors=="response_regression"] <- "frac_republican"
-
-correlations <- cor(all[,which(colnames(all) %in% temp_predictors)])
+# Here we do the correlation plot
 
 corrplot::corrplot(
-  correlations,
-  order="hclust",
-  hclust.method="complete",
-  # careful with this
-  tl.col=c(
-    rep("black", 2),
-    "red",
-    rep("black", 13)
-  ), 
-  tl.srt = 45,
+  cor(all[,which(colnames(all) %in% predictors)]),
+  order = "hclust",
+  hclust.method = "complete",
+  tl.srt = 50,
   addrect = 11,
   col = config$theme$correlations,
-  win.asp = .5
+  win.asp = .5,
+  tl.col = "black",
+  tl.pos = "lt",
+  mar = c(0, 0, 1, 1),
+  tl.cex = 1.5
 )
 
-##############################################
 ##############################################
